@@ -35,6 +35,10 @@ public class Post {
         this.user = user;
     }
 
+    public Object getRid() {
+        return rid;
+    }
+
     public String getHeader() {
         return header;
     }

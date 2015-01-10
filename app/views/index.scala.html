@@ -5,7 +5,8 @@
     <h1>Our Zella Blog Tutorial</h1>
 
     @for(post <- posts) {
-        <h4>@post.getHeader</h4>
+        <a href="@routes.Application.detailpost(post.getRid().toString())">@post.getHeader</a>
+
         <p>@post.getBody</p>
         @for(comment <- post.getComments) {
             <p>@comment.getBody</p>

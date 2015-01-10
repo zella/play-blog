@@ -1,0 +1,13 @@
+@import model.Post
+
+@(post: Post) @main("jopa") {
+    <h3>@post.getHeader</h3>
+
+    @for(comment <- post.getComments) {
+        <p>@comment.getBody</p>
+        <small>By a @comment.getUser</small>
+        <hr/>
+    }
+
+
+}

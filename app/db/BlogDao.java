@@ -1,6 +1,8 @@
 package db;
 
 import com.google.common.collect.Lists;
+import com.orientechnologies.orient.core.db.record.OIdentifiable;
+import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 import model.Post;
 import model.User;
@@ -25,6 +27,13 @@ public class BlogDao extends OAbstractDao {
             Iterator<Post> it = db.browseClass(Post.class);
             List<Post> posts = Lists.newArrayList(it);
             return posts;
+        }
+    }
+
+    public static Post getPostById(String id) {
+        try (OObjectDatabaseTx db = acquireDatabase()) {
+            //TODO typing
+            return db.load(new ORecordId(id));
         }
     }
 
