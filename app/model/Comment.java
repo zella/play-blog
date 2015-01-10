@@ -1,14 +1,33 @@
 package model;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 /**
  * Created by dru on 09.01.2015.
  */
-@Entity
+
 public class Comment {
 
-    private User user;
+//    @Id
+//    private Object rid;
 
+    private User user;
     private String body;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
 }

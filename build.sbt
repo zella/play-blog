@@ -7,7 +7,12 @@ lazy val root = (project in file(".")).enablePlugins(PlayJava)
 scalaVersion := "2.11.1"
 
 libraryDependencies ++= Seq(
-  javaJdbc,
-  javaJpa,
-  "org.hibernate" % "hibernate-entitymanager" % "4.3.8.Final" // replace by your jpa implementation
+  javaJpa, //TODO rem?
+  "com.orientechnologies" % "orient-commons" % "1.7.10",
+  "com.orientechnologies" % "orientdb-core" % "1.7.10",
+  "com.orientechnologies" % "orientdb-object" % "1.7.10",
+  "com.orientechnologies" % "orientdb-client" % "1.7.10",
+  "com.google.guava" % "guava" % "18.0"
 )
+
+//templatesImport += "model.Post"

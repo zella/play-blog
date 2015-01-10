@@ -1,32 +1,61 @@
 package model;
 
+import javax.persistence.Embedded;
+import javax.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by dru on 09.01.2015.
  */
 
-import org.hibernate.annotations.Cascade;
 
-import javax.persistence.*;
-import java.util.List;
 
-/**
- * Entity managed by JPA
- */
-@Entity
+
+
 public class Post {
 
     @Id
-    //TODO increment
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Object rid;
+
     private String header;
     private String body;
-    //TODO
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private List<Comment> comments;
 
-    public Post(String body, String header) {
+    private User user;
+
+    @Embedded
+    private List<Comment> comments = new ArrayList<>();
+
+    public Post() {
+    }
+
+    public Post(String body, String header, User user) {
         this.body = body;
         this.header = header;
+        this.user = user;
+    }
+
+    public String getHeader() {
+        return header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
     }
 }

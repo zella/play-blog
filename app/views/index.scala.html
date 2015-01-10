@@ -1,7 +1,17 @@
-@(message: String)
+@import model.Post
 
-@main("Welcome to Play") {
+@(posts: List[Post]) @main("Zella blog") {
 
-    @play20.welcome(message, style = "Java")
+    <h1>Our Zella Blog Tutorial</h1>
+
+    @for(post <- posts) {
+        <h4>@post.getHeader</h4>
+        <p>@post.getBody</p>
+        @for(comment <- post.getComments) {
+            <p>@comment.getBody</p>
+            <small>By a @comment.getUser</small>
+        }
+        <hr/>
+    }
 
 }
