@@ -6,12 +6,7 @@
 
     @for(post <- posts) {
         <a href="@routes.Application.detailpost(post.getRid().toString())">@post.getHeader</a>
-
         <p>@post.getBody</p>
-        @for(comment <- post.getComments) {
-            <p>@comment.getBody</p>
-            <small>By a @comment.getUser</small>
-        }
         <hr/>
     }
 

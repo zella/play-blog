@@ -4,9 +4,11 @@ import com.google.common.collect.Lists;
 import com.orientechnologies.orient.core.db.record.OIdentifiable;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
+import model.Comment;
 import model.Post;
 import model.User;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class BlogDao extends OAbstractDao {
 
     public static Post getPostById(String id) {
         try (OObjectDatabaseTx db = acquireDatabase()) {
-            //TODO typing
+            //TODO typing?
             return db.load(new ORecordId(id));
         }
     }
@@ -40,6 +42,13 @@ public class BlogDao extends OAbstractDao {
     public static void saveNewUser(User user) {
         try (OObjectDatabaseTx db = acquireDatabase()) {
             db.save(user);
+        }
+    }
+
+    public static void addComment(Comment comment, Post source) {
+        try (OObjectDatabaseTx db = acquireDatabase()) {
+            source.getComments().add(comment);
+            db.save(source);
         }
     }
 

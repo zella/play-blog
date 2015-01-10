@@ -12,15 +12,15 @@ public class Comment {
 //    @Id
 //    private Object rid;
 
-    private User user;
+    private String name;
     private String body;
 
-    public User getUser() {
-        return user;
+    public String getName() {
+        return name;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getBody() {

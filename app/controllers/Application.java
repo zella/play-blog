@@ -1,17 +1,14 @@
 package controllers;
 
 import db.BlogDao;
-import model.Post;
-import play.*;
-import play.api.libs.Collections;
+import model.Comment;
+import play.data.Form;
 import play.mvc.*;
 
 import views.html.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
+
+import static play.data.Form.*;
 
 public class Application extends Controller {
 
@@ -19,8 +16,16 @@ public class Application extends Controller {
         return ok(index.render(BlogDao.getAllPosts()));
     }
 
-    public static Result detailpost(String id) {
-        return ok(detailpost.render(BlogDao.getPostById(id)));
+    public static Result detailpost(String postId) {
+        return ok(detailpost.render(BlogDao.getPostById(postId)));
+    }
+
+    public static Result addcomment(String postId) {
+        Form<Comment> commentForm = form(Comment.class).bindFromRequest();
+        Comment comment =commentForm.get();
+        BlogDao.addComment(comment,BlogDao.getPostById(postId));
+      //  return redirect(controllers.routes.Application.detailpost(postId));
+        return ok("ok");
     }
 
 }
