@@ -2,10 +2,8 @@ package controllers;
 
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.user.AuthUser;
-import com.feth.play.module.pa.user.AuthUserIdentity;
-import com.feth.play.module.pa.user.EmailIdentity;
-import db.BlogDao;
 import model.Comment;
+import model.Post;
 import model.User;
 import play.data.Form;
 import play.mvc.*;
@@ -33,35 +31,26 @@ public class Application extends Controller {
 //    }
 
     public static Result index() {
-        return ok(index.render(BlogDao.getAllPosts()));
+        return ok(index.render(Post.findAllPosts()));
+    }
+
+    public static Result detailPost(String postId) {
+        return ok(detailpost.render(Post.findById(postId)));
     }
 
     @Security.Authenticated(Secured.class)
-    public static Result detailpost(String postId) {
-        return ok(detailpost.render(BlogDao.getPostById(postId)));
-    }
-
-    @Security.Authenticated(Secured.class)
-    public static Result addcomment(String postId) {
+    public static Result addComment(String postId) {
         Form<Comment> commentForm = form(Comment.class).bindFromRequest();
         Comment comment = commentForm.get();
-        BlogDao.addComment(comment, BlogDao.getPostById(postId));
-        //  return redirect(controllers.routes.Application.detailpost(postId));
-        return ok("ok");
+        Post post = Post.findById(postId);
+        post.addComment(comment);
+        post.save();
+        return ok();
     }
 
     public static User getLocalUser(final Http.Session session) {
-
-        final AuthUser identity = PlayAuthenticate.getUser(session());
-
-
-        if (identity instanceof EmailIdentity) {
-            final EmailIdentity emailIdentity = (EmailIdentity) identity;
-            final User user = BlogDao.findUserByEmail(emailIdentity.getEmail());
-            return user;
-        }
-        return null;//TODO refactor
-
+        final AuthUser identity = PlayAuthenticate.getUser(session);
+        return User.findByAuthUserIdentity(identity);
     }
 
 }

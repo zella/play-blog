@@ -9,7 +9,7 @@
         <properties>
             <!--h2 database dialect-->
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
-            <!--will update database if database tables are already created and will create if database tables are not created-->
+            <!--will update database if database tables are already created and will createAndSave if database tables are not created-->
             <property name="hibernate.hbm2ddl.auto" value="update"/>
         </properties>
     </persistence-unit>

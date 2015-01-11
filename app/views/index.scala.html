@@ -15,6 +15,8 @@
             } else {
                 at @auth.expires() (UNIX timestamp)
             }
+            Name: @Application.getLocalUser(session).getName
+
             <a href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout">Logout</a>
         }
     }
@@ -22,7 +24,7 @@
     <h1>Our Zella Blog Tutorial</h1>
 
     @for(post <- posts) {
-        <a href="@routes.Application.detailpost(post.getRid().toString())">@post.getHeader</a>
+        <a href="@routes.Application.detailPost(post.getRid().toString())">@post.getHeader</a>
         <p>@post.getBody</p>
         <hr/>
     }
