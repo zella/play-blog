@@ -3,8 +3,12 @@
 # ~~~~
 
 # Home page
-GET         /                          controllers.Application.index()
-GET         /post/:id                  controllers.Application.detailpost(id: String)
-POST        /addcomment/:postid        controllers.Application.addcomment(postid: String)
+GET         /                                     controllers.Application.index()
+GET         /post/:id                             controllers.Application.detailpost(id: String)
+POST        /addcomment/:postid                   controllers.Application.addcomment(postid: String)
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file              controllers.Assets.at(path="/public", file)
+GET         /assets/*file                         controllers.Assets.at(path="/public", file)
+# Authenticate
+GET         /logout                               com.feth.play.module.pa.controllers.Authenticate.logout
+GET         /authenticate/:provider               com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
+GET         /authenticate/:provider/denied        controllers.Application.oAuthDenied(provider: String)

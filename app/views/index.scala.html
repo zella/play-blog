@@ -1,6 +1,23 @@
-@import model.Post
+@import model._
+@import com.feth.play.module.pa.views.html._
 
 @(posts: List[Post]) @main("Zella blog") {
+
+    @forProviders() { p =>
+        <a href="@p.getUrl()">@p.getKey()</a>
+    }
+    @currentAuth() { auth =>
+        @if(auth != null) {
+            Logged in with provider '@auth.getProvider()' and the user ID '@auth.getId()'<br/>
+            Your session expires
+            @if(auth.expires() == -1) {
+                never
+            } else {
+                at @auth.expires() (UNIX timestamp)
+            }
+            <a href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout">Logout</a>
+        }
+    }
 
     <h1>Our Zella Blog Tutorial</h1>
 
