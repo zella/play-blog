@@ -12,3 +12,7 @@ GET         /assets/*file                         controllers.Assets.at(path="/p
 GET         /logout                               com.feth.play.module.pa.controllers.Authenticate.logout
 GET         /authenticate/:provider               com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
 GET         /authenticate/:provider/denied        controllers.Application.oAuthDenied(provider: String)
+
+
+GET         /ajax_call                            controllers.Application.ajaxCall()
+GET         /javascriptRoutes                     controllers.Application.javascriptRoutes()
