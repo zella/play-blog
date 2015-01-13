@@ -3,9 +3,6 @@
 
 @(posts: List[Post]) @main("Zella blog") {
 
-    @forProviders() { p =>
-        <a href="@p.getUrl()">@p.getKey()</a>
-    }
     @currentAuth() { auth =>
         @if(auth != null) {
             Logged in with provider '@auth.getProvider()' and the user ID '@auth.getId()'<br/>
@@ -18,6 +15,10 @@
             Name: @Application.getLocalUser(session).getName
 
             <a href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout">Logout</a>
+        } else {
+            @forProviders() { p =>
+                <a href="@p.getUrl()">@p.getKey()</a>
+            }
         }
     }
 

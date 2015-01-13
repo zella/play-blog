@@ -28,7 +28,7 @@ public class Post {
     private User user;
 
     @Embedded
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     public Post() {
     }
@@ -85,11 +85,6 @@ public class Post {
             //TODO typing?
             return db.load(new ORecordId(id));
         }
-    }
-
-    public void addComment(Comment comment) {
-        if (comments == null) comments = Collections.singletonList(comment);
-        this.getComments().add(comment);
     }
 
     public void save() {

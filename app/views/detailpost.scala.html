@@ -14,30 +14,51 @@
     <p>@post.getBody</p>
     <hr/>
 
-    <h4>Comments:</h4>
-    @for(comment <- post.getComments) {
-        <p>@comment.getBody</p>
-        <small>By a @comment.getName</small>
-        <hr/>
-    }
+    <div id="commentsContainer">
+        <h4>Comments:</h4>
+        @for(comment <- post.getComments) {
+            <p>@comment.getBody</p>
+            <small>By a @comment.getName</small>
+            <hr/>
+        }
+    </div>
 
     @currentAuth() { auth =>
         @if(auth != null) {
             <h3>Add a comment as @user.getName</h3>
-            @helper.form(action = routes.Application.addComment(post.getRid().toString())) {
-
+            <form id = "commentForm">
                 <textarea name="body" cols="60" rows="10"></textarea> <br>
                 <input type="submit" value="Submit">
-            }
+            </form>
         } else {
             <p>Чтобы оставить комментарии необходимо авторизироваться</p>
         }
 
     }
 
+    @*********************
+    * We need incapsulate js in assets. post id we should store
+    * in html attribute(<div id = "postContainde", data = "#11:2">)?
+    * and then use its attribute in extarnal js
+    *********************@
     <script>
-        jsRoutes.controllers.Application.a
-
+    $("#commentForm").submit(function () {
+    jsRoutes.controllers.Application.addComment('@post.getRid().toString').ajax({
+    success: function (data) {
+    $("#commentsContainer").append("<p>" + data.body + "</p><small>By a" + data.name + "</small><hr/>");
+    $('#commentForm').each(function () {
+    this.reset();
+    });
+    },
+    error: function () {
+    alert("Error!")
+    },
+    data: $("#commentForm").serialize()
+    })
+    return false;
+    }
+    )
     </script>
+
 
 }

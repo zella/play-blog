@@ -1,5 +1,6 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.user.AuthUser;
 import model.Comment;
@@ -7,6 +8,7 @@ import model.Post;
 import model.User;
 import play.Routes;
 import play.data.Form;
+import play.libs.Json;
 import play.mvc.*;
 
 import views.html.*;
@@ -36,20 +38,27 @@ public class Application extends Controller {
 
     @Security.Authenticated(Secured.class)
     public static Result addComment(String postId) {
+        System.out.println(postId);
         Form<Comment> commentForm = form(Comment.class).bindFromRequest();
         Comment comment = commentForm.get();
         comment.setName(getLocalUser(session()).getName());
         Post post = Post.findById(postId);
-        post.addComment(comment);
+        post.getComments().add(comment);
         post.save();
-        return ok("Ajax call!!!");
+        System.out.println(Json.toJson(comment).toString());
+        return ok(Json.toJson(comment));
     }
 
+    /**
+     * Need for referencing routes from js;
+     * @return
+     */
     public static Result javascriptRoutes() {
         response().setContentType("text/javascript");
         return ok(
                 Routes.javascriptRouter("jsRoutes",
-                        controllers.routes.javascript.Application.ajaxCall()
+                        controllers.routes.javascript.Application.ajaxCall(),
+                        controllers.routes.javascript.Application.addComment()
                 )
         );
     }
