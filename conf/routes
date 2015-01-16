@@ -4,15 +4,30 @@
 
 # Home page
 GET         /                                     controllers.Application.index()
-GET         /post/:id                             controllers.Application.detailPost(id: String)
+GET         /posts/:id                            controllers.Application.detailPost(id: String)
 POST        /addcomment/:postid                   controllers.Application.addComment(postid: String)
-# Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                         controllers.Assets.at(path="/public", file)
+
+# Admins
+
+#Admin page
+GET         /admin                                controllers.Application.admin()
+
+# Add post
+GET         /admin/posts/new                      controllers.BlogPosts.create()
+POST        /admin/posts                          controllers.BlogPosts.save()
+
+# Edit existing post
+GET         /admin/posts/:id                      controllers.BlogPosts.edit(id:String)
+POST        /admin/posts/:id                      controllers.BlogPosts.update(id:String)
+
 # Authenticate
 GET         /logout                               com.feth.play.module.pa.controllers.Authenticate.logout
 GET         /authenticate/:provider               com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
 GET         /authenticate/:provider/denied        controllers.Application.oAuthDenied(provider: String)
 
-
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file                         controllers.Assets.at(path="/public", file)
+# Test ajax action. TODO remove
 GET         /ajax_call                            controllers.Application.ajaxCall()
+# For calling routes from js
 GET         /javascriptRoutes                     controllers.Application.javascriptRoutes()

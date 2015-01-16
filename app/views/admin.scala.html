@@ -1,0 +1,21 @@
+@import model._
+
+@(posts: List[Post], user: User) @main("Admin") {
+
+    @if(flash.contains("success")) {
+        <p>
+        @flash.get("success")
+        </p>
+    }
+
+
+    <h4>My blog posts:</h4>
+    @for(post <- posts) {
+        <p>@post.getHeader <a href="@routes.BlogPosts.edit(post.getRid.toString)">edit</a></p>
+
+
+    }
+
+    <p> <a class="btn" href="@routes.BlogPosts.create()">Create new post</a> as @user.getName</p>
+
+}

@@ -11,6 +11,7 @@ import db.DB;
 
 import javax.persistence.Embedded;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,6 +27,10 @@ public class User {
     private String name;
 
     private String email;
+
+    //TODO
+    @OneToMany
+    public List<Post> posts;
 
     @Embedded
     public List<LinkedAccount> linkedAccounts;

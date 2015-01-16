@@ -1,7 +1,6 @@
 @import model._
-@import com.feth.play.module.pa.views.html._
 
-@(post: Post, user: User) @main("Detail post") {
+@(post: Post, user: User) @main(post.getHeader) {
 
     Name from session(auth):
     @if(user != null) {
@@ -10,9 +9,11 @@
         <p>not logged</p>
     }
 
-    <h3>@post.getHeader</h3>
-    <p>@post.getBody</p>
-    <hr/>
+    <div id="blogpostContainer" data-post-id="@post.getRid()">
+        <h3>@post.getHeader</h3>
+        <p>@post.getBody</p>
+        <hr/>
+    </div>
 
     <div id="commentsContainer">
         <h4>Comments:</h4>
@@ -23,42 +24,20 @@
         }
     </div>
 
-    @currentAuth() { auth =>
-        @if(auth != null) {
-            <h3>Add a comment as @user.getName</h3>
-            <form id = "commentForm">
-                <textarea name="body" cols="60" rows="10"></textarea> <br>
-                <input type="submit" value="Submit">
-            </form>
-        } else {
-            <p>Чтобы оставить комментарии необходимо авторизироваться</p>
-        }
 
+    @if(user != null) {
+        <h3>Add a comment as @user.getName</h3>
+        <form id = "commentForm">
+            <textarea name="body" cols="60" rows="10"></textarea> <br>
+            <input type="submit" value="Submit">
+        </form>
+    } else {
+        <p>Чтобы оставить комментарии необходимо авторизироваться</p>
     }
 
-    @*********************
-    * We need incapsulate js in assets. post id we should store
-    * in html attribute(<div id = "postContainde", data = "#11:2">)?
-    * and then use its attribute in extarnal js
-    *********************@
-    <script>
-    $("#commentForm").submit(function () {
-    jsRoutes.controllers.Application.addComment('@post.getRid().toString').ajax({
-    success: function (data) {
-    $("#commentsContainer").append("<p>" + data.body + "</p><small>By a" + data.name + "</small><hr/>");
-    $('#commentForm').each(function () {
-    this.reset();
-    });
-    },
-    error: function () {
-    alert("Error!")
-    },
-    data: $("#commentForm").serialize()
-    })
-    return false;
-    }
-    )
-    </script>
+
+
+    <script src="@routes.Assets.at("javascripts/sendcomment.js")" type="text/javascript"></script>
 
 
 }

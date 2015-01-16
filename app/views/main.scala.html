@@ -9,21 +9,6 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <script src="@routes.Assets.at("javascripts/jquery-1.11.2.min.js")" type="text/javascript"></script>
         <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
-        <script>
-        var func = function () {
-
-        jsRoutes.controllers.Application.ajaxCall ( ).ajax ( {
-        success : function ( data ) {
-        alert ( data )
-        },
-        error : function ( ) {
-        alert ( "Error!" )
-        }
-        } )
-        }
-      //  window.onload = func
-
-        </script>
 
     </head>
     <body>
