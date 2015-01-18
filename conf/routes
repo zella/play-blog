@@ -4,8 +4,8 @@
 
 # Home page
 GET         /                                     controllers.Application.index()
-GET         /posts/:id                            controllers.Application.detailPost(id: String)
-POST        /addcomment/:postid                   controllers.Application.addComment(postid: String)
+GET         /posts/:id                            controllers.Posts.viewPost(id: String)
+POST        /addcomment/:postid                   controllers.Posts.addComment(postid: String)
 
 # Admins
 
@@ -13,12 +13,19 @@ POST        /addcomment/:postid                   controllers.Application.addCom
 GET         /admin                                controllers.Application.admin()
 
 # Add post
-GET         /admin/posts/new                      controllers.BlogPosts.create()
-POST        /admin/posts                          controllers.BlogPosts.save()
+GET         /admin/posts/new                      controllers.AdminsPosts.create(blogName)
+POST        /admin/posts                          controllers.AdminsPosts.save(blogName)
+
+# Add blog
+GET         /admin/blogs/new                      controllers.AdminsBlogs.create()
+POST        /admin/blogs                          controllers.AdminsBlogs.save()
 
 # Edit existing post
-GET         /admin/posts/:id                      controllers.BlogPosts.edit(id:String)
-POST        /admin/posts/:id                      controllers.BlogPosts.update(id:String)
+GET         /admin/posts/:id                      controllers.AdminsPosts.edit(id:String)
+POST        /admin/posts/:id                      controllers.AdminsPosts.update(id:String)
+
+# Blog main page
+GET         /blogs/:name                          controllers.Blogs.viewBlog(name:String)
 
 # Authenticate
 GET         /logout                               com.feth.play.module.pa.controllers.Authenticate.logout

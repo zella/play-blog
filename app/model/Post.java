@@ -8,6 +8,7 @@ import db.DB;
 
 import javax.persistence.Embedded;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -29,6 +30,12 @@ public class Post {
     //TODO }
 
     private User user;
+
+    /**
+     * Blog that post belongs
+     */
+
+  //  private Blog blog;
 
     @Embedded
     private List<Comment> comments = new ArrayList<>();
@@ -74,6 +81,14 @@ public class Post {
         return comments;
     }
 
+//    public Blog getBlog() {
+//        return blog;
+//    }
+//
+//    public void setBlog(Blog blog) {
+//        this.blog = blog;
+//    }
+
     public static List<Post> findAll() {
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
             //TODO or sql query - test performance
@@ -91,6 +106,14 @@ public class Post {
             return posts;
         }
     }
+
+//    public static List<Post> findByBlogName(String name) {
+//        try (OObjectDatabaseTx db = DB.acquireDatabase()) {
+//            OSQLSynchQuery query = new OSQLSynchQuery<User>("select from Post where blog = ?)");
+//            List<Post> posts = db.command(query).execute(name);
+//            return posts;
+//        }
+//    }
 
     public static Post findById(String id) {
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {

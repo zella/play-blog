@@ -2,6 +2,7 @@ package controllers;
 
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.user.AuthUser;
+import model.Blog;
 import model.Comment;
 import model.Post;
 import model.User;
@@ -18,7 +19,7 @@ import static play.data.Form.*;
  * Created by dru on 14.01.2015.
  */
 
-public class BlogPosts extends Controller {
+public class AdminsPosts extends Controller {
 
 
     /**
@@ -28,7 +29,6 @@ public class BlogPosts extends Controller {
      */
     public static Result edit(String id) {
         Form<Post> blogpostForm = form(Post.class).fill(Post.findById(id));
-
         return ok(editpost.render(id, Application.getLocalUser(session()), blogpostForm));
     }
 
@@ -43,7 +43,7 @@ public class BlogPosts extends Controller {
             return badRequest("TODO form has error");
         }
         Post postFromForm = blogpostForm.get();
-
+        //TODO info about blog
         //TODO merge/update functionality
         Post toUpdate = Post.findById(id);
         toUpdate.setBody(postFromForm.getBody());
@@ -51,7 +51,7 @@ public class BlogPosts extends Controller {
         toUpdate.save();
         flash("success", "Post has been updated");
         /**
-         * you can use redirect(routes.Application.detailPost(blogPost.save().getRid().toString()));
+         * you can use redirect(routes.Application.viewPost(blogPost.save().getRid().toString()));
          * and if you use @With(LocalUser.class) it preferred way.
          * Only one plus of my solution - avoiding Post.findById query TODO only on create
          */
@@ -61,14 +61,14 @@ public class BlogPosts extends Controller {
     /**
      * Display the 'new blog post form'.
      */
-    public static Result create() {
-        return ok(createpost.render(Application.getLocalUser(session())));
+    public static Result create(String blogName) {
+        return ok(createpost.render(blogName, Application.getLocalUser(session())));
     }
 
     /**
      * Handle the 'new blog post form' submission
      */
-    public static Result save() {
+    public static Result save(String blogName) {
         Form<Post> blogpostForm = form(Post.class).bindFromRequest();
         if (blogpostForm.hasErrors()) {
             return badRequest("TODO form has error");
@@ -76,8 +76,10 @@ public class BlogPosts extends Controller {
         Post blogPost = blogpostForm.get();
         User localUser = Application.getLocalUser(session());
         blogPost.setUser(localUser);
-        blogPost.save();
-        flash("success", "Post has been created");
+        Blog blog = Blog.findByName(blogName);
+        blog.getPosts().add(blogPost);
+        blog.save();
+        flash("success", "Post for \"" + blog.getName() + "\" has been created");
         return redirect(routes.Application.admin());
 
 

@@ -3,7 +3,7 @@
 @(postId: String, user: User, blogpostForm: Form[Post]) @main("Edit post") {
 
 
-    @helper.form(action = routes.BlogPosts.update(postId)) {
+    @helper.form(action = routes.AdminsPosts.update(postId)) {
 
         @helper.textarea(blogpostForm("header"), '_label -> "Title", 'cols -> "100", 'rows -> "2")
         @helper.textarea(blogpostForm("body"), '_label -> "Text", 'cols -> "100", 'rows -> "20")

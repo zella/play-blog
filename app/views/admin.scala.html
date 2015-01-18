@@ -1,6 +1,6 @@
 @import model._
 
-@(posts: List[Post], user: User) @main("Admin") {
+@(blogs: List[Blog], user: User) @main("Admin") {
 
     @if(flash.contains("success")) {
         <p>
@@ -8,14 +8,17 @@
         </p>
     }
 
-
-    <h4>My blog posts:</h4>
-    @for(post <- posts) {
-        <p>@post.getHeader <a href="@routes.BlogPosts.edit(post.getRid.toString)">edit</a></p>
-
+    <h4>My blogs:</h4>
+    @for(blog <- blogs) {
+        <p>Blog: @blog.getName</p>
+        <ul>
+            @for(post <- blog.getPosts) {
+                <li>@post.getHeader <a href="@routes.AdminsPosts.edit(post.getRid.toString)">edit</a></li>
+            }
+        <li><a class="btn" href="@routes.AdminsPosts.create(blog.getName)">Create new post</a> as @user.getName</li>
+        </ul>
 
     }
-
-    <p> <a class="btn" href="@routes.BlogPosts.create()">Create new post</a> as @user.getName</p>
+    <p> <a class="btn" href="@routes.AdminsBlogs.create()">Create new blog</a> as @user.getName</p>
 
 }

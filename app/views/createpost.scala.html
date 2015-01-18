@@ -1,11 +1,14 @@
 @import model._
 @import com.feth.play.module.pa.views.html._
 
-@(user: User) @main("Create post") {
+@*********************
+* TODO form *
+*********************@
+@(blogName:String, user: User) @main("Create post") {
 
     @if(user != null) {
         <h3>Create new blog post as @user.getName</h3>
-        @helper.form(action = routes.BlogPosts.save(), 'id -> "createpostForm") {
+        @helper.form(action = routes.AdminsPosts.save(blogName), 'id -> "createpostForm") {
             <div>Title</div>
             <textarea name="header" cols="100" rows="2"></textarea> <br>
             <div>Text</div>

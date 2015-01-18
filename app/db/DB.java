@@ -2,10 +2,7 @@ package db;
 
 import com.orientechnologies.orient.object.db.OObjectDatabasePool;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
-import model.Comment;
-import model.LinkedAccount;
-import model.Post;
-import model.User;
+import model.*;
 
 /**
  * Created by dru on 10.01.2015.
@@ -22,6 +19,7 @@ public class DB {
         database.getEntityManager().registerEntityClass(User.class);
         database.getEntityManager().registerEntityClass(Comment.class);
         database.getEntityManager().registerEntityClass(LinkedAccount.class);
+        database.getEntityManager().registerEntityClass(Blog.class);
         return database;
     }
 }

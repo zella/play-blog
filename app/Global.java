@@ -1,3 +1,4 @@
+import model.Blog;
 import model.Post;
 import model.User;
 import play.Application;
@@ -11,6 +12,8 @@ import com.feth.play.module.pa.exceptions.AuthException;
 
 import controllers.routes;
 
+import java.util.List;
+
 /**
  * Created by dru on 10.01.2015.
  */
@@ -20,6 +23,14 @@ public class Global extends GlobalSettings {
     @Override
     public void onStart(Application application) {
         super.onStart(application);
+
+    //    blog.getPosts().add(post);
+
+//        blog = blog.save();
+//
+//        List<Post> posts =  blog.getPosts();
+//
+//        blog = posts.get(0).getBlog();
 
 
         PlayAuthenticate.setResolver(new PlayAuthenticate.Resolver() {

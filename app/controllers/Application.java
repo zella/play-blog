@@ -2,19 +2,16 @@ package controllers;
 
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.user.AuthUser;
-import model.Comment;
+import model.Blog;
 import model.Post;
 import model.User;
 import play.Routes;
-import play.data.Form;
 import play.libs.F;
-import play.libs.Json;
 import play.mvc.*;
 import views.html.*;
 
-import static play.data.Form.*;
-
 public class Application extends Controller {
+
     public static final String FLASH_MESSAGE_KEY = "message";
     public static final String FLASH_ERROR_KEY = "error";
 
@@ -28,7 +25,6 @@ public class Application extends Controller {
     public static Result index() {
         return ok(index.render(Post.findAll()));
     }
-
     /**
      * Display admin page
      *
@@ -36,31 +32,9 @@ public class Application extends Controller {
      */
     public static Result admin() {
         User localUser = getLocalUser(session());
-        return ok(admin.render(Post.findByUserId(localUser.getRid().toString()), localUser));
+        return ok(admin.render(Blog.findByUser(localUser.getRid().toString()), localUser));
     }
 
-
-    public static Result detailPost(String postId) {
-        //TODO implicit user passing?
-        return ok(detailpost.render(Post.findById(postId), getLocalUser(session())));
-    }
-
-    /**
-     * Ajax action
-     *
-     * @param postId
-     * @return
-     */
-    @Security.Authenticated(Secured.class)
-    public static Result addComment(String postId) {
-        Form<Comment> commentForm = form(Comment.class).bindFromRequest();
-        Comment comment = commentForm.get();
-        comment.setName(getLocalUser(session()).getName());
-        Post post = Post.findById(postId);
-        post.getComments().add(comment);
-        post.save();
-        return ok(Json.toJson(comment));
-    }
 
     /**
      * Need for referencing routes from js;
@@ -72,7 +46,7 @@ public class Application extends Controller {
         return ok(
                 Routes.javascriptRouter("jsRoutes",
                         controllers.routes.javascript.Application.ajaxCall(),
-                        controllers.routes.javascript.Application.addComment()
+                        controllers.routes.javascript.Posts.addComment()
                 )
         );
     }
