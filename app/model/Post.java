@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
+import controllers.Application;
 import db.DB;
+import play.data.validation.ValidationError;
 
 import javax.persistence.Embedded;
 import javax.persistence.Id;
@@ -24,6 +26,8 @@ public class Post {
     @Id
     private Object rid;
 
+    private String name;
+
     //TODO make as embedded entity {
     private String header;
     private String body;
@@ -35,7 +39,7 @@ public class Post {
      * Blog that post belongs
      */
 
-  //  private Blog blog;
+    //  private Blog blog;
 
     @Embedded
     private List<Comment> comments = new ArrayList<>();
@@ -81,13 +85,13 @@ public class Post {
         return comments;
     }
 
-//    public Blog getBlog() {
-//        return blog;
-//    }
-//
-//    public void setBlog(Blog blog) {
-//        this.blog = blog;
-//    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public static List<Post> findAll() {
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
@@ -122,8 +126,7 @@ public class Post {
         }
     }
 
-    /**     *
-     *
+    /**
      * @return proxy with rid
      */
     public Post save() {
@@ -131,9 +134,38 @@ public class Post {
             return db.save(this);
         }
     }
+
     public void delete() {
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
-             db.delete(this);
+            db.delete(this);
         }
+    }
+
+    /**
+     * Check existance of name for that user
+     *
+     * @param name name to check
+     * @return
+     */
+    public static boolean isNameUnique(String name, String userId) {
+        try (OObjectDatabaseTx db = DB.acquireDatabase()) {
+            OSQLSynchQuery query = new OSQLSynchQuery<Blog>("select from Post where name = ? and user = ?");
+            List<Post> posts = db.command(query).execute(name, userId);
+            return posts.isEmpty();
+        }
+    }
+
+    /**
+     * Form validation
+     *
+     * @return
+     */
+    public String validate() {
+        //  List<ValidationError> errors = new ArrayList<ValidationError>();
+        System.out.println("validate post");
+        if (!isNameUnique(getName(), getUser().getRid().toString()))
+            return "post " + getName() + " already exist";
+        else
+            return null;
     }
 }

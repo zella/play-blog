@@ -58,7 +58,7 @@ public class Blog {
     }
 
     /**
-     * Check existance of name for that user
+     * Check global existance of blog name
      *
      * @param name name to check
      * @return
@@ -83,7 +83,10 @@ public class Blog {
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
             OSQLSynchQuery query = new OSQLSynchQuery<Blog>("select from Blog where name = ?");
             List<Blog> blogs = db.command(query).execute(name);
-            return blogs.get(0);
+            if (blogs.isEmpty())
+                return null;
+            else
+                return blogs.get(0);
         }
     }
 

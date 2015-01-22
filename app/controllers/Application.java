@@ -30,6 +30,7 @@ public class Application extends Controller {
      *
      * @return
      */
+    @Security.Authenticated(Secured.class)
     public static Result admin() {
         User localUser = getLocalUser(session());
         return ok(admin.render(Blog.findByUser(localUser.getRid().toString()), localUser));

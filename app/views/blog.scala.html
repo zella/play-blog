@@ -1,7 +1,7 @@
 @import model._
 @import com.feth.play.module.pa.views.html._
 
-@(posts: List[Post]) @main("Zella blog") {
+@(blog: Blog) @main("Zella blog") {
 
     @currentAuth() { auth =>
         @if(auth != null) {
@@ -25,8 +25,8 @@
 
     <h1>Our Zella Blog Tutorial</h1>
 
-    @for(post <- posts) {
-        <a href="@routes.Posts.viewPost(post.getRid().toString())">@post.getHeader</a>
+    @for(post <- blog.getPosts) {
+        <a href="@routes.Posts.viewPost(blog.getName, post.getName)">@post.getHeader</a>
         <p>@post.getBody</p>
         <hr/>
     }

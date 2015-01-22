@@ -23,7 +23,10 @@ public class Blogs extends Controller {
 
     public static Result viewBlog(String name) {
         Blog blog_ = Blog.findByName(name);
-        return ok(blog.render(blog_.getPosts()));
+        if (blog_ != null)
+            return ok(blog.render(blog_));
+        else
+            return forbidden("blog not found");//TODO blog not found page
     }
 
 

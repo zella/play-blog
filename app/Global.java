@@ -3,6 +3,7 @@ import model.Post;
 import model.User;
 import play.Application;
 import play.GlobalSettings;
+import play.data.format.Formatters;
 import play.mvc.Call;
 
 import com.feth.play.module.pa.PlayAuthenticate;
@@ -12,7 +13,9 @@ import com.feth.play.module.pa.exceptions.AuthException;
 
 import controllers.routes;
 
+import java.text.ParseException;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by dru on 10.01.2015.
@@ -23,15 +26,6 @@ public class Global extends GlobalSettings {
     @Override
     public void onStart(Application application) {
         super.onStart(application);
-
-    //    blog.getPosts().add(post);
-
-//        blog = blog.save();
-//
-//        List<Post> posts =  blog.getPosts();
-//
-//        blog = posts.get(0).getBlog();
-
 
         PlayAuthenticate.setResolver(new PlayAuthenticate.Resolver() {
 
@@ -86,6 +80,18 @@ public class Global extends GlobalSettings {
                 // We don't support moderated account merging in this sample.
                 // See the play-authenticate-usage project for an example
                 return null;
+            }
+        });
+
+        Formatters.register(User.class,new Formatters.SimpleFormatter<User>() {
+            @Override
+            public User parse(String text, Locale locale) throws ParseException {
+                return User.findById(text);
+            }
+
+            @Override
+            public String print(User user, Locale locale) {
+                return user.getRid().toString();
             }
         });
     }

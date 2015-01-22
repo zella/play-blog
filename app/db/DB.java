@@ -20,6 +20,7 @@ public class DB {
         database.getEntityManager().registerEntityClass(Comment.class);
         database.getEntityManager().registerEntityClass(LinkedAccount.class);
         database.getEntityManager().registerEntityClass(Blog.class);
+        database.setLazyLoading(false);//I have issue with javasisst and java8
         return database;
     }
 }

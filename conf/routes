@@ -4,7 +4,7 @@
 
 # Home page
 GET         /                                     controllers.Application.index()
-GET         /posts/:id                            controllers.Posts.viewPost(id: String)
+GET         /blogs/:blogName/:postName            controllers.Posts.viewPost(blogName, postName)
 POST        /addcomment/:postid                   controllers.Posts.addComment(postid: String)
 
 # Admins

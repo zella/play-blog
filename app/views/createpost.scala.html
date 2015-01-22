@@ -4,7 +4,13 @@
 @*********************
 * TODO form *
 *********************@
-@(blogName:String, user: User) @main("Create post") {
+@(postForm: Form[Post],blogName:String, user: User) @main("Create post") {
+
+    @if(postForm.hasGlobalErrors) {
+        <p class="error">
+        @postForm.globalError.message
+        </p>
+    }
 
     @if(user != null) {
         <h3>Create new blog post as @user.getName</h3>
@@ -13,6 +19,7 @@
             <textarea name="header" cols="100" rows="2"></textarea> <br>
             <div>Text</div>
             <textarea name="body" cols="100" rows="20"></textarea> <br>
+            <input type="hidden" name="user" value="@user.getRid().toString" />
             <input type="submit" value="Submit">
         }
     } else {

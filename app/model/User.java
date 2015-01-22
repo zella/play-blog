@@ -5,6 +5,7 @@ import com.feth.play.module.pa.user.AuthUser;
 import com.feth.play.module.pa.user.AuthUserIdentity;
 import com.feth.play.module.pa.user.EmailIdentity;
 import com.feth.play.module.pa.user.NameIdentity;
+import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 import db.DB;
@@ -76,6 +77,13 @@ public class User {
                 }
             }
             return db.save(user);
+        }
+    }
+
+    public static User findById(String id) {
+        try (OObjectDatabaseTx db = DB.acquireDatabase()) {
+            //TODO typing?
+            return db.load(new ORecordId(id));
         }
     }
 
