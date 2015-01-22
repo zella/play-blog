@@ -1,10 +1,23 @@
 @import model._
 @import com.feth.play.module.pa.views.html._
-
 @*********************
 * TODO form *
 *********************@
-@(postForm: Form[Post],blogName:String, user: User) @main("Create post") {
+@(postForm: Form[Post], blogName: String, user: User) @main("Create post") {
+
+
+    <!-- Codemirror and marked dependencies -->
+    <link rel="stylesheet" href="@routes.Assets.at("codemirror/lib/codemirror.css")">
+    <script src="@routes.Assets.at("codemirror/lib/codemirror.js")"></script>
+    <script src="@routes.Assets.at("codemirror/mode/markdown/markdown.js")"></script>
+    <script src="@routes.Assets.at("codemirror/addon/mode/overlay.js")"></script>
+    <script src="@routes.Assets.at("codemirror/mode/xml/xml.js")"></script>
+    <script src="@routes.Assets.at("codemirror/mode/gfm/gfm.js")"></script>
+    <script src="@routes.Assets.at("javascripts/marked.js")"></script>
+
+    <!-- HTML editor CSS and JavaScript -->
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/components/htmleditor.css")">
+    <script src="@routes.Assets.at("javascripts/components/htmleditor.min.js")"></script>
 
     @if(postForm.hasGlobalErrors) {
         <p class="error">
@@ -18,7 +31,7 @@
             <div>Title</div>
             <textarea name="header" cols="100" rows="2"></textarea> <br>
             <div>Text</div>
-            <textarea name="body" cols="100" rows="20"></textarea> <br>
+            <textarea data-uk-htmleditor="{markdown:true}" name="body" cols="100" rows="20"></textarea> <br>
             <input type="hidden" name="user" value="@user.getRid().toString" />
             <input type="submit" value="Submit">
         }
