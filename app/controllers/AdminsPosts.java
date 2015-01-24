@@ -48,8 +48,8 @@ public class AdminsPosts extends Controller {
         //TODO merge/update functionality
         Post toUpdate = Post.findById(id);
         toUpdate.setBody(postFromForm.getBody());
-        toUpdate.setHeader(postFromForm.getHeader());
-        toUpdate.setName(postFromForm.getHeader());//TODO
+    //    toUpdate.setHeader(postFromForm.getHeader());
+        toUpdate.setName(postFromForm.getName());//TODO test
         toUpdate.save();
         flash("success", "Post has been updated");
         /**
@@ -65,7 +65,7 @@ public class AdminsPosts extends Controller {
      */
     public static Result create(String blogName) {
         Form<Post> blogpostForm = form(Post.class);
-        return ok(createpost.render(blogpostForm,blogName, Application.getLocalUser(session())));
+        return ok(createpost.render(blogpostForm,blogName));
     }
 
     /**
@@ -74,14 +74,15 @@ public class AdminsPosts extends Controller {
     public static Result save(String blogName) {
         Form<Post> blogpostForm = form(Post.class).bindFromRequest();//
         if (blogpostForm.hasErrors()) {
-            return badRequest(createpost.render(blogpostForm,blogName, Application.getLocalUser(session())));
+            return badRequest(createpost.render(blogpostForm,blogName));
         }
         Post blogPost = blogpostForm.get();
-        blogPost.setName(blogPost.getHeader());//TODO
+      //  blogPost.setName(blogPost.getHeader());//TODO
         User localUser = Application.getLocalUser(session());
         blogPost.setUser(localUser);
         Blog blog = Blog.findByName(blogName);
         blog.getPosts().add(blogPost);
+        blogPost.setBlog(blog);
         blog.save();
         flash("success", "Post for \"" + blog.getName() + "\" has been created");
         return redirect(routes.Application.admin());

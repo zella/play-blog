@@ -25,7 +25,7 @@ public class AdminsBlogs extends Controller {
      */
     public static Result create() {
         Form<Blog> blogForm = form(Blog.class);
-        return ok(createblog.render(blogForm, Application.getLocalUser(session())));
+        return ok(createblog.render(blogForm));
     }
 
     /**
@@ -34,7 +34,7 @@ public class AdminsBlogs extends Controller {
     public static Result save() {
         Form<Blog> blogForm = form(Blog.class).bindFromRequest();
         if (blogForm.hasErrors()) { //TODO check existance
-            return badRequest(createblog.render(blogForm, Application.getLocalUser(session())));
+            return badRequest(createblog.render(blogForm));
         }
         Blog blog = blogForm.get();
         User localUser = Application.getLocalUser(session());

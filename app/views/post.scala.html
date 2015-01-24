@@ -1,6 +1,6 @@
 @import model._
 
-@(post: Post, user: User) @main(post.getHeader) {
+@(post: Post, user: User) @main(post.getName) {
     @*markdown parser and code highlighter*@
     <script type="text/javascript" src="@routes.Assets.at("javascripts/marked.js")"></script>
     <script type="text/javascript" src="@routes.Assets.at("javascripts/highlight.min.js")"></script>
@@ -9,7 +9,7 @@
     <article class="uk-article">
         <div id="blogpostContainer" data-post-id="@post.getRid()">
             <h1 class="uk-article-title">
-            @post.getHeader
+            @post.getName
             </h1>
 
             <p class="uk-article-meta">Written by Author on 12 April 2013. Posted in <a href="#">Blog</a></p>

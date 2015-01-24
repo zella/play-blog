@@ -29,7 +29,6 @@ public class Post {
     private String name;
 
     //TODO make as embedded entity {
-    private String header;
     private String body;
     //TODO }
 
@@ -38,8 +37,7 @@ public class Post {
     /**
      * Blog that post belongs
      */
-
-    //  private Blog blog;
+    private Blog blog;
 
     @Embedded
     private List<Comment> comments = new ArrayList<>();
@@ -47,9 +45,9 @@ public class Post {
     public Post() {
     }
 
-    public Post(String body, String header, User user) {
+    public Post(String body, String name, User user) {
         this.body = body;
-        this.header = header;
+        this.name = name;
         this.user = user;
     }
 
@@ -57,17 +55,17 @@ public class Post {
         return rid;
     }
 
-    public String getHeader() {
-        return header;
-    }
+//    public String getHeader() {
+//        return header;
+//    }
 
     public String getBody() {
         return body;
     }
 
-    public void setHeader(String header) {
-        this.header = header;
-    }
+//    public void setHeader(String header) {
+//        this.header = header;
+//    }
 
     public void setBody(String body) {
         this.body = body;
@@ -93,6 +91,14 @@ public class Post {
         this.name = name;
     }
 
+    public Blog getBlog() {
+        return blog;
+    }
+
+    public void setBlog(Blog blog) {
+        this.blog = blog;
+    }
+
     public static List<Post> findAll() {
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
             //TODO or sql query - test performance
@@ -102,7 +108,6 @@ public class Post {
         }
     }
 
-    //TODO or by user class
     public static List<Post> findByUserId(String userId) {
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
             OSQLSynchQuery query = new OSQLSynchQuery<User>("select from Post where user = ?)");
@@ -110,14 +115,6 @@ public class Post {
             return posts;
         }
     }
-
-//    public static List<Post> findByBlogName(String name) {
-//        try (OObjectDatabaseTx db = DB.acquireDatabase()) {
-//            OSQLSynchQuery query = new OSQLSynchQuery<User>("select from Post where blog = ?)");
-//            List<Post> posts = db.command(query).execute(name);
-//            return posts;
-//        }
-//    }
 
     public static Post findById(String id) {
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
@@ -130,6 +127,7 @@ public class Post {
      * @return proxy with rid
      */
     public Post save() {
+        if (getBlog() == null) throw new IllegalStateException("You need set blog to this post before saving");
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
             return db.save(this);
         }
@@ -147,10 +145,10 @@ public class Post {
      * @param name name to check
      * @return
      */
-    public static boolean isNameUnique(String name, String userId) {
+    public static boolean isNameUnique(String name, String blogName) {
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
-            OSQLSynchQuery query = new OSQLSynchQuery<Blog>("select from Post where name = ? and user = ?");
-            List<Post> posts = db.command(query).execute(name, userId);
+            OSQLSynchQuery query = new OSQLSynchQuery<Blog>("select from Post where name = ? and blog = ?");
+            List<Post> posts = db.command(query).execute(name, blogName);
             return posts.isEmpty();
         }
     }
@@ -163,7 +161,7 @@ public class Post {
     public String validate() {
         //  List<ValidationError> errors = new ArrayList<ValidationError>();
         System.out.println("validate post");
-        if (!isNameUnique(getName(), getUser().getRid().toString()))
+        if (!isNameUnique(getName(), getBlog().getName()))
             return "post " + getName() + " already exist";
         else
             return null;

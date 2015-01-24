@@ -26,7 +26,8 @@ public class Blog {
      */
     private User user;
 
-    //  @OneToMany
+    //TODO remove dependency.
+  //  @OneToMany
     private List<Post> posts = new ArrayList<>();
 
     public List<Post> getPosts() {
@@ -102,6 +103,7 @@ public class Blog {
      * @return proxy with rid
      */
     public Blog save() {
+
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
             return db.save(this);
         }

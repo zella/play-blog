@@ -83,15 +83,26 @@ public class Global extends GlobalSettings {
             }
         });
 
-        Formatters.register(User.class,new Formatters.SimpleFormatter<User>() {
+        Formatters.register(User.class, new Formatters.SimpleFormatter<User>() {
             @Override
-            public User parse(String text, Locale locale) throws ParseException {
-                return User.findById(text);
+            public User parse(String id, Locale locale) throws ParseException {
+                return User.findById(id);
             }
 
             @Override
             public String print(User user, Locale locale) {
                 return user.getRid().toString();
+            }
+        });
+        Formatters.register(Blog.class, new Formatters.SimpleFormatter<Blog>() {
+            @Override
+            public Blog parse(String name, Locale locale) throws ParseException {
+                return Blog.findByName(name);
+            }
+
+            @Override
+            public String print(Blog blog, Locale locale) {
+                return blog.getName();
             }
         });
     }
