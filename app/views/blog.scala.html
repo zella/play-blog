@@ -1,7 +1,11 @@
 @import model._
-@import com.feth.play.module.pa.views.html._
 @*TODO name is not url*@
 @(blog: Blog) @main(blog.getName) {
+
+    @*markdown parser and code highlighter*@
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/marked.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/highlight.min.js")"></script>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/highlight.min.css")">
 
     <div class="uk-grid" data-uk-grid-margin>
 
@@ -43,16 +47,13 @@
 
 
     </div>
-    <script>
-    //  var marked = require('marked');
 
-    $( ".blog-content" ).each(function( index ) {
-        var content = $( this ).html()
-    console.log( content );
-    $( this ).html(marked(content));
-  //  $( this ).html(marked($( this ).html));
-    });
-    //  document.getElementById('blog-content').innerHTML =  marked('# Marked in browser\n\nRendered by **marked**.') ;
+    <script>
+    hljs.initHighlightingOnLoad ( ) ;
+    $ ( ".blog-content" ).each ( function ( index ) {
+    var content = $ ( this ).text ( )
+    $ ( this ).html ( marked ( content ) ) ;
+    } ) ;
     </script>
 
 }
