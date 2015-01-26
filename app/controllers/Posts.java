@@ -42,11 +42,14 @@ public class Posts extends Controller {
      * @param postId
      * @return
      */
-    @Security.Authenticated(Secured.class)
     public static Result addComment(String postId) {
         Form<Comment> commentForm = form(Comment.class).bindFromRequest();
         Comment comment = commentForm.get();
-        comment.setName(Application.getLocalUser(session()).getName());
+        User user = Application.getLocalUser(session());
+        if (user == null)
+            comment.setName("Anonymous");
+        else
+            comment.setName(user.getName());
         Post post = Post.findById(postId);
         post.getComments().add(comment);
         post.save();

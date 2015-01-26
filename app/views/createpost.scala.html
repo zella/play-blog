@@ -26,7 +26,7 @@
     <h3>Create new blog post as @Application.getLocalUser(session).getName</h3>
     @helper.form(action = routes.AdminsPosts.save(blogName), 'id -> "createpostForm") {
         <div>Title</div>
-        <textarea name="header" cols="100" rows="2"></textarea> <br>
+        <textarea name="name" cols="100" rows="2"></textarea> <br>
         <div>Text</div>
         <textarea data-uk-htmleditor="{markdown:true}" name="body" cols="100" rows="20"></textarea> <br>
         @*<input type="hidden" name="user" value="@user.getRid().toString" />*@

@@ -5,9 +5,9 @@
 
     @helper.form(action = routes.AdminsPosts.update(postId)) {
 
-        @helper.textarea(blogpostForm("header"), '_label -> "Title", 'cols -> "100", 'rows -> "2")
+        @helper.textarea(blogpostForm("name"), '_label -> "Title", 'cols -> "100", 'rows -> "2")
         @helper.textarea(blogpostForm("body"), '_label -> "Text", 'cols -> "100", 'rows -> "20")
-        <input type="hidden" name="user" value="@user.getRid().toString" />
+        @*<input type="hidden" name="user" value="@user.getRid().toString" />*@
 
 
 

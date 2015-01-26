@@ -140,14 +140,14 @@ public class Post {
     }
 
     /**
-     * Check existance of name for that user
+     * Check existance of name for blog
      *
      * @param name name to check
      * @return
      */
     public static boolean isNameUnique(String name, String blogName) {
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
-            OSQLSynchQuery query = new OSQLSynchQuery<Blog>("select from Post where name = ? and blog = ?");
+            OSQLSynchQuery query = new OSQLSynchQuery<Blog>("select from Post where name = ? and blog.name = ?");
             List<Post> posts = db.command(query).execute(name, blogName);
             return posts.isEmpty();
         }
@@ -165,5 +165,25 @@ public class Post {
             return "post " + getName() + " already exist";
         else
             return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Post post = (Post) o;
+
+        if (name != null ? !name.equals(post.name) : post.name != null) return false;
+        if (rid != null ? !rid.equals(post.rid) : post.rid != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = rid != null ? rid.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
 }

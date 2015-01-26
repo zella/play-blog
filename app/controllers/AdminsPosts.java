@@ -48,10 +48,27 @@ public class AdminsPosts extends Controller {
         //TODO merge/update functionality
         Post toUpdate = Post.findById(id);
         toUpdate.setBody(postFromForm.getBody());
-    //    toUpdate.setHeader(postFromForm.getHeader());
+        //    toUpdate.setHeader(postFromForm.getHeader());
         toUpdate.setName(postFromForm.getName());//TODO test
         toUpdate.save();
         flash("success", "Post has been updated");
+        /**
+         * you can use redirect(routes.Application.viewPost(blogPost.save().getRid().toString()));
+         * and if you use @With(LocalUser.class) it preferred way.
+         * Only one plus of my solution - avoiding Post.findById query TODO only on create
+         */
+        return redirect(routes.Application.admin());
+    }
+
+    //TODO transactional or remove reference blog (1-many) posts
+    public static Result delete(String postId) {
+        Post toDelete = Post.findById(postId);
+        Blog blog = toDelete.getBlog();
+        blog.getPosts().remove(toDelete);
+        blog.save();
+        toDelete.delete();
+
+        flash("success", "Post has been deleted");
         /**
          * you can use redirect(routes.Application.viewPost(blogPost.save().getRid().toString()));
          * and if you use @With(LocalUser.class) it preferred way.
@@ -65,7 +82,7 @@ public class AdminsPosts extends Controller {
      */
     public static Result create(String blogName) {
         Form<Post> blogpostForm = form(Post.class);
-        return ok(createpost.render(blogpostForm,blogName));
+        return ok(createpost.render(blogpostForm, blogName));
     }
 
     /**
@@ -74,10 +91,10 @@ public class AdminsPosts extends Controller {
     public static Result save(String blogName) {
         Form<Post> blogpostForm = form(Post.class).bindFromRequest();//
         if (blogpostForm.hasErrors()) {
-            return badRequest(createpost.render(blogpostForm,blogName));
+            return badRequest(createpost.render(blogpostForm, blogName));
         }
         Post blogPost = blogpostForm.get();
-      //  blogPost.setName(blogPost.getHeader());//TODO
+        //  blogPost.setName(blogPost.getHeader());//TODO
         User localUser = Application.getLocalUser(session());
         blogPost.setUser(localUser);
         Blog blog = Blog.findByName(blogName);
