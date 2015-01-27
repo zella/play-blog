@@ -1,6 +1,7 @@
+
 @import model._
 
-@(blogs: List[Blog], user: User) @main("Admin") {
+@(postsAll: Map[Blog, List[Post]], user: User) @main("Admin") {
 
     @if(flash.contains("success")) {
         <p>
@@ -9,23 +10,21 @@
     }
 
     <h4>My blogs:</h4>
-    @for(blog <- blogs) {
-        <p>Blog: @blog.getName</p>
-        <ul>
-            @for(post <- blog.getPosts) {
-                <li>@post.getName <a href="@routes.AdminsPosts.edit(post.getRid.toString)">edit</a>
-                    @*TODO aligment*@
-                <form name="deleteForm" method="POST" action="@routes.AdminsPosts.delete(post.getRid.toString)">
-                    <input type="hidden" name="id" value="@post.getRid.toString">
-                    <input class="uk-button" type="submit" value="x">
-                </form>
 
-                </li>
+    @for((blog, posts) <- postsAll) {
+        @if(blog != null) {
+            <p>Blog: @blog.getName</p>
+        }
+        <ul>
+            @for(post <- posts) {
+                <li>@post.getName <a href="@routes.AdminsPosts.edit(post.getRid.toString, blog.getName)">edit</a></li>
             }
         <li><a class="btn" href="@routes.AdminsPosts.create(blog.getName)">Create new post</a> as @user.getName</li>
         </ul>
 
+
     }
+
     <p> <a class="btn" href="@routes.AdminsBlogs.create()">Create new blog</a> as @user.getName</p>
 
 }

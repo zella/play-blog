@@ -1,6 +1,6 @@
 @import model._
 @*TODO name is not url*@
-@(blog: Blog) @main(blog.getName) {
+@(posts: List[Post], blogName: String) @main(blogName) {
 
     @*markdown parser and code highlighter*@
     <script type="text/javascript" src="@routes.Assets.at("javascripts/marked.js")"></script>
@@ -11,12 +11,12 @@
 
         <div class="uk-width-medium-3-4">
 
-        @for(post <- blog.getPosts) {
+        @for(post <- posts) {
 
             <article class="uk-article">
 
                 <h1 class="uk-article-title">
-                    <a href="@routes.Posts.viewPost(blog.getName, post.getName)">@post.getName</a>
+                    <a href="@routes.Posts.viewPost(blogName, post.getName)">@post.getName</a>
                 </h1>
 
                 <p class="uk-article-meta">Written by Author on 12 April 2013. Posted in <a href="#">Blog</a></p>
@@ -26,7 +26,7 @@
 
 
                 <p>
-                    <a class="uk-button uk-button-primary" href="@routes.Posts.viewPost(blog.getName, post.getName)">Продолжить чтение</a>
+                    <a class="uk-button uk-button-primary" href="@routes.Posts.viewPost(blogName, post.getName)">Продолжить чтение</a>
                     <a class="uk-button" href="#">4 Comments</a>
                 </p>
 

@@ -10,6 +10,10 @@ import play.libs.F;
 import play.mvc.*;
 import views.html.*;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class Application extends Controller {
 
     public static final String FLASH_MESSAGE_KEY = "message";
@@ -32,8 +36,19 @@ public class Application extends Controller {
      */
     @Security.Authenticated(Secured.class)
     public static Result admin() {
+
         User localUser = getLocalUser(session());
-        return ok(admin.render(Blog.findByUser(localUser.getRid().toString()), localUser));
+        List<Post> posts = Post.findByUserId(localUser.getRid().toString());
+        Map<Blog, List<Post>> groupByBlog = posts
+                .stream().collect(
+                        Collectors.groupingBy(p -> p.getBlog()));
+
+
+        return ok(admin.render(groupByBlog, localUser));
+
+//
+//        User localUser = getLocalUser(session());
+//        return ok(admin.render(Blog.findByUser(localUser.getRid().toString()), localUser));
     }
 
 
@@ -52,6 +67,7 @@ public class Application extends Controller {
         );
     }
 
+    //TODO remove
     public static Result ajaxCall() {
         System.out.println("ajax");
         return ok("Ajax call!!!");

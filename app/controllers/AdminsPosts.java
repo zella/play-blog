@@ -26,27 +26,27 @@ public class AdminsPosts extends Controller {
     /**
      * Display the 'edit form' of a existing Post.
      *
-     * @param id Id of the blog post to edit
+     * @param postId Id of the blog post to edit
      */
-    public static Result edit(String id) {
-        Form<Post> blogpostForm = form(Post.class).fill(Post.findById(id));
-        return ok(editpost.render(id, Application.getLocalUser(session()), blogpostForm));
+    public static Result edit(String postId, String blogName) {
+        Form<Post> blogpostForm = form(Post.class).fill(Post.findById(postId));
+        return ok(editpost.render(postId, blogpostForm, blogName));
     }
 
     /**
      * Handle the 'edit form' submission
      *
-     * @param id Id of the blog post to edit
+     * @param postId Id of the blog post to edit
      */
-    public static Result update(String id) {
+    public static Result update(String postId_, String blogName) {
         Form<Post> blogpostForm = form(Post.class).bindFromRequest();
         if (blogpostForm.hasErrors()) {
-            return badRequest("TODO form has error");
+            return badRequest(editpost.render(postId_, blogpostForm, blogName));
         }
         Post postFromForm = blogpostForm.get();
         //TODO info about blog
         //TODO merge/update functionality
-        Post toUpdate = Post.findById(id);
+        Post toUpdate = Post.findById(postId_);
         toUpdate.setBody(postFromForm.getBody());
         //    toUpdate.setHeader(postFromForm.getHeader());
         toUpdate.setName(postFromForm.getName());//TODO test
@@ -60,20 +60,12 @@ public class AdminsPosts extends Controller {
         return redirect(routes.Application.admin());
     }
 
-    //TODO transactional or remove reference blog (1-many) posts
     public static Result delete(String postId) {
         Post toDelete = Post.findById(postId);
-        Blog blog = toDelete.getBlog();
-        blog.getPosts().remove(toDelete);
-        blog.save();
         toDelete.delete();
 
         flash("success", "Post has been deleted");
-        /**
-         * you can use redirect(routes.Application.viewPost(blogPost.save().getRid().toString()));
-         * and if you use @With(LocalUser.class) it preferred way.
-         * Only one plus of my solution - avoiding Post.findById query TODO only on create
-         */
+
         return redirect(routes.Application.admin());
     }
 
@@ -88,19 +80,19 @@ public class AdminsPosts extends Controller {
     /**
      * Handle the 'new blog post form' submission
      */
-    public static Result save(String blogName) {
+    public static Result save(String blogName_) {
+        //TODO formatters issue
         Form<Post> blogpostForm = form(Post.class).bindFromRequest();//
         if (blogpostForm.hasErrors()) {
-            return badRequest(createpost.render(blogpostForm, blogName));
+            return badRequest(createpost.render(blogpostForm, blogName_));
         }
         Post blogPost = blogpostForm.get();
-        //  blogPost.setName(blogPost.getHeader());//TODO
         User localUser = Application.getLocalUser(session());
         blogPost.setUser(localUser);
-        Blog blog = Blog.findByName(blogName);
-        blog.getPosts().add(blogPost);
+        Blog blog = Blog.findByName(blogName_);
+
         blogPost.setBlog(blog);
-        blog.save();
+        blogPost.save();
         flash("success", "Post for \"" + blog.getName() + "\" has been created");
         return redirect(routes.Application.admin());
 

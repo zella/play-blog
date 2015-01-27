@@ -1,15 +1,34 @@
 @import model._
 
-@(postId: String, user: User, blogpostForm: Form[Post]) @main("Edit post") {
+@(postId: String, postForm: Form[Post], blogName: String) @main("Edit post") {
 
+    <!-- Codemirror and marked dependencies -->
+    <link rel="stylesheet" href="@routes.Assets.at("codemirror/lib/codemirror.css")">
+    <script src="@routes.Assets.at("codemirror/lib/codemirror.js")"></script>
+    <script src="@routes.Assets.at("codemirror/mode/markdown/markdown.js")"></script>
+    <script src="@routes.Assets.at("codemirror/addon/mode/overlay.js")"></script>
+    <script src="@routes.Assets.at("codemirror/mode/xml/xml.js")"></script>
+    <script src="@routes.Assets.at("codemirror/mode/gfm/gfm.js")"></script>
+    <script src="@routes.Assets.at("javascripts/marked.js")"></script>
 
-    @helper.form(action = routes.AdminsPosts.update(postId)) {
+    <!-- HTML editor CSS and JavaScript -->
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/components/htmleditor.css")">
+    <script src="@routes.Assets.at("javascripts/components/htmleditor.min.js")"></script>
 
-        @helper.textarea(blogpostForm("name"), '_label -> "Title", 'cols -> "100", 'rows -> "2")
-        @helper.textarea(blogpostForm("body"), '_label -> "Text", 'cols -> "100", 'rows -> "20")
-        @*<input type="hidden" name="user" value="@user.getRid().toString" />*@
+    @if(postForm.hasGlobalErrors) {
+        <p class="error">
+        @postForm.globalError.message
+        </p>
+    }
 
+    <h3 class="uk-h3">Edit post</h3>
+    @helper.form(action = routes.AdminsPosts.update(postId, blogName)) {
 
+        @helper.textarea(postForm("name"), '_label -> "Title", 'cols -> "100", 'rows -> "2")
+        @helper.textarea(postForm("body"), '_label -> "Text", 'cols -> "100", 'rows -> "20", Symbol("data-uk-htmleditor") -> "{markdown:true}")
+        @*TODO helper*@
+        <input type="hidden" name="blog" value="@blogName" />
+        <input type="hidden" name="rid" value="@postId" />
 
         <div>
             <input type="submit" value="Save this post"> or

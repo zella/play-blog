@@ -26,18 +26,6 @@ public class Blog {
      */
     private User user;
 
-    //TODO remove dependency.
-  //  @OneToMany
-    private List<Post> posts = new ArrayList<>();
-
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
-
     public Object getRid() {
         return rid;
     }
@@ -125,5 +113,22 @@ public class Blog {
             return "blog with " + getName() + " already exist";
         else
             return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Blog blog = (Blog) o;
+
+        if (!getName().equals(blog.getName())) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
     }
 }

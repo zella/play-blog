@@ -1,3 +1,5 @@
+import com.orientechnologies.orient.core.id.ORID;
+import com.orientechnologies.orient.core.id.ORecordId;
 import model.Blog;
 import model.Post;
 import model.User;
@@ -103,6 +105,17 @@ public class Global extends GlobalSettings {
             @Override
             public String print(Blog blog, Locale locale) {
                 return blog.getName();
+            }
+        });
+        Formatters.register(ORID.class, new Formatters.SimpleFormatter<ORID>() {
+            @Override
+            public ORID parse(String text, Locale locale) throws ParseException {
+                return new ORecordId(text);
+            }
+
+            @Override
+            public String print(ORID oRecordId, Locale locale) {
+                return oRecordId.toString();
             }
         });
     }

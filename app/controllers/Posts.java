@@ -31,9 +31,10 @@ public class Posts extends Controller {
 
     public static Result viewPost(String blogName, String postName) {
         //TODO bug in javasisst asm? Update to new version; I turned off lazy loading for resolving it
-        Post post_ = Blog.findByName(blogName).getPosts()
-                .stream().filter(p -> p.getName().equals(postName)).findFirst().get();
-        return ok(post.render(post_, Application.getLocalUser(session())));
+//        Post post_ = Blog.findByName(blogName).getPosts()
+//                .stream().filter(p -> p.getName().equals(postName)).findFirst().get();
+
+        return ok(post.render(Post.findByPostNameAndBlogName(postName,blogName), Application.getLocalUser(session())));
     }
 
     /**
@@ -42,14 +43,11 @@ public class Posts extends Controller {
      * @param postId
      * @return
      */
+    @Security.Authenticated(Secured.class)
     public static Result addComment(String postId) {
         Form<Comment> commentForm = form(Comment.class).bindFromRequest();
         Comment comment = commentForm.get();
-        User user = Application.getLocalUser(session());
-        if (user == null)
-            comment.setName("Anonymous");
-        else
-            comment.setName(user.getName());
+        comment.setName(Application.getLocalUser(session()).getName());
         Post post = Post.findById(postId);
         post.getComments().add(comment);
         post.save();

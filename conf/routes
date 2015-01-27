@@ -23,8 +23,8 @@ POST        /admin/blogs                          controllers.AdminsBlogs.save()
 
 
 # Edit existing post
-GET         /admin/posts/:id                      controllers.AdminsPosts.edit(id:String)
-POST        /admin/posts/                         controllers.AdminsPosts.update(id:String)
+GET         /admin/posts/:id                      controllers.AdminsPosts.edit(id, blogName)
+POST        /admin/posts/                         controllers.AdminsPosts.update(id, blogName)
 
 # Delete existing post
 POST        /admin/posts/:id/delete               controllers.AdminsPosts.delete(id:String)

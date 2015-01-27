@@ -1,6 +1,7 @@
 package model;
 
 import com.google.common.collect.Lists;
+import com.orientechnologies.orient.core.id.ORID;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
@@ -24,7 +25,7 @@ import java.util.List;
 public class Post {
 
     @Id
-    private Object rid;
+    private ORID rid;
 
     private String name;
 
@@ -55,17 +56,16 @@ public class Post {
         return rid;
     }
 
-//    public String getHeader() {
-//        return header;
-//    }
+    //seems bad. need better validation mechanism
+    public void setRid(ORID rid) {
+        this.rid = rid;
+    }
+
 
     public String getBody() {
         return body;
     }
 
-//    public void setHeader(String header) {
-//        this.header = header;
-//    }
 
     public void setBody(String body) {
         this.body = body;
@@ -99,6 +99,11 @@ public class Post {
         this.blog = blog;
     }
 
+    /**
+     * For test cases
+     *
+     * @return
+     */
     public static List<Post> findAll() {
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
             //TODO or sql query - test performance
@@ -112,6 +117,22 @@ public class Post {
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
             OSQLSynchQuery query = new OSQLSynchQuery<User>("select from Post where user = ?)");
             List<Post> posts = db.command(query).execute(userId);
+            return posts;
+        }
+    }
+
+    public static Post findByPostNameAndBlogName(String postName, String blogName) {
+        try (OObjectDatabaseTx db = DB.acquireDatabase()) {
+            OSQLSynchQuery query = new OSQLSynchQuery<User>("select from Post where name = ? and blog.name = ?)");
+            List<Post> posts = db.command(query).execute(postName, blogName);
+            return posts.get(0);
+        }
+    }
+
+    public static List<Post> findByBlogName(String name) {
+        try (OObjectDatabaseTx db = DB.acquireDatabase()) {
+            OSQLSynchQuery query = new OSQLSynchQuery<User>("select from Post where blog.name = ?)");
+            List<Post> posts = db.command(query).execute(name);
             return posts;
         }
     }
@@ -160,7 +181,10 @@ public class Post {
      */
     public String validate() {
         //  List<ValidationError> errors = new ArrayList<ValidationError>();
+        //TODO epmty text validation
         System.out.println("validate post");
+        //if update, name can be same
+        if (getRid() != null) return null;
         if (!isNameUnique(getName(), getBlog().getName()))
             return "post " + getName() + " already exist";
         else
