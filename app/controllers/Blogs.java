@@ -21,13 +21,17 @@ import static play.data.Form.form;
  */
 public class Blogs extends Controller {
 
-    public static Result viewBlog(String blogName) {
+    public static Result viewBlog(int page, String blogName) {
         Blog blog_ = Blog.findByName(blogName);
         if (blog_ != null)
-            return ok(blog.render(Post.findByBlogName(blogName), blogName));
+            return ok(blog.render(Post.page(page, 3, blogName),blogName));
         else
             return forbidden("blog not found");//TODO blog not found page
     }
+
+//    public static Result listPosts(int page, String blogName) {
+//        return ok(               list.render(Post.page(page, 10, blogName)));
+//    }
 
 
 }

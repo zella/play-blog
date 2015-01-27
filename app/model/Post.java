@@ -3,6 +3,7 @@ package model;
 import com.google.common.collect.Lists;
 import com.orientechnologies.orient.core.id.ORID;
 import com.orientechnologies.orient.core.id.ORecordId;
+import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 import controllers.Application;
@@ -129,11 +130,21 @@ public class Post {
         }
     }
 
-    public static List<Post> findByBlogName(String name) {
+    public static List<Post> findByBlogName(String name, long skip, long limit) {
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
-            OSQLSynchQuery query = new OSQLSynchQuery<User>("select from Post where blog.name = ?)");
-            List<Post> posts = db.command(query).execute(name);
+            OSQLSynchQuery query = new OSQLSynchQuery<Post>("select from Post where blog.name = \"" + name + "\" SKIP " + skip + " LIMIT " + limit);
+            List<Post> posts = db.command(query).execute(name, skip, limit);
             return posts;
+        }
+    }
+
+    public static long count(String name) {
+        try (OObjectDatabaseTx db = DB.acquireDatabase()) {
+            OSQLSynchQuery query = new OSQLSynchQuery<ODocument>("select COUNT(*) from Post where blog.name =\"" + name + "\"");
+            //  Object total_ =  (db.query(query).get(0));
+            long total = ((ODocument) (db.query(query).get(0))).field("COUNT");//TODO test and command instead
+
+            return total;
         }
     }
 
@@ -172,6 +183,30 @@ public class Post {
             List<Post> posts = db.command(query).execute(name, blogName);
             return posts.isEmpty();
         }
+    }
+
+
+    /**
+     * Return a page of computer
+     *
+     * @param page     Page to display
+     * @param pageSize Number of computers per page
+     */
+    public static Page page(int page, int pageSize, String blogName) {
+        if (page < 1) page = 1;
+
+        long total = Post.count(blogName);
+
+        List<Post> data = Post.findByBlogName(blogName, (page - 1) * pageSize, pageSize);
+
+
+//                List<Computer>data=JPA.em()
+//                .createQuery("from Computer c where lower(c.name) like ? order by c." + sortBy + " " + order)
+//                .setParameter(1, "%" + filter.toLowerCase() + "%")
+//                .setFirstResult((page - 1) * pageSize)
+//                .setMaxResults(pageSize)
+//                .getResultList();
+        return new Page(data, total, page, pageSize);
     }
 
     /**

@@ -1,7 +1,20 @@
 @import model._
 @*TODO name is not url*@
-@(posts: List[Post], blogName: String) @main(blogName) {
+@(page: Page, blogName: String)
 
+
+@****************************************
+* Helper generating navigation links *
+****************************************@
+@link(newPage: Int) = @{
+
+    // Generate the link
+    routes.Blogs.viewBlog(newPage, blogName)
+
+}
+
+
+@main(blogName) {
     @*markdown parser and code highlighter*@
     <script type="text/javascript" src="@routes.Assets.at("javascripts/marked.js")"></script>
     <script type="text/javascript" src="@routes.Assets.at("javascripts/highlight.min.js")"></script>
@@ -11,29 +24,42 @@
 
         <div class="uk-width-medium-3-4">
 
-        @for(post <- posts) {
+            @for(post <- page.getList) {
 
-            <article class="uk-article">
+                <article class="uk-article">
 
-                <h1 class="uk-article-title">
-                    <a href="@routes.Posts.viewPost(blogName, post.getName)">@post.getName</a>
-                </h1>
+                    <h1 class="uk-article-title">
+                        <a href="@routes.Posts.viewPost(blogName, post.getName)">@post.getName</a>
+                    </h1>
 
-                <p class="uk-article-meta">Written by Author on 12 April 2013. Posted in <a href="#">Blog</a></p>
+                    <p class="uk-article-meta">Written by Author on 12 April 2013. Posted in <a href="#">Blog</a></p>
 
-                <p class="blog-content">@post.getBody</p>
-
-
-
-                <p>
-                    <a class="uk-button uk-button-primary" href="@routes.Posts.viewPost(blogName, post.getName)">Продолжить чтение</a>
-                    <a class="uk-button" href="#">4 Comments</a>
-                </p>
-
-            </article>
+                    <p class="blog-content">@post.getBody</p>
 
 
-        }
+
+                    <p>
+                        <a class="uk-button uk-button-primary" href="@routes.Posts.viewPost(blogName, post.getName)">Продолжить чтение</a>
+                        <a class="uk-button" href="#">4 Comments</a>
+                    </p>
+
+                </article>
+            }
+            <ul class="uk-pagination">
+                @if(page.hasPrev) {
+                    <li><a href="@link(page.getPageIndex - 1)"><i class="uk-icon-angle-double-left"></i></a></li>
+                }else {
+                    <li class="uk-disabled"><span><i class="uk-icon-angle-double-left"></i></span></li>
+                }
+                <li class="uk-active"><span>@page.getPageIndex</span></li>
+
+                @if(page.hasNext) {
+                    <li><a href="@link(page.getPageIndex + 1)"><i class="uk-icon-angle-double-right"></i></a></li>
+                }else {
+                    <li class="uk-disabled"><span><i class="uk-icon-angle-double-right"></i></span></li>
+                }
+
+            </ul>
         </div>
 
         @*TODO*@

@@ -30,7 +30,7 @@ POST        /admin/posts/                         controllers.AdminsPosts.update
 POST        /admin/posts/:id/delete               controllers.AdminsPosts.delete(id:String)
 
 # Blog main page
-GET         /blogs/:name                          controllers.Blogs.viewBlog(name:String)
+GET         /blogs/:name                          controllers.Blogs.viewBlog(page: Int ?= 0, name:String)
 
 # Authenticate
 GET         /logout                               com.feth.play.module.pa.controllers.Authenticate.logout
