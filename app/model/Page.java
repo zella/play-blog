@@ -16,6 +16,12 @@ public class Page {
     private final int pageIndex;
     private final List<Post> list;
 
+    /**
+     * @param data     posts on page
+     * @param total    total posts
+     * @param page     number
+     * @param pageSize count posts on page
+     */
     public Page(List<Post> data, long total, int page, int pageSize) {
         this.list = data;
         this.totalRowCount = total;
@@ -40,7 +46,14 @@ public class Page {
     }
 
     public boolean hasNext() {
-        return (totalRowCount/pageSize) >= pageIndex;
+        return (totalRowCount / pageSize) >= pageIndex;
+    }
+
+    public int getTotalPages() {
+        //TODO
+        int res = (int) Math.ceil((float)totalRowCount / (float)pageSize);
+        System.out.println(res);
+        return res;
     }
 
     public String getDisplayXtoYofZ() {

@@ -4,16 +4,13 @@
 @(page: Page, blogName: String)
 
 
-    @****************************************
-    * Helper generating navigation links *
-    ****************************************@
-    @link(newPage: Int) = @{
-
+@****************************************
+* Helper generating navigation links *
+****************************************@
+@link(newPage: Int) = @{
     // Generate the link
     routes.Blogs.viewBlog(newPage, blogName)
-
 }
-
 
 @main(blogName) {
     @*markdown parser and code highlighter*@
@@ -44,13 +41,23 @@
 
                 </article>
             }
+
+
             <ul class="uk-pagination">
+
                 @if(page.hasPrev) {
                     <li><a href="@link(page.getPageIndex - 1)"><i class="uk-icon-angle-double-left"></i></a></li>
                 } else {
                     <li class="uk-disabled"><span><i class="uk-icon-angle-double-left"></i></span></li>
                 }
-                <li class="uk-active"><span>@page.getPageIndex</span></li>
+
+                @for(x <- TemplateHelpers.pagingRange(page.getTotalPages, 3, page.getPageIndex)) {
+                    @if(page.getPageIndex == x) {
+                        <li class="uk-active"><span>@x</span></li>>
+                    } else {
+                        <li><a href="@link(x)"><span>@x</span></a></li>>
+                    }
+                }
 
                 @if(page.hasNext) {
                     <li><a href="@link(page.getPageIndex + 1)"><i class="uk-icon-angle-double-right"></i></a></li>
