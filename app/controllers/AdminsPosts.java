@@ -1,16 +1,11 @@
 package controllers;
 
-import com.feth.play.module.pa.PlayAuthenticate;
-import com.feth.play.module.pa.user.AuthUser;
 import model.Blog;
-import model.Comment;
 import model.Post;
 import model.User;
-import play.Routes;
 import play.data.Form;
-import play.libs.F;
-import play.libs.Json;
 import play.mvc.*;
+import util.TextUtils;
 import views.html.*;
 
 import static play.data.Form.*;
@@ -22,6 +17,8 @@ import static play.data.Form.*;
 @Security.Authenticated(Secured.class)
 public class AdminsPosts extends Controller {
 
+
+    public static final int TRUNCATED_MEDIUM_CHAR_COUNT = 150;
 
     /**
      * Display the 'edit form' of a existing Post.
@@ -36,7 +33,7 @@ public class AdminsPosts extends Controller {
     /**
      * Handle the 'edit form' submission
      *
-     * @param postId Id of the blog post to edit
+     * @param postId_ Id of the blog post to edit
      */
     public static Result update(String postId_, String blogName) {
         Form<Post> blogpostForm = form(Post.class).bindFromRequest();
@@ -49,7 +46,8 @@ public class AdminsPosts extends Controller {
         Post toUpdate = Post.findById(postId_);
         toUpdate.setBody(postFromForm.getBody());
         //    toUpdate.setHeader(postFromForm.getHeader());
-        toUpdate.setName(postFromForm.getName());//TODO test
+        toUpdate.setName(postFromForm.getName());
+        toUpdate.setHtmlPreview(TextUtils.generateTruncateHtmlPreview(toUpdate.getBody(), TRUNCATED_MEDIUM_CHAR_COUNT));
         toUpdate.save();
         flash("success", "Post has been updated");
         /**
@@ -87,6 +85,7 @@ public class AdminsPosts extends Controller {
             return badRequest(createpost.render(blogpostForm, blogName_));
         }
         Post blogPost = blogpostForm.get();
+        blogPost.setHtmlPreview(TextUtils.generateTruncateHtmlPreview(blogPost.getBody(), 50));
         User localUser = Application.getLocalUser(session());
         blogPost.setUser(localUser);
         Blog blog = Blog.findByName(blogName_);
@@ -98,5 +97,7 @@ public class AdminsPosts extends Controller {
 
 
     }
+
+
 
 }

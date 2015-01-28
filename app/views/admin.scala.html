@@ -1,4 +1,3 @@
-
 @import model._
 
 @(postsAll: Map[Blog, List[Post]], user: User) @main("Admin") {
@@ -21,8 +20,6 @@
             }
         <li><a class="btn" href="@routes.AdminsPosts.create(blog.getName)">Create new post</a> as @user.getName</li>
         </ul>
-
-
     }
 
     <p> <a class="btn" href="@routes.AdminsBlogs.create()">Create new blog</a> as @user.getName</p>

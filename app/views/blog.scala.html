@@ -1,12 +1,13 @@
 @import model._
+@import util._
 @*TODO name is not url*@
 @(page: Page, blogName: String)
 
 
-@****************************************
-* Helper generating navigation links *
-****************************************@
-@link(newPage: Int) = @{
+    @****************************************
+    * Helper generating navigation links *
+    ****************************************@
+    @link(newPage: Int) = @{
 
     // Generate the link
     routes.Blogs.viewBlog(newPage, blogName)
@@ -33,10 +34,8 @@
                     </h1>
 
                     <p class="uk-article-meta">Written by Author on 12 April 2013. Posted in <a href="#">Blog</a></p>
-
-                    <p class="blog-content">@post.getBody</p>
-
-
+                    @*<p class="blog-content">@TextUtils.truncateStringLineBreak(post.getBody, 10)</p>*@
+                    <p class="blog-content">@post.getHtmlPreview</p>
 
                     <p>
                         <a class="uk-button uk-button-primary" href="@routes.Posts.viewPost(blogName, post.getName)">Продолжить чтение</a>
@@ -48,14 +47,14 @@
             <ul class="uk-pagination">
                 @if(page.hasPrev) {
                     <li><a href="@link(page.getPageIndex - 1)"><i class="uk-icon-angle-double-left"></i></a></li>
-                }else {
+                } else {
                     <li class="uk-disabled"><span><i class="uk-icon-angle-double-left"></i></span></li>
                 }
                 <li class="uk-active"><span>@page.getPageIndex</span></li>
 
                 @if(page.hasNext) {
                     <li><a href="@link(page.getPageIndex + 1)"><i class="uk-icon-angle-double-right"></i></a></li>
-                }else {
+                } else {
                     <li class="uk-disabled"><span><i class="uk-icon-angle-double-right"></i></span></li>
                 }
 
@@ -78,7 +77,7 @@
     hljs.initHighlightingOnLoad ( ) ;
     $ ( ".blog-content" ).each ( function ( index ) {
     var content = $ ( this ).text ( )
-    $ ( this ).html ( marked ( content ) ) ;
+    $ ( this ).html ( content ) ;
     } ) ;
     </script>
 

@@ -10,6 +10,7 @@ import play.libs.F;
 import play.mvc.*;
 import views.html.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,6 +30,7 @@ public class Application extends Controller {
     public static Result index() {
         return ok(index.render(Post.findAll()));
     }
+
     /**
      * Display admin page
      *
@@ -39,9 +41,20 @@ public class Application extends Controller {
 
         User localUser = getLocalUser(session());
         List<Post> posts = Post.findByUserId(localUser.getRid().toString());
+        //TODO if posts empty show blogs
+
+        List<Blog> blogs = Blog.findByUser(localUser.getRid().toString());
+
         Map<Blog, List<Post>> groupByBlog = posts
                 .stream().collect(
                         Collectors.groupingBy(p -> p.getBlog()));
+
+        //TODO stream
+        blogs.forEach(b -> {
+            if (!groupByBlog.containsKey(b)) {
+                groupByBlog.put(b, new ArrayList<Post>());
+            }
+        });
 
 
         return ok(admin.render(groupByBlog, localUser));

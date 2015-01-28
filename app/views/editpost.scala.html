@@ -25,7 +25,7 @@
     @helper.form(action = routes.AdminsPosts.update(postId, blogName)) {
 
         @helper.textarea(postForm("name"), '_label -> "Title", 'cols -> "100", 'rows -> "2")
-        @helper.textarea(postForm("body"), '_label -> "Text", 'cols -> "100", 'rows -> "20", Symbol("data-uk-htmleditor") -> "{markdown:true}")
+        @helper.textarea(postForm("body"), 'id -> "postBody", '_label -> "Text", Symbol("data-uk-htmleditor") -> "{markdown:true}")
         @*TODO helper*@
         <input type="hidden" name="blog" value="@blogName" />
         <input type="hidden" name="rid" value="@postId" />
@@ -34,8 +34,6 @@
             <input type="submit" value="Save this post"> or
             <a href="@routes.Application.admin()" class="btn">Cancel</a>
         </div>
-
     }
-
 
 }

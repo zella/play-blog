@@ -6,15 +6,11 @@ import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
-import controllers.Application;
 import db.DB;
-import play.data.validation.ValidationError;
 
 import javax.persistence.Embedded;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,6 +29,8 @@ public class Post {
     //TODO make as embedded entity {
     private String body;
     //TODO }
+
+    String htmlPreview;
 
     private User user;
 
@@ -70,6 +68,14 @@ public class Post {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getHtmlPreview() {
+        return htmlPreview;
+    }
+
+    public void setHtmlPreview(String htmlPreview) {
+        this.htmlPreview = htmlPreview;
     }
 
     public User getUser() {
@@ -126,7 +132,7 @@ public class Post {
         try (OObjectDatabaseTx db = DB.acquireDatabase()) {
             OSQLSynchQuery query = new OSQLSynchQuery<User>("select from Post where name = ? and blog.name = ?)");
             List<Post> posts = db.command(query).execute(postName, blogName);
-            return posts.get(0);
+            return (posts.isEmpty()) ? null : posts.get(0);
         }
     }
 
@@ -216,7 +222,7 @@ public class Post {
      */
     public String validate() {
         //  List<ValidationError> errors = new ArrayList<ValidationError>();
-        //TODO epmty text validation
+        //TODO epmty text validation, and maybe belongs to user
         System.out.println("validate post");
         //if update, name can be same
         if (getRid() != null) return null;
