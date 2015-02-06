@@ -24,14 +24,8 @@ public class Blogs extends Controller {
     public static Result viewBlog(int page, String blogName) {
         Blog blog_ = Blog.findByName(blogName);
         if (blog_ != null)
-            return ok(blog.render(Post.page(page, 3, blogName),blogName));//TODO 3 => config
+            return ok(blog.render(Post.page(page, 3, blogName),blogName, Post.findByBlogName(blogName,0,-1)));//TODO 3 => config
         else
             return forbidden("blog not found");//TODO blog not found page
     }
-
-//    public static Result listPosts(int page, String blogName) {
-//        return ok(               list.render(Post.page(page, 10, blogName)));
-//    }
-
-
 }

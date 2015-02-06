@@ -24,6 +24,6 @@ public class Secured extends Security.Authenticator {
     public Result onUnauthorized(final Context ctx) {
         ctx.flash().put(Application.FLASH_MESSAGE_KEY, "Nice try, but you need to log in first!");
         //TODO auth protect from commenting only
-        return unauthorized("need login suka");
+        return unauthorized("need login");
     }
 }
