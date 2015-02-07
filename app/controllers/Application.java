@@ -41,7 +41,6 @@ public class Application extends Controller {
 
         User localUser = getLocalUser(session());
         List<Post> posts = Post.findByUserId(localUser.getRid().toString());
-        //TODO if posts empty show blogs
 
         List<Blog> blogs = Blog.findByUser(localUser.getRid().toString());
 

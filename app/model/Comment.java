@@ -1,7 +1,7 @@
 package model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+
+import java.util.Date;
 
 /**
  * Created by dru on 09.01.2015.
@@ -9,11 +9,17 @@ import javax.persistence.Id;
 
 public class Comment {
 
-//    @Id
-//    private Object rid;
-
     private String name;
     private String body;
+    private Date date;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     public String getName() {
         return name;

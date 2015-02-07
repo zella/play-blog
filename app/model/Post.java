@@ -11,6 +11,7 @@ import db.DB;
 import javax.persistence.Embedded;
 import javax.persistence.Id;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class Post {
     private String body;
     //TODO }
 
-    String htmlPreview;
+    private String htmlPreview;
 
     private User user;
 
@@ -38,6 +39,8 @@ public class Post {
      * Blog that post belongs
      */
     private Blog blog;
+
+    private Date creationDate;
 
     @Embedded
     private List<Comment> comments = new ArrayList<>();
@@ -60,6 +63,13 @@ public class Post {
         this.rid = rid;
     }
 
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
 
     public String getBody() {
         return body;

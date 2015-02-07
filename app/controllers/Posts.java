@@ -14,6 +14,7 @@ import views.html.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +49,7 @@ public class Posts extends Controller {
         Form<Comment> commentForm = form(Comment.class).bindFromRequest();
         Comment comment = commentForm.get();
         comment.setName(Application.getLocalUser(session()).getName());
+        comment.setDate(new Date());
         Post post = Post.findById(postId);
         post.getComments().add(comment);
         post.save();

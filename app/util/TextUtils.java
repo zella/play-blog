@@ -4,8 +4,10 @@ import org.markdown4j.Markdown4jProcessor;
 
 import java.io.IOException;
 import java.text.BreakIterator;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -118,10 +120,15 @@ public class TextUtils {
         }
         String truncatedHtml = TextUtils.truncateHtmlWords(html, charCount);
 
-        if (truncatedHtml.length()> charCount*2){
+        if (truncatedHtml.length() > charCount * 2) {
             truncatedHtml = TextUtils.truncateStringLineBreak(truncatedHtml, charCount);
         }
-        truncatedHtml+="\n\n. . . ";
-        return  truncatedHtml;
+        truncatedHtml += "\n\n. . . ";
+        return truncatedHtml;
+    }
+
+    public static String toReadableDate(Date date) {
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy HH:mm");
+        return sdf.format(date);
     }
 }

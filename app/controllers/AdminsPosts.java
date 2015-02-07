@@ -8,6 +8,8 @@ import play.mvc.*;
 import util.TextUtils;
 import views.html.*;
 
+import java.util.Date;
+
 import static play.data.Form.*;
 
 /**
@@ -88,6 +90,8 @@ public class AdminsPosts extends Controller {
         blogPost.setHtmlPreview(TextUtils.generateTruncateHtmlPreview(blogPost.getBody(), 50));
         User localUser = Application.getLocalUser(session());
         blogPost.setUser(localUser);
+        blogPost.setCreationDate(new Date());
+
         Blog blog = Blog.findByName(blogName_);
 
         blogPost.setBlog(blog);
@@ -97,7 +101,6 @@ public class AdminsPosts extends Controller {
 
 
     }
-
 
 
 }

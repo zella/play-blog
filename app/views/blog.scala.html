@@ -1,7 +1,7 @@
 @import model._
 @import util._
 @*TODO name is not url*@
-@(page: Page, blogName: String, allPosts: List[Post])
+@(page: Page, blogName: String, allPosts: List[Post], user:User)
 
 
 @****************************************
@@ -30,7 +30,7 @@
                         <a href="@routes.Posts.viewPost(blogName, post.getName)">@post.getName</a>
                     </h1>
 
-                    <p class="uk-article-meta">Written by Author on 12 April 2013. Posted in <a href="#">Blog</a></p>
+                    <p class="uk-article-meta">Written by @user.getName on @TextUtils.toReadableDate(post.getCreationDate)</p>
                     @*<p class="blog-content">@TextUtils.truncateStringLineBreak(post.getBody, 10)</p>*@
                     <p class="blog-content">@post.getHtmlPreview</p>
 
