@@ -13,7 +13,8 @@
             @post.getName
             </h1>
 
-            <p class="uk-article-meta">Written by @user.getName  on @TextUtils.toReadableDate(post.getCreationDate)</p>
+            <p class="uk-article-meta">
+                Written by @post.getUser.getName  on @TextUtils.toReadableDate(post.getCreationDate)</p>
 
             <p class="blog-content">@post.getBody</p>
             <hr/>
@@ -45,12 +46,7 @@
             <input type="submit" value="Submit">
         </form>
     } else {
-        @*TODO*@
-        <h3>Add a comment as Anonymous</h3>
-        <form id = "commentForm">
-            <textarea name="body" cols="60" rows="10"></textarea> <br>
-            <input type="submit" value="Submit">
-        </form>
+        <p>Чтобы оставить комментарии необходимо авторизироваться</p>
     }
     <script>
     hljs.initHighlightingOnLoad ( ) ;

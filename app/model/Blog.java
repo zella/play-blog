@@ -87,6 +87,14 @@ public class Blog {
         }
     }
 
+    public static List<Blog> findAll() {
+        try (OObjectDatabaseTx db = DB.acquireDatabase()) {
+            OSQLSynchQuery query = new OSQLSynchQuery<Blog>("select from Blog");
+            List<Blog> blogs = db.command(query).execute();
+            return blogs;
+        }
+    }
+
     /**
      * @return proxy with rid
      */
