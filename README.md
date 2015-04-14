@@ -1,7 +1,7 @@
 # play-blog  
 ## Blog system written with play framework 2.3.x (java)
 
-Exapmle http://www.blogzella.tk
+Example http://www.blogzella.tk
 
 **What using:**  
 * [orientdb](http://www.orientechnologies.com/orientdb/) as database
