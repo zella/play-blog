@@ -1,0 +1,18 @@
+<script>
+$("#commentForm").submit(function () {
+       jsRoutes.controllers.Posts.addComment($("#blogpostContainer").data("post-id")).ajax({
+            success: function (data) {
+                $("#commentsContainer").append(data);
+                $('#commentForm').each(function () {
+                    this.reset();
+                });
+            },
+            error: function () {
+                alert("Error!")
+            },
+            data: $("#commentForm").serialize()
+        })
+        return false;
+    }
+)
+</script>

@@ -1,22 +1,11 @@
 package controllers;
 
-import com.feth.play.module.pa.PlayAuthenticate;
-import com.feth.play.module.pa.user.AuthUser;
 import model.*;
-import model.User;
-import org.reflections.adapters.JavassistAdapter;
-import play.Routes;
 import play.data.Form;
-import play.libs.F;
-import play.libs.Json;
 import play.mvc.*;
 import views.html.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static play.data.Form.form;
 
@@ -35,7 +24,7 @@ public class Posts extends Controller {
 //        Post post_ = Blog.findByName(blogName).getPosts()
 //                .stream().filter(p -> p.getName().equals(postName)).findFirst().get();
 
-        return ok(post.render(Post.findByPostNameAndBlogName(postName,blogName), Application.getLocalUser(session())));
+        return ok(post.render(Post.findByPostNameAndBlogName(postName, blogName), Application.getLocalUser(session())));
     }
 
     /**
@@ -53,6 +42,7 @@ public class Posts extends Controller {
         Post post = Post.findById(postId);
         post.getComments().add(comment);
         post.save();
-        return ok(Json.toJson(comment));
+//        return ok(Json.toJson(comment));
+        return ok(views.html.comment.comment.render(comment));
     }
 }

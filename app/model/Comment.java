@@ -1,6 +1,8 @@
 package model;
 
 
+import util.TextUtils;
+
 import java.util.Date;
 
 /**
@@ -35,5 +37,9 @@ public class Comment {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getReadableDate(){
+        return TextUtils.toReadableDate(getDate());
     }
 }
