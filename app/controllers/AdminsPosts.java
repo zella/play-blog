@@ -57,7 +57,7 @@ public class AdminsPosts extends Controller {
          * and if you use @With(LocalUser.class) it preferred way.
          * Only one plus of my solution - avoiding Post.findById query TODO only on create
          */
-        return redirect(routes.Application.admin());
+        return redirect(controllers.routes.Application.admin());
     }
 
     public static Result delete(String postId) {
@@ -66,7 +66,7 @@ public class AdminsPosts extends Controller {
 
         flash("success", "Post has been deleted");
 
-        return redirect(routes.Application.admin());
+        return redirect(controllers.routes.Application.admin());
     }
 
     /**
