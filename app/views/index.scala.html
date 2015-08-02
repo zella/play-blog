@@ -1,16 +1,7 @@
-@import model._
-@import com.feth.play.module.pa.views.html._
+@(message: String)
 
-@() @main("Zella blog") {
+@main("Welcome to Play") {
 
+    @play20.welcome(message, style = "Java")
 
-    <h1 class="uk-h1"> Zella Blog System(In development). Please, login for creating blogs and commenting others</h1>
-
-    <h3 class="uk-h3">All blogs listed here:</h3>
-
-    <ul>
-    @for(blog <- Blog.findAll()) {
-            <li><a href="@routes.Blogs.viewBlog(0, blog.getName)">@blog.getName</a></li>
-    }
-    </ul>
 }

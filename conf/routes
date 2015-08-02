@@ -3,43 +3,7 @@
 # ~~~~
 
 # Home page
-GET         /                                     controllers.Application.index()
-GET         /blogs/:blogName/:postName            controllers.Posts.viewPost(blogName, postName)
-POST        /addcomment/:postid                   controllers.Posts.addComment(postid: String)
-
-# Admins
-
-#Admin page
-GET         /admin                                controllers.Application.admin()
-
-# Add post
-GET         /admin/posts/new                      controllers.AdminsPosts.create(blogName)
-POST        /admin/posts                          controllers.AdminsPosts.save(blogName)
-
-# Add blog
-GET         /admin/blogs/new                      controllers.AdminsBlogs.create()
-POST        /admin/blogs                          controllers.AdminsBlogs.save()
-
-
-
-# Edit existing post
-GET         /admin/posts/:id                      controllers.AdminsPosts.edit(id, blogName)
-POST        /admin/posts/                         controllers.AdminsPosts.update(id, blogName)
-
-# Delete existing post
-POST        /admin/posts/:id/delete               controllers.AdminsPosts.delete(id:String)
-
-# Blog main page
-GET         /blogs/:name                          controllers.Blogs.viewBlog(page: Int ?= 0, name:String)
-
-# Authenticate
-GET         /logout                               com.feth.play.module.pa.controllers.Authenticate.logout
-GET         /authenticate/:provider               com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
-GET         /authenticate/:provider/denied        controllers.Application.oAuthDenied(provider: String)
+GET     /                           controllers.Application.index()
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                         controllers.Assets.at(path="/public", file)
-# Test ajax action. TODO remove
-GET         /ajax_call                            controllers.Application.ajaxCall()
-# For calling routes from js
-GET         /javascriptRoutes                     controllers.Application.javascriptRoutes()
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
