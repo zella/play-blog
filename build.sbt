@@ -1,23 +1,18 @@
-name := """play-blog"""
+name := """easy_blog"""
 
-version := "0.1.0"
+version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava)
+lazy val root = (project in file("."))
+  .enablePlugins(PlayJava, PlayEbean)
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.6"
 
 libraryDependencies ++= Seq(
-  javaJpa,
-  "com.google.guava" % "guava" % "18.0",
-  "com.feth" %% "play-authenticate" % "0.6.8"
+  javaJdbc,
+  cache,
+  javaWs
 )
 
-libraryDependencies += "com.orientechnologies" % "orientdb-core" % "2.0.6" withSources() withJavadoc()
-
-libraryDependencies += "com.orientechnologies" % "orientdb-client" % "2.0.6" withSources() withJavadoc()
-
-libraryDependencies += "com.orientechnologies" % "orientdb-enterprise" % "2.0.6" withSources() withJavadoc()
-
-libraryDependencies += "com.orientechnologies" % "orientdb-object" % "2.0.6" withSources() withSources() withJavadoc()
-
-libraryDependencies += "com.orientechnologies" % "orientdb-lucene" % "2.0.6" withSources() withJavadoc()
+// Play provides two styles of routers, one expects its actions to be injected, the
+// other, legacy style, accesses its actions statically.
+routesGenerator := InjectedRoutesGenerator
