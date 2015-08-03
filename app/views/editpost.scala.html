@@ -1,0 +1,39 @@
+@import model._
+
+@(postId: String, postForm: Form[Post], blogName: String) @main("Edit post") {
+
+    <!-- Codemirror and marked dependencies -->
+    <link rel="stylesheet" href="@routes.Assets.at("codemirror/lib/codemirror.css")">
+    <script src="@routes.Assets.at("codemirror/lib/codemirror.js")"></script>
+    <script src="@routes.Assets.at("codemirror/mode/markdown/markdown.js")"></script>
+    <script src="@routes.Assets.at("codemirror/addon/mode/overlay.js")"></script>
+    <script src="@routes.Assets.at("codemirror/mode/xml/xml.js")"></script>
+    <script src="@routes.Assets.at("codemirror/mode/gfm/gfm.js")"></script>
+    <script src="@routes.Assets.at("javascripts/marked.js")"></script>
+
+    <!-- HTML editor CSS and JavaScript -->
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/components/htmleditor.css")">
+    <script src="@routes.Assets.at("javascripts/components/htmleditor.min.js")"></script>
+
+    @if(postForm.hasGlobalErrors) {
+        <p class="error">
+        @postForm.globalError.message
+        </p>
+    }
+
+    <h3 class="uk-h3">Edit post</h3>
+    @helper.form(action = routes.AdminsPosts.update(postId, blogName)) {
+
+        @helper.textarea(postForm("name"), '_label -> "Title", 'cols -> "100", 'rows -> "2")
+        @helper.textarea(postForm("body"), 'id -> "postBody", '_label -> "Text", Symbol("data-uk-htmleditor") -> "{markdown:true}")
+        @*TODO helper*@
+        <input type="hidden" name="blog" value="@blogName" />
+        <input type="hidden" name="rid" value="@postId" />
+
+        <div>
+            <input type="submit" value="Save this post"> or
+            <a href="@routes.Application.admin()" class="btn">Cancel</a>
+        </div>
+    }
+
+}

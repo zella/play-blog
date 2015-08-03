@@ -1,7 +1,11 @@
-@(message: String)
+@import model._
 
-@main("Welcome to Play") {
+@(posts: List[Post])
 
-    @play20.welcome(message, style = "Java")
-
+@() @main("Your blog name, bro") {
+    <ul>
+    @for(post <- posts) {
+            <li><a href="@routes.Posts.detail(post.getTitle)">@post.getTitle</a></li>
+    }
+    </ul>
 }

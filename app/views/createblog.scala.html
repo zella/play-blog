@@ -1,0 +1,21 @@
+@import model._
+
+@(blogForm: Form[Blog]) @main("Create blog") {
+
+    @if(blogForm.hasGlobalErrors) {
+        <p class="error">
+        @blogForm.globalError.message
+        </p>
+    }
+
+
+    <h3>Create new blog as @Application.getLocalUser(session).getName</h3>
+    @helper.form(action = routes.AdminsBlogs.save(), 'id -> "createblogForm") {
+        <div>Name</div>
+        <textarea name="name" cols="100" rows="2"></textarea> <br>
+
+        <input type="submit" value="Submit">
+    }
+
+
+}

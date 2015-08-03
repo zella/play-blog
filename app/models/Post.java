@@ -17,28 +17,32 @@ import java.util.Date;
 public class Post extends Model {
 
 
-    public static final Finder<Long,Post> find = new Finder<Long, Post>(Post.class);
+   public static final Finder<Long, Post> find = new Finder<>(Post.class);
 
+   //TODO created and update - separate dates
+   @Formats.DateTime(pattern = "yyyy-MM-dd hh:mm")
+   private Date creationDate;
 
-    @Formats.DateTime(pattern = "yyyy-MM-dd")
-    private Date creationDate;
+   @Constraints.Required
+   @Id
+   private String title;
 
-    @Constraints.Required
-    @Id
-    private String title;
+   @Constraints.Required
+   private String content;
 
-    @Constraints.Required
-    private String content;
+   //TODO class
+   @Constraints.Required
+   private String user;
 
-    public Date getCreationDate() {
-        return creationDate;
-    }
+   public Date getCreationDate() {
+      return creationDate;
+   }
 
-    public String getTitle() {
-        return title;
-    }
+   public String getTitle() {
+      return title;
+   }
 
-    public String getContent() {
-        return content;
-    }
+   public String getContent() {
+      return content;
+   }
 }

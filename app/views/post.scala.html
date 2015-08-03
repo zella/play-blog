@@ -1,0 +1,62 @@
+@import model._
+@import util._
+
+@(post: Post) @main(post.getName) {
+    @*markdown parser and code highlighter*@
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/marked.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/highlight.min.js")"></script>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/highlight.min.css")">
+
+    <article class="uk-article">
+        <div id="postContainer" data-post-id="@post.getTitle()">
+            <h1 class="uk-article-title">
+            @post.getTitle
+            </h1>
+
+            <p class="uk-article-meta">
+                Written by @post.getUser on @TextUtils.toReadableDate(post.getCreationDate)</p>
+
+            <p class="post-content">@post.getContent</p>
+            <hr/>
+        </div>
+    </article>
+
+    <!--<h2 class="uk-h2">Комментарии</h2>-->
+    <!--<ul class="uk-comment-list" id="commentsContainer">-->
+
+    <!--@for(c <- post.getComments) {-->
+        <!--<li>-->
+        <!--@views.html.comment.comment(c)-->
+        <!--</li>-->
+    <!--}-->
+    <!--</ul>-->
+
+    <!--@if(user != null) {-->
+        <!--<h3>Add a comment as @user.getName</h3>-->
+        <!--<form id = "commentForm">-->
+            <!--<textarea name="body" cols="60" rows="10"></textarea> <br>-->
+            <!--<input type="submit" value="Submit">-->
+        <!--</form>-->
+    <!--} else {-->
+        <!--<p>Чтобы оставить комментарии необходимо авторизироваться</p>-->
+    <!--}-->
+    <script>
+    hljs.initHighlightingOnLoad ( ) ;
+    var marked_ = marked.setOptions ( {
+    renderer : new marked.Renderer ( ),
+    gfm : true,
+    tables : true,
+    breaks : true,
+    pedantic : false,
+    sanitize : true,
+    smartLists : true,
+    smartypants : false
+    } ) ;
+    $ ( ".blog-content" ).html ( marked_ ( $ ( ".post-content" ).text ( ) ) ) ;
+    </script>
+
+    <!--@*send comment ajax js*@-->
+    <!--@views.html.comment.sendcomment()-->
+
+
+}
