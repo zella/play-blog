@@ -13,6 +13,10 @@ libraryDependencies ++= Seq(
   javaWs
 )
 
+libraryDependencies += "com.feth" %% "play-authenticate" % "0.6.8"
+
+libraryDependencies += "org.xerial" % "sqlite-jdbc" % "3.8.11"
+
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.
 routesGenerator := InjectedRoutesGenerator
