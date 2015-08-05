@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model;
+import models.user.User;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
@@ -32,7 +33,7 @@ public class Post extends Model {
 
    //TODO class
    @Constraints.Required
-   private String user;
+   private User user;
 
    public Date getCreationDate() {
       return creationDate;
@@ -44,5 +45,9 @@ public class Post extends Model {
 
    public String getContent() {
       return content;
+   }
+
+   public User getUser() {
+      return user;
    }
 }

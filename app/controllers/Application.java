@@ -21,8 +21,8 @@ public class Application extends Controller {
       return redirect(routes.Application.login());
    }
 
-   public Result index() {
-      return ok(index.render("Your new application is ready."));
+   public Result index(int page) {
+      return ok(index.render(page, Posts.));
    }
 
 
