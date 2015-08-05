@@ -6,6 +6,15 @@ import com.feth.play.module.pa.user.AuthUser;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+
+/**
+ * Several accounts support. Not using yet.
+ *
+ *
+ *
+ * See <a href="https://github.com/joscha/play-authenticate">https://github.com/joscha/play-authenticate</a>
+ *
+ */
 @Entity
 @Table(name = "linked_accounts")
 public class LinkedAccount extends Model {

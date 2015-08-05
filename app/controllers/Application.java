@@ -26,30 +26,17 @@ public class Application extends Controller {
    }
 
 
-   public static Result login(String page) {
-
-      //TODO path from config
-
-      if (page.contains("/login")) {
-         return ok(login.render());
-      } else {
-         return notFound();
-      }
-   }
-
    /**
-    * Handles login form
+    * Login page. "with google etc"
+    *
     * @return
     */
-   public static Result doLogin() {
+   public static Result login() {
 
-      //TODO path from config
 
-      if (page.contains("/login")) {
+
          return ok(login.render());
-      } else {
-         return notFound();
-      }
+
    }
 
 
@@ -58,10 +45,10 @@ public class Application extends Controller {
     *
     * @return
     */
-//   @Security.Authenticated(Secured.class)
-//   public static Result admin() {
-//      //TODO if not logged return not found;
-//   }
+   @Security.Authenticated(Secured.class)
+   public static Result admin() {
+      return ok(admin.render());
+   }
 
 
 

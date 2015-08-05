@@ -1,6 +1,7 @@
 package service;
 
-import model.User;
+
+import models.user.User;
 import play.Application;
 
 import com.feth.play.module.pa.user.AuthUser;
@@ -10,9 +11,9 @@ import com.feth.play.module.pa.service.UserServicePlugin;
 /**
  * Authenticate
  */
-public class MyUserServicePlugin extends UserServicePlugin {
+public class BlogUserServicePlugin extends UserServicePlugin {
 
-   public MyUserServicePlugin(final Application app) {
+   public BlogUserServicePlugin(final Application app) {
       super(app);
    }
 
