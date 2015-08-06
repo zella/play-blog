@@ -4,7 +4,6 @@ import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.user.AuthUser;
 import models.*;
 import models.user.User;
-import play.*;
 import play.mvc.*;
 
 import views.html.*;
@@ -21,8 +20,8 @@ public class Application extends Controller {
       return redirect(routes.Application.login());
    }
 
-   public Result index(int page) {
-      return ok(index.render(page, Post.page(page)));
+   public static Result index(int page) {
+      return ok(index.render(Post.page(page)));
    }
 
 
@@ -43,7 +42,7 @@ public class Application extends Controller {
     */
    @Security.Authenticated(Secured.class)
    public static Result admin() {
-      return ok(admin.render());
+      return ok(admin.render(Post.find.all()));
    }
 
 

@@ -1,20 +1,12 @@
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.exceptions.AccessDeniedException;
 import com.feth.play.module.pa.exceptions.AuthException;
+import controllers.routes;
 import play.*;
-import play.api.mvc.Handler;
-import play.core.j.JavaHandler;
+
 import play.libs.F;
-import play.mvc.Action;
-import play.mvc.Call;
-import play.mvc.Http;
-import play.mvc.Http.Request;
-import play.mvc.Result;
-
-import java.lang.reflect.Method;
-
-import play.*;
 import play.mvc.*;
+
 
 /**
  * Created by dru on 03.08.15.

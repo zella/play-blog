@@ -7,9 +7,11 @@ import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by dru on 02.08.15.
@@ -19,22 +21,27 @@ import java.util.List;
 public class Post extends Model {
 
 
-   public static final Finder<Long, Post> find = new Finder<>(Post.class);
+   public static final Finder<UUID, Post> find = new Finder<>(Post.class);
+
+   @Id
+   private UUID id;
 
    //TODO created and update - separate dates
    @Formats.DateTime(pattern = "yyyy-MM-dd hh:mm")
    private Date creationDate;
 
    @Constraints.Required
-   @Id
    private String title;
 
    @Constraints.Required
    private String content;
 
-   //TODO class
-   @Constraints.Required
+   @ManyToOne
    private User user;
+
+   public UUID getId() {
+      return id;
+   }
 
    public Date getCreationDate() {
       return creationDate;
@@ -52,17 +59,37 @@ public class Post extends Model {
       return user;
    }
 
+   public void setCreationDate(Date creationDate) {
+      this.creationDate = creationDate;
+   }
+
+   public void setUser(User user) {
+      this.user = user;
+   }
+
+   public void setTitle(String title) {
+      this.title = title;
+   }
+
+   public void setContent(String content) {
+      this.content = content;
+   }
+
    public static Page page(int page) {
       // 0 - should be first
 
       // if (page < 1) page = 1;
       long total = find.findRowCount();
       List<Post> postsOnPage = find
-          .order().asc("creationDate")
-          .findPagedList(page, Page.DEFAULT_PAGE_SIZE)
-          .getList();
+            .order().asc("creationDate")
+            .findPagedList(page, Page.DEFAULT_PAGE_SIZE)
+            .getList();
 
       return new Page(postsOnPage, total, page);
+   }
+
+   public String getHtmlPreview() {
+      return "TODO";
    }
 
 }

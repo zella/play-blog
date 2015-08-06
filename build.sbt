@@ -18,8 +18,9 @@ libraryDependencies ++= Seq(
 
 libraryDependencies += "com.feth" %% "play-authenticate" % "0.7.0-SNAPSHOT"
 
-libraryDependencies += "org.xerial" % "sqlite-jdbc" % "3.8.11"
+libraryDependencies += "org.pegdown" % "pegdown" % "1.5.0"
+
 
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.
-routesGenerator := InjectedRoutesGenerator
+//routesGenerator := InjectedRoutesGenerator

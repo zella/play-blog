@@ -1,8 +1,6 @@
-package util;
+package utils;
 
-import org.markdown4j.Markdown4jProcessor;
 
-import java.io.IOException;
 import java.text.BreakIterator;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,6 +9,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+//
+//import org.pegdown.PegDownProcessor;
 
 /**
  * Created by dru on 23.01.2015.
@@ -112,12 +113,9 @@ public class TextUtils {
 
     //TODO if images.count>1 reduce it. use jsoup.
     public static String generateTruncateHtmlPreview(String markdown, int charCount) {
-        String html = markdown;
-        try {
-            html = new Markdown4jProcessor().process(markdown);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        org.pegdown.PegDownProcessor pegDownProcessor = new org.pegdown.PegDownProcessor();
+        String html = pegDownProcessor.markdownToHtml(markdown);
         String truncatedHtml = TextUtils.truncateHtmlWords(html, charCount);
 
         if (truncatedHtml.length() > charCount * 2) {

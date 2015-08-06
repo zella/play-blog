@@ -1,11 +1,11 @@
-@import model._
-@import util._
+@import models._
+@import utils._
 
-@(post: Post) @main(post.getName) {
+@(post: Post) @main(post.getTitle) {
     @*markdown parser and code highlighter*@
-    <script type="text/javascript" src="@routes.Assets.at("javascripts/marked.js")"></script>
-    <script type="text/javascript" src="@routes.Assets.at("javascripts/highlight.min.js")"></script>
-    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/highlight.min.css")">
+    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/marked.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/highlight.min.js")"></script>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/highlight.min.css")">
 
     <article class="uk-article">
         <div id="postContainer" data-post-id="@post.getTitle()">
@@ -21,25 +21,25 @@
         </div>
     </article>
 
-    <!--<h2 class="uk-h2">Комментарии</h2>-->
-    <!--<ul class="uk-comment-list" id="commentsContainer">-->
+    @*<!--<h2 class="uk-h2">Комментарии</h2>-->*@
+    @*<!--<ul class="uk-comment-list" id="commentsContainer">-->*@
 
-    <!--@for(c <- post.getComments) {-->
-        <!--<li>-->
-        <!--@views.html.comment.comment(c)-->
-        <!--</li>-->
-    <!--}-->
-    <!--</ul>-->
+    @*<!--@for(c <- post.getComments) {-->*@
+        @*<!--<li>-->*@
+        @*<!--@views.html.comment.comment(c)-->*@
+        @*<!--</li>-->*@
+    @*<!--}-->*@
+    @*<!--</ul>-->*@
 
-    <!--@if(user != null) {-->
-        <!--<h3>Add a comment as @user.getName</h3>-->
-        <!--<form id = "commentForm">-->
-            <!--<textarea name="body" cols="60" rows="10"></textarea> <br>-->
-            <!--<input type="submit" value="Submit">-->
-        <!--</form>-->
-    <!--} else {-->
-        <!--<p>Чтобы оставить комментарии необходимо авторизироваться</p>-->
-    <!--}-->
+    @*<!--@if(user != null) {-->*@
+        @*<!--<h3>Add a comment as @user.getName</h3>-->*@
+        @*<!--<form id = "commentForm">-->*@
+            @*<!--<textarea name="body" cols="60" rows="10"></textarea> <br>-->*@
+            @*<!--<input type="submit" value="Submit">-->*@
+        @*<!--</form>-->*@
+    @*<!--} else {-->*@
+        @*<!--<p>Чтобы оставить комментарии необходимо авторизироваться</p>-->*@
+    @*<!--}-->*@
     <script>
     hljs.initHighlightingOnLoad ( ) ;
     var marked_ = marked.setOptions ( {
@@ -56,7 +56,7 @@
     </script>
 
     <!--@*send comment ajax js*@-->
-    <!--@views.html.comment.sendcomment()-->
+    @*<!--@views.html.comment.sendcomment()-->*@
 
 
 }

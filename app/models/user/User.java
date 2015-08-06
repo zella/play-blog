@@ -13,6 +13,7 @@ import models.user.LinkedAccount;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by dru on 09.01.2015.
@@ -26,8 +27,8 @@ public class User extends Model {
 
    private String name;
 
-   @Id //autoincrement?
-   private Long id;
+   @Id
+   private UUID id;
 
    private String email;
 
@@ -44,7 +45,7 @@ public class User extends Model {
    @OneToMany(cascade = CascadeType.ALL)
    public List<LinkedAccount> linkedAccounts;
 
-   public Long getId() {
+   public UUID getId() {
       return id;
    }
 
