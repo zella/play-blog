@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by dru on 02.08.15.
@@ -50,4 +51,18 @@ public class Post extends Model {
    public User getUser() {
       return user;
    }
+
+   public static Page page(int page) {
+      // 0 - should be first
+
+      // if (page < 1) page = 1;
+      long total = find.findRowCount();
+      List<Post> postsOnPage = find
+          .order().asc("creationDate")
+          .findPagedList(page, Page.DEFAULT_PAGE_SIZE)
+          .getList();
+
+      return new Page(postsOnPage, total, page);
+   }
+
 }

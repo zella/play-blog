@@ -22,7 +22,7 @@ public class Application extends Controller {
    }
 
    public Result index(int page) {
-      return ok(index.render(page, Posts.));
+      return ok(index.render(page, Post.page(page)));
    }
 
 
@@ -32,11 +32,7 @@ public class Application extends Controller {
     * @return
     */
    public static Result login() {
-
-
-
-         return ok(login.render());
-
+       return ok(login.render());
    }
 
 

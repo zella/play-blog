@@ -11,6 +11,9 @@ import java.util.List;
  */
 public class Page {
 
+    //TODO for test purposes; need 10-16
+    public static final int DEFAULT_PAGE_SIZE = 3;
+
     private final int pageSize;
     private final long totalRowCount;
     private final int pageIndex;
@@ -27,6 +30,18 @@ public class Page {
         this.totalRowCount = total;
         this.pageIndex = page;
         this.pageSize = pageSize;
+    }
+
+    /**
+     * @param data     posts on page
+     * @param total    total posts
+     * @param page     number
+     */
+    public Page(List<Post> data, long total, int page) {
+        this.list = data;
+        this.totalRowCount = total;
+        this.pageIndex = page;
+        this.pageSize = DEFAULT_PAGE_SIZE;
     }
 
     public long getTotalRowCount() {
