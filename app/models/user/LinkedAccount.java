@@ -4,6 +4,7 @@ import com.avaje.ebean.Model;
 import com.feth.play.module.pa.user.AuthUser;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 
@@ -18,6 +19,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "linked_accounts")
 public class LinkedAccount extends Model {
+
+   @Id
+   public Long id;
 
    private String providerUserId;
    private String providerKey;

@@ -42,7 +42,7 @@ public class User extends Model {
    // must cascade the save; user.save() fires saving all linked accounts.
    // Note that you can update OrderDetails individually (without relying on cascade save)
    // but to insert a new OrderDetail we are relying on the cascading save.
- //  @OneToMany(cascade = CascadeType.ALL)
+   @OneToMany(cascade = CascadeType.ALL)
    public List<LinkedAccount> linkedAccounts = new ArrayList<>();
 
    public UUID getId() {
@@ -106,7 +106,7 @@ public class User extends Model {
          final NameIdentity identity = (NameIdentity) authUser;
          final String name = identity.getName();
          if (name != null) {
-            user.name = name;
+            user.setName(name);
          }
       }
       user.save();
@@ -129,11 +129,13 @@ public class User extends Model {
    public static User find(final AuthUserIdentity authUserIdentity) {
       if (authUserIdentity == null) return null;
       return find.query()
-//          .where().and(
-//              Expr.eq("linkedAccounts.providerUserId", authUserIdentity.getId()),
-//              Expr.eq("linkedAccounts.providerKey", authUserIdentity.getProvider())
-      //    )
+          .where().and(
+              Expr.eq("linkedAccounts.providerUserId", authUserIdentity.getId()),
+              Expr.eq("linkedAccounts.providerKey", authUserIdentity.getProvider())
+          )
       .findUnique();
+
+    //  return find.all().get(0);
    }
 
    public static boolean exists(final AuthUserIdentity identity) {

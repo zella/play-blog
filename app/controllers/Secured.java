@@ -21,6 +21,7 @@ public class Secured extends Security.Authenticator {
 
       if (authUser != null) {
          User user = User.find(authUser);
+         if (user == null) return null;
          ctx.args.put("user", user);
          return user.getName();
       } else {
