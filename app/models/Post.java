@@ -5,10 +5,7 @@ import models.user.User;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -34,6 +31,7 @@ public class Post extends Model {
    private String title;
 
    @Constraints.Required
+   @Column(columnDefinition = "TEXT")
    private String content;
 
    @ManyToOne
