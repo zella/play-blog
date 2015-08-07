@@ -30,8 +30,8 @@ public class Secured extends Security.Authenticator {
 
    @Override
    public Result onUnauthorized(final Context ctx) {
-      ctx.flash().put(Application.FLASH_MESSAGE_KEY, "Nice try, but you need to log in first!");
+      ctx.flash().put(Application.FLASH_ERROR_KEY, "Nice try, but you need to log in first!");
       //auth protect from commenting, also from admining
-      return unauthorized("need login");
+      return redirect(routes.Application.login());
    }
 }

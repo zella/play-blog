@@ -11,6 +11,7 @@ import models.Post;
 import models.user.LinkedAccount;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -36,14 +37,13 @@ public class User extends Model {
 
    //TODO
    @OneToMany
-   public List<Post> posts;
+   public List<Post> posts = new ArrayList<>();
 
-   @Embedded
    // must cascade the save; user.save() fires saving all linked accounts.
    // Note that you can update OrderDetails individually (without relying on cascade save)
    // but to insert a new OrderDetail we are relying on the cascading save.
-   @OneToMany(cascade = CascadeType.ALL)
-   public List<LinkedAccount> linkedAccounts;
+ //  @OneToMany(cascade = CascadeType.ALL)
+   public List<LinkedAccount> linkedAccounts = new ArrayList<>();
 
    public UUID getId() {
       return id;
@@ -63,6 +63,30 @@ public class User extends Model {
 
    public void setAvatarUrl(String avatarUrl) {
       this.avatarUrl = avatarUrl;
+   }
+
+   public List<LinkedAccount> getLinkedAccounts() {
+      return linkedAccounts;
+   }
+
+   public void setLinkedAccounts(List<LinkedAccount> linkedAccounts) {
+      this.linkedAccounts = linkedAccounts;
+   }
+
+   public List<Post> getPosts() {
+      return posts;
+   }
+
+   public void setPosts(List<Post> posts) {
+      this.posts = posts;
+   }
+
+   public void setName(String name) {
+      this.name = name;
+   }
+
+   public void setEmail(String email) {
+      this.email = email;
    }
 
    public static User createAndSave(final AuthUser authUser) {
@@ -105,10 +129,11 @@ public class User extends Model {
    public static User find(final AuthUserIdentity authUserIdentity) {
       if (authUserIdentity == null) return null;
       return find.query()
-          .where().and(
-              Expr.eq("linkedAccounts.providerUserId", authUserIdentity.getId()),
-              Expr.eq("linkedAccounts.providerKey", authUserIdentity.getProvider())
-          ).findUnique();
+//          .where().and(
+//              Expr.eq("linkedAccounts.providerUserId", authUserIdentity.getId()),
+//              Expr.eq("linkedAccounts.providerKey", authUserIdentity.getProvider())
+      //    )
+      .findUnique();
    }
 
    public static boolean exists(final AuthUserIdentity identity) {

@@ -1,6 +1,7 @@
 package service;
 
 
+import com.google.inject.Inject;
 import models.user.User;
 import play.Application;
 
@@ -13,6 +14,7 @@ import com.feth.play.module.pa.service.UserServicePlugin;
  */
 public class BlogUserServicePlugin extends UserServicePlugin {
 
+   @Inject
    public BlogUserServicePlugin(final Application app) {
       super(app);
    }

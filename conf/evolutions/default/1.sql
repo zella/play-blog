@@ -4,7 +4,6 @@
 # --- !Ups
 
 create table linked_accounts (
-  user_id                   varchar(40) not null,
   provider_user_id          varchar(255),
   provider_key              varchar(255))
 ;
@@ -26,10 +25,8 @@ create table users (
   constraint pk_users primary key (id))
 ;
 
-alter table linked_accounts add constraint fk_linked_accounts_users_1 foreign key (user_id) references users (id) on delete restrict on update restrict;
-create index ix_linked_accounts_users_1 on linked_accounts (user_id);
-alter table posts add constraint fk_posts_user_2 foreign key (user_id) references users (id) on delete restrict on update restrict;
-create index ix_posts_user_2 on posts (user_id);
+alter table posts add constraint fk_posts_user_1 foreign key (user_id) references users (id) on delete restrict on update restrict;
+create index ix_posts_user_1 on posts (user_id);
 
 
 
