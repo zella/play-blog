@@ -15,7 +15,7 @@ create table posts (
   id                        varchar(40) not null,
   creation_date             timestamp,
   title                     varchar(255),
-  content                   TEXT,
+  content                   clob,
   user_id                   varchar(40),
   constraint pk_posts primary key (id))
 ;

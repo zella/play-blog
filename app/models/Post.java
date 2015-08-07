@@ -31,7 +31,7 @@ public class Post extends Model {
    private String title;
 
    @Constraints.Required
-   @Column(columnDefinition = "TEXT")
+   @Lob
    private String content;
 
    @ManyToOne
