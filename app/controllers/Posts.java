@@ -28,7 +28,24 @@ public class Posts extends Controller {
    public static Result detail(String title) {
       Post post_ = Post.find.query()
             .where().eq("title", title).findUnique();
-      return ok(post.render(post_));
+
+      //TODO multiuser
+//
+//      if (post_.getIsPrivate()) {
+//         User localUser = Application.getLocalUser(session());
+//         //don't allow see private post from other users
+//         if (localUser != null && post_.getUser().equals(localUser))
+//            return ok(post.render(post_));
+//         else
+//            return notFound("Page not found");
+//      } else
+//         return ok(post.render(post_));
+
+      if (post_.getIsPrivate() && Application.getLocalUser(session()) == null) {
+         return notFound("Page not found");
+      } else
+         return ok(post.render(post_));
+
    }
 
 
@@ -91,6 +108,7 @@ public class Posts extends Controller {
       Post toUpdate = Post.find.byId(postId);
       toUpdate.setContent(postFromForm.getContent());
       toUpdate.setTitle(postFromForm.getTitle());
+      toUpdate.setIsPrivate(postFromForm.getIsPrivate());
 //      toUpdate.setName(postFromForm.getName());
 //      toUpdate.setHtmlPreview(util.TextUtils.generateTruncateHtmlPreview(toUpdate.getBody(), TRUNCATED_MEDIUM_CHAR_COUNT));
       toUpdate.save();

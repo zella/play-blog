@@ -27,6 +27,7 @@
     @helper.form(action = routes.Posts.save(), 'id -> "createpostForm") {
         @helper.textarea(postForm("title"), '_label -> "Title", 'cols -> "100", 'rows -> "2", '_showConstraints -> false)
         @helper.textarea(postForm("content"), '_label -> "Text", 'cols -> "100", 'rows -> "20",  '_showConstraints -> false, Symbol("data-uk-htmleditor") -> "{markdown:true}")
+        @helper.checkbox(postForm("isPrivate"))
         <input type="submit" value="Submit">
     }
 }

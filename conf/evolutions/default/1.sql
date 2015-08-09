@@ -9,6 +9,7 @@ create table posts (
   title                     varchar(255),
   content                   clob,
   user_email                varchar(255),
+  is_private                boolean,
   constraint pk_posts primary key (id))
 ;
 

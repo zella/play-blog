@@ -12,7 +12,7 @@ public class Application extends Controller {
    public static Result index(int page) {
       if (page < 1)
          return redirect(routes.Application.index(1));
-      return ok(index.render(Post.page(page)));
+      return ok(index.render(Post.page(page, getLocalUser(session()) != null)));
    }
 
 
@@ -69,8 +69,8 @@ public class Application extends Controller {
    }
 
 
-   public static User getLocalUser(Http.Session session){
-     return User.findByEmail(session.get("email"));
+   public static User getLocalUser(Http.Session session) {
+      return User.findByEmail(session.get("email"));
    }
 
 

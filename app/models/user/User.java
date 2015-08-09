@@ -6,10 +6,7 @@ import com.avaje.ebean.Model;
 import models.Post;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by dru on 09.01.2015.
@@ -80,15 +77,6 @@ public class User extends Model {
       this.email = email;
    }
 
-
-//
-//    public static User findById(String id) {
-//        try (OObjectDatabaseTx db = DB.acquireDatabase()) {
-//            //TODO typing?
-//            return db.load(new ORecordId(id));
-//        }
-//    }
-
    public static User findByEmail(final String email) {
       return find.query()
             .where().eq("email", email).findUnique();
@@ -99,7 +87,7 @@ public class User extends Model {
       List<User> users = find.all();
       User user = find.where()
             .and(Expr.eq("email", email), Expr.eq("password", password))
-                  //TODO exist dquery
+                  //TODO exist query
             .findUnique();
 
       return user;
@@ -111,4 +99,17 @@ public class User extends Model {
       return findByEmailAndPass(email, password) != null;
    }
 
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      User user = (User) o;
+      return Objects.equals(getEmail(), user.getEmail()) &&
+            Objects.equals(getPassword(), user.getPassword());
+   }
+
+   @Override
+   public int hashCode() {
+      return Objects.hash(getEmail(), getPassword());
+   }
 }

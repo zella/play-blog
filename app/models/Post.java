@@ -1,7 +1,9 @@
 package models;
 
-import com.avaje.ebean.Model;
+import com.avaje.ebean.*;
+import com.avaje.ebean.Query;
 import models.user.User;
+import org.springframework.core.annotation.Order;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
@@ -25,6 +27,8 @@ public class Post extends Model {
    @Id
    private UUID id;
 
+   //TODO set column names manually
+
    //TODO created and update - separate dates
    @Formats.DateTime(pattern = "yyyy-MM-dd hh:mm")
    private Date creationDate;
@@ -41,6 +45,8 @@ public class Post extends Model {
 
    @ManyToOne
    private User user;
+
+   private Boolean isPrivate = false;
 
    public UUID getId() {
       return id;
@@ -78,16 +84,32 @@ public class Post extends Model {
       this.content = content;
    }
 
-   public static Page page(int page) {
-      // 0 - should be first
+   public Boolean getIsPrivate() {
+      return isPrivate;
+   }
 
-     // if (page < 1) page = 1;
+   public void setIsPrivate(Boolean isPrivate) {
+      this.isPrivate = isPrivate;
+   }
+
+   public static Page page(int page, boolean showPrivate) {
+
       long total = find.findRowCount();
-      List<Post> postsOnPage = find
-            .order().desc("creationDate")
-            .findPagedList(page-1, Page.DEFAULT_PAGE_SIZE)
-            .getList();
 
+      List<Post> postsOnPage;
+      if (showPrivate)
+         postsOnPage = find
+               .query()
+               .order().desc("creationDate")
+               .findPagedList(page - 1, Page.DEFAULT_PAGE_SIZE)
+               .getList();
+      else
+         postsOnPage = find
+               .query()
+               .where().eq("isPrivate", false)
+               .order().desc("creationDate")
+               .findPagedList(page - 1, Page.DEFAULT_PAGE_SIZE)
+               .getList();
       return new Page(postsOnPage, total, page);
    }
 
@@ -99,6 +121,7 @@ public class Post extends Model {
       return find.query()
             .where().eq("title", title).findUnique() == null;
    }
+
 
    /**
     * Form validation
