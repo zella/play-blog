@@ -6,6 +6,7 @@ import models.user.User;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 import views.html.editpost;
 import views.html.*;
 
@@ -26,7 +27,7 @@ public class Posts extends Controller {
 
    public static Result detail(String title) {
       Post post_ = Post.find.query()
-          .where().eq("title", title).findUnique();
+            .where().eq("title", title).findUnique();
       return ok(post.render(post_));
    }
 
@@ -34,6 +35,7 @@ public class Posts extends Controller {
    /**
     * Display the 'new post form'.
     */
+   @Security.Authenticated(Secured.class)
    public static Result create() {
       Form<Post> newPostForm = form(Post.class);
       return ok(createpost.render(newPostForm));
@@ -42,13 +44,14 @@ public class Posts extends Controller {
    /**
     * Handle the 'new post form' submission
     */
+   @Security.Authenticated(Secured.class)
    public static Result save() {
       Form<Post> newPostForm = form(Post.class).bindFromRequest();
       if (newPostForm.hasErrors()) {
          return badRequest(createpost.render(newPostForm));
       }
       Post post = newPostForm.get();
-   //   post.setHtmlPreview(.TextUtils.generateTruncateHtmlPreview(blogPost.getBody(), TRUNCATED_MEDIUM_CHAR_COUNT));
+      //   post.setHtmlPreview(.TextUtils.generateTruncateHtmlPreview(blogPost.getBody(), TRUNCATED_MEDIUM_CHAR_COUNT));
       //TODO local user!
       User localUser = Application.getLocalUser(session());
       post.setUser(localUser);
@@ -64,6 +67,7 @@ public class Posts extends Controller {
     *
     * @param postId Id of the blog post to edit
     */
+   @Security.Authenticated(Secured.class)
    public static Result edit(UUID postId) {
       Form<Post> postForm = form(Post.class).fill(Post.find.byId(postId));
       return ok(editpost.render(postId, postForm));
@@ -75,6 +79,7 @@ public class Posts extends Controller {
     *
     * @param postId Id of the blog post to edit
     */
+   @Security.Authenticated(Secured.class)
    public static Result doEdit(UUID postId) {
       Form<Post> postForm = form(Post.class).bindFromRequest();
       if (postForm.hasErrors()) {
@@ -83,12 +88,12 @@ public class Posts extends Controller {
       Post postFromForm = postForm.get();
       //TODO info about blog
       //TODO merge/update functionality
-//      Post toUpdate = Post.findById(postId_);
-//      toUpdate.setBody(postFromForm.getBody());
-//      //    toUpdate.setHeader(postFromForm.getHeader());
+      Post toUpdate = Post.find.byId(postId);
+      toUpdate.setContent(postFromForm.getContent());
+      toUpdate.setTitle(postFromForm.getTitle());
 //      toUpdate.setName(postFromForm.getName());
 //      toUpdate.setHtmlPreview(util.TextUtils.generateTruncateHtmlPreview(toUpdate.getBody(), TRUNCATED_MEDIUM_CHAR_COUNT));
-//      toUpdate.save();
+      toUpdate.save();
       flash("success", "Post has been updated");
       /**
        * you can use redirect(routes.Application.viewPost(blogPost.save().getRid().toString()));

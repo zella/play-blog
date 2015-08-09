@@ -3,12 +3,7 @@ package models.user;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Model;
-import com.feth.play.module.pa.user.AuthUser;
-import com.feth.play.module.pa.user.AuthUserIdentity;
-import com.feth.play.module.pa.user.EmailIdentity;
-import com.feth.play.module.pa.user.NameIdentity;
 import models.Post;
-import models.user.LinkedAccount;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,9 +24,9 @@ public class User extends Model {
    private String name;
 
    @Id
-   private UUID id;
-
    private String email;
+
+   private String password;
 
    private String avatarUrl;
 
@@ -39,14 +34,10 @@ public class User extends Model {
    @OneToMany
    public List<Post> posts = new ArrayList<>();
 
-   // must cascade the save; user.save() fires saving all linked accounts.
-   // Note that you can update OrderDetails individually (without relying on cascade save)
-   // but to insert a new OrderDetail we are relying on the cascading save.
-   @OneToMany(cascade = CascadeType.ALL)
-   public List<LinkedAccount> linkedAccounts = new ArrayList<>();
-
-   public UUID getId() {
-      return id;
+   public User(String email, String password, String name) {
+      this.password = password;
+      this.email = email;
+      this.name = name;
    }
 
    public String getEmail() {
@@ -65,12 +56,12 @@ public class User extends Model {
       this.avatarUrl = avatarUrl;
    }
 
-   public List<LinkedAccount> getLinkedAccounts() {
-      return linkedAccounts;
+   public String getPassword() {
+      return password;
    }
 
-   public void setLinkedAccounts(List<LinkedAccount> linkedAccounts) {
-      this.linkedAccounts = linkedAccounts;
+   public void setPassword(String password) {
+      this.password = password;
    }
 
    public List<Post> getPosts() {
@@ -89,29 +80,7 @@ public class User extends Model {
       this.email = email;
    }
 
-   public static User createAndSave(final AuthUser authUser) {
-      final User user = new User();
-      user.linkedAccounts = Collections.singletonList(LinkedAccount
-          .create(authUser));
 
-      if (authUser instanceof EmailIdentity) {
-         final EmailIdentity identity = (EmailIdentity) authUser;
-         // Remember, even when getting them from FB & Co., emails should be
-         // verified within the application as a security breach there might
-         // break your security as well!
-         user.email = identity.getEmail();
-      }
-
-      if (authUser instanceof NameIdentity) {
-         final NameIdentity identity = (NameIdentity) authUser;
-         final String name = identity.getName();
-         if (name != null) {
-            user.setName(name);
-         }
-      }
-      user.save();
-      return user;
-   }
 //
 //    public static User findById(String id) {
 //        try (OObjectDatabaseTx db = DB.acquireDatabase()) {
@@ -122,23 +91,24 @@ public class User extends Model {
 
    public static User findByEmail(final String email) {
       return find.query()
-          .where().eq("email", email).findUnique();
+            .where().eq("email", email).findUnique();
 
    }
 
-   public static User find(final AuthUserIdentity authUserIdentity) {
-      if (authUserIdentity == null) return null;
-      return find.query()
-          .where().and(
-              Expr.eq("linkedAccounts.providerUserId", authUserIdentity.getId()),
-              Expr.eq("linkedAccounts.providerKey", authUserIdentity.getProvider())
-          )
-      .findUnique();
+   public static User findByEmailAndPass(final String email, final String password) {
+      List<User> users = find.all();
+      User user = find.where()
+            .and(Expr.eq("email", email), Expr.eq("password", password))
+                  //TODO exist dquery
+            .findUnique();
 
-    //  return find.all().get(0);
+      return user;
    }
 
-   public static boolean exists(final AuthUserIdentity identity) {
-      return find(identity) != null;
+   public static boolean exist(final String email, final String password) {
+
+      //  if (email.equals("1")) return true; else  return false;
+      return findByEmailAndPass(email, password) != null;
    }
+
 }

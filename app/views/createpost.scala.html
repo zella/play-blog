@@ -25,8 +25,8 @@
 
     <h3 class="uk-h3">Create new blog post as @Application.getLocalUser(session).getName</h3>
     @helper.form(action = routes.Posts.save(), 'id -> "createpostForm") {
-        @helper.textarea(postForm("title"), '_label -> "Title", 'cols -> "100", 'rows -> "2")
-        @helper.textarea(postForm("content"), '_label -> "Text", 'cols -> "100", 'rows -> "20", Symbol("data-uk-htmleditor") -> "{markdown:true}")
+        @helper.textarea(postForm("title"), '_label -> "Title", 'cols -> "100", 'rows -> "2", '_showConstraints -> false)
+        @helper.textarea(postForm("content"), '_label -> "Text", 'cols -> "100", 'rows -> "20",  '_showConstraints -> false, Symbol("data-uk-htmleditor") -> "{markdown:true}")
         <input type="submit" value="Submit">
     }
 }

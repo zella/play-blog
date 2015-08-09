@@ -3,32 +3,30 @@
 # ~~~~
 
 # Home page
-GET         /                                     controllers.Application.index(page: Int ?= 0)
+GET         /                       controllers.Application.index(page: Int ?= 1)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file           controllers.Assets.versioned(path="/public", file: Asset)
 
 # Admins
 
 # Add post
-GET         /admin/posts/new                      controllers.Posts.create()
-POST        /admin/posts                          controllers.Posts.save()
+GET         /admin/posts/new        controllers.Posts.create()
+POST        /admin/posts            controllers.Posts.save()
 
 
 # Edit existing post
-GET         /admin/posts/:id                      controllers.Posts.edit(id: java.util.UUID)
-POST        /admin/posts/                         controllers.Posts.doEdit(id: java.util.UUID)
+GET         /admin/posts/:id        controllers.Posts.edit(id: java.util.UUID)
+POST        /admin/posts/           controllers.Posts.doEdit(id: java.util.UUID)
 
 
 #Admin page
-GET         /admin                                controllers.Application.admin()
+GET         /admin                  controllers.Application.admin()
 
-#Admin page
-GET         /login                                controllers.Application.login()
+#Authenticate
+GET         /login                  controllers.Application.login()
+POST        /authenticate           controllers.Application.authenticate()
+GET         /logout                 controllers.Application.logout()
 
-# Authenticate
-GET         /logout                               com.feth.play.module.pa.controllers.Authenticate.logout
-GET         /authenticate/:provider               com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
-GET         /authenticate/:provider/denied        controllers.Application.oAuthDenied(provider: String)
-
-GET         /post/:postTitle                      controllers.Posts.detail(postTitle)
+#
+GET         /post/:postTitle        controllers.Posts.detail(postTitle)

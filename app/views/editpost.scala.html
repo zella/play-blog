@@ -24,8 +24,8 @@
     <h3 class="uk-h3">Edit post</h3>
     @helper.form(action = routes.Posts.doEdit(postId)) {
 
-        @helper.textarea(postForm("name"), '_label -> "Title", 'cols -> "100", 'rows -> "2")
-        @helper.textarea(postForm("body"), 'id -> "postBody", '_label -> "Text", Symbol("data-uk-htmleditor") -> "{markdown:true}")
+        @helper.textarea(postForm("title"), '_label -> "Title", 'cols -> "100", 'rows -> "2", '_showConstraints -> false)
+        @helper.textarea(postForm("content"), 'id -> "postBody", '_label -> "Text", '_showConstraints -> false,     Symbol("data-uk-htmleditor") -> "{markdown:true}")
         @*TODO helper*@
         <input type="hidden" name="id" value="@postId" />
 

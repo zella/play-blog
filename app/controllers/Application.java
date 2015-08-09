@@ -1,39 +1,47 @@
 package controllers;
 
-import com.feth.play.module.pa.PlayAuthenticate;
-import com.feth.play.module.pa.user.AuthUser;
 import models.*;
 import models.user.User;
+import play.data.Form;
 import play.mvc.*;
 
 import views.html.*;
 
 public class Application extends Controller {
 
-   public static final String FLASH_MESSAGE_KEY = "message";
-   public static final String FLASH_ERROR_KEY = "error";
-
-   public static Result oAuthDenied(final String providerKey) {
-      com.feth.play.module.pa.controllers.Authenticate.noCache(response());
-      flash(FLASH_ERROR_KEY,
-          "Login error!");
-      return redirect(routes.Application.login());
-   }
-
    public static Result index(int page) {
+      if (page < 1)
+         return redirect(routes.Application.index(1));
       return ok(index.render(Post.page(page)));
    }
 
 
-   /**
-    * Login page. "with google etc"
-    *
-    * @return
-    */
    public static Result login() {
-       return ok(login.render());
+      return ok(
+            login.render(Form.form(Login.class))
+      );
    }
 
+   public static Result logout() {
+      session().clear();
+      flash("success", "You've been logged out");
+      return redirect(
+            routes.Application.login()
+      );
+   }
+
+   public static Result authenticate() {
+      Form<Login> loginForm = Form.form(Login.class).bindFromRequest();
+      if (loginForm.hasErrors()) {
+         return badRequest(login.render(loginForm));
+      } else {
+         session().clear();
+         session("email", loginForm.get().email);
+         return redirect(
+               routes.Application.admin()
+         );
+      }
+   }
 
    /**
     * Display admin page
@@ -42,16 +50,28 @@ public class Application extends Controller {
     */
    @Security.Authenticated(Secured.class)
    public static Result admin() {
-      return ok(admin.render(Post.find.all()));
+      return ok(admin.render(Post.find.order().desc("creationDate").findList()));
    }
 
 
+   public static class Login {
 
-   public static User getLocalUser(final Http.Session session) {
-      final AuthUser identity = PlayAuthenticate.getUser(session);
-      return User.find(identity);
+      public String email;
+      public String password;
+
+      public String validate() {
+         if (!User.exist(email, password)) {
+            return "Invalid user or password";
+         }
+         return null;
+      }
+
    }
 
+
+   public static User getLocalUser(Http.Session session){
+     return User.findByEmail(session.get("email"));
+   }
 
 
 }

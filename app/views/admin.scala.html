@@ -1,5 +1,4 @@
 @import models._
-@import com.feth.play.module.pa.views.html._
 
 @(posts: List[Post]) @main("Administration") {
 
@@ -7,24 +6,8 @@
 <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
     <nav class="uk-navbar uk-margin-large-bottom" >
         <div class="uk-navbar-flip uk-margin-small-top uk-margin-small-bottom uk-margin-small-right">
-            @currentAuth() { auth =>
-            @if(auth != null) {
-            <div class="uk-button-group">
-                @*********************
-                * rem it             *
-                *********************@
-                <a class="uk-button uk-button-primary" href="@routes.Application.admin()">@Application.getLocalUser(session).getName</a>
 
-                <a class="uk-button uk-button-primary" href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout                                                                                                                                                                                                                                                                                                    ">
-                    Exit</a>
-            </div>
-            } else {
-            @forProviders() { p =>
-            <a class="uk-button uk-button-primary" href="@p.getUrl()">Login with @p.getKey()</a>
 
-            }
-            }
-            }
         </div>
     </nav>
 

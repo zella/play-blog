@@ -7,11 +7,7 @@ lazy val root = (project in file("."))
 
 scalaVersion := "2.11.6"
 
-// add resolver for deadbolt and easymail snapshots
-resolvers += Resolver.sonatypeRepo("snapshots")
-
 libraryDependencies ++= Seq(
-  "com.feth" %% "play-authenticate" % "0.7.0-SNAPSHOT",
   javaJdbc,
   cache,
   javaWs

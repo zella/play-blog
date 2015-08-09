@@ -4,8 +4,10 @@ import com.avaje.ebean.Model;
 import models.user.User;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
+import play.data.validation.ValidationError;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -28,9 +30,12 @@ public class Post extends Model {
    private Date creationDate;
 
    @Constraints.Required
+   @Constraints.MinLength(value = 2)
+   @Constraints.MaxLength(value = 255)
    private String title;
 
    @Constraints.Required
+   @Constraints.MinLength(value = 10)
    @Lob
    private String content;
 
@@ -76,11 +81,11 @@ public class Post extends Model {
    public static Page page(int page) {
       // 0 - should be first
 
-      // if (page < 1) page = 1;
+     // if (page < 1) page = 1;
       long total = find.findRowCount();
       List<Post> postsOnPage = find
-            .order().asc("creationDate")
-            .findPagedList(page, Page.DEFAULT_PAGE_SIZE)
+            .order().desc("creationDate")
+            .findPagedList(page-1, Page.DEFAULT_PAGE_SIZE)
             .getList();
 
       return new Page(postsOnPage, total, page);
@@ -90,4 +95,22 @@ public class Post extends Model {
       return "TODO";
    }
 
+   public static boolean isTitleUnique(String title) {
+      return find.query()
+            .where().eq("title", title).findUnique() == null;
+   }
+
+   /**
+    * Form validation
+    *
+    * @return
+    */
+   public List<ValidationError> validate() {
+      List<ValidationError> errors = new ArrayList<>();
+      if (getId() != null && !isTitleUnique(getTitle())) {
+         errors.add(new ValidationError("title", "Post with title " + getTitle() + " already exist."));
+      }
+      return errors.isEmpty() ? null : errors;
+
+   }
 }
