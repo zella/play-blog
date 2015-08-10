@@ -135,6 +135,15 @@ public class Posts extends Controller {
    @Security.Authenticated(Secured.class)
    public static Result delete(String id) {
 
+//      Post toDelete = Post.find.byId(UUID.fromString(id));
+//      if (toDelete != null) {
+//         toDelete.delete();
+//         flash("success", "Post has been deleted");
+//      } else {
+//         flash("error", "Error, post not exist");
+//      }
+//      return redirect(routes.Application.admin());
+
       Post toDelete = Post.find.byId(UUID.fromString(id));
       if (toDelete != null) {
          toDelete.delete();

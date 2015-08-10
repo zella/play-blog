@@ -3,36 +3,37 @@
 # ~~~~
 
 # Home page
-GET         /                       controllers.Application.index(page: Int ?= 1)
+GET         /                         controllers.Application.index(page: Int ?= 1)
+
+
+# For calling routes from js
+GET         /js_routes                      controllers.Application.javascriptRoutes()
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file           controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file             controllers.Assets.versioned(path="/public", file: Asset)
 
 # Admins
 
 # Add post
-GET         /admin/post/new        controllers.Posts.create()
-POST        /admin/post            controllers.Posts.save()
+GET         /admin/post/new           controllers.Posts.create()
+POST        /admin/post               controllers.Posts.save()
 
 
 # Edit existing post
-GET         /admin/post/:id        controllers.Posts.edit(id: java.util.UUID)
-POST        /admin/post/           controllers.Posts.doEdit(id: java.util.UUID)
+GET         /admin/post/:id           controllers.Posts.edit(id: java.util.UUID)
+POST        /admin/post/              controllers.Posts.doEdit(id: java.util.UUID)
 
 # Delete post
-POST         /admin/post/delete    controllers.Posts.delete(id)
+POST        /admin/post/delete        controllers.Posts.delete(id)
 
 #Admin page
-GET         /admin                  controllers.Application.admin()
+GET         /admin                    controllers.Application.admin()
 
 #Authenticate
-GET         /login                  controllers.Application.login()
-POST        /authenticate           controllers.Application.authenticate()
-GET         /logout                 controllers.Application.logout()
+GET         /login                    controllers.Application.login()
+POST        /authenticate             controllers.Application.authenticate()
+GET         /logout                   controllers.Application.logout()
 
 #View post
-GET         /post/:postTitle        controllers.Posts.detail(postTitle)
+GET         /post/:postTitle          controllers.Posts.detail(postTitle)
 
-
-# For calling routes from js
-GET         /javascriptRoutes                     controllers.Application.javascriptRoutes()
