@@ -1,5 +1,5 @@
 # play-blog  
-#####Simple blog written with play framework.
+
 
 
 **Feautures:**
@@ -33,3 +33,8 @@
  3. Launch `./activator start` from project folder
  
  4. Admin urls: `/login` `/logout` `/admin`
+ 
+
+
+*NOTE*  
+It's very alpha version.
