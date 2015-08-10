@@ -4,6 +4,7 @@ import models.*;
 import models.user.User;
 import play.data.Form;
 import play.mvc.*;
+import play.Routes;
 
 import views.html.*;
 
@@ -12,7 +13,7 @@ public class Application extends Controller {
    public static Result index(int page) {
       if (page < 1)
          return redirect(routes.Application.index(1));
-      return ok(index.render(Post.page(page, getLocalUser(session()) != null)));
+      return ok(index.render(Post.page(page, getLocalUser(session()) != null), Post.allWithTitlesOnly()));
    }
 
 
@@ -52,6 +53,21 @@ public class Application extends Controller {
    public static Result admin() {
       return ok(admin.render(Post.find.order().desc("creationDate").findList()));
    }
+
+   /**
+    * Need for referencing routes from js;
+    *
+    * @return
+    */
+   public static Result javascriptRoutes() {
+      response().setContentType("text/javascript");
+      return ok(
+          Routes.javascriptRouter("jsRoutes",
+              controllers.routes.javascript.Posts.delete()
+          )
+      );
+   }
+
 
 
    public static class Login {

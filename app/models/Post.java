@@ -43,6 +43,9 @@ public class Post extends Model {
    @Lob
    private String content;
 
+   @Lob
+   private String htmlPreview = "";
+
    @ManyToOne
    private User user;
 
@@ -92,6 +95,14 @@ public class Post extends Model {
       this.isPrivate = isPrivate;
    }
 
+   public String getHtmlPreview() {
+      return htmlPreview;
+   }
+
+   public void setHtmlPreview(String htmlPreview) {
+      this.htmlPreview = htmlPreview;
+   }
+
    public static Page page(int page, boolean showPrivate) {
 
       long total = find.findRowCount();
@@ -99,27 +110,28 @@ public class Post extends Model {
       List<Post> postsOnPage;
       if (showPrivate)
          postsOnPage = find
-               .query()
-               .order().desc("creationDate")
-               .findPagedList(page - 1, Page.DEFAULT_PAGE_SIZE)
-               .getList();
+             .query()
+             .order().desc("creationDate")
+             .findPagedList(page - 1, Page.DEFAULT_PAGE_SIZE)
+             .getList();
       else
          postsOnPage = find
-               .query()
-               .where().eq("isPrivate", false)
-               .order().desc("creationDate")
-               .findPagedList(page - 1, Page.DEFAULT_PAGE_SIZE)
-               .getList();
+             .query()
+             .where().eq("isPrivate", false)
+             .order().desc("creationDate")
+             .findPagedList(page - 1, Page.DEFAULT_PAGE_SIZE)
+             .getList();
       return new Page(postsOnPage, total, page);
    }
 
-   public String getHtmlPreview() {
-      return "TODO";
+   public static List<Post> allWithTitlesOnly() {
+      //TODO fetch titles only
+      return find.order().desc("creationDate").findList();
    }
 
    public static boolean isTitleUnique(String title) {
       return find.query()
-            .where().eq("title", title).findUnique() == null;
+          .where().eq("title", title).findUnique() == null;
    }
 
 

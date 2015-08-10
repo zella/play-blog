@@ -1,6 +1,6 @@
-name := """easy_blog"""
+name := """play_blog"""
 
-version := "1.0-SNAPSHOT"
+version := "0.1-SNAPSHOT"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayJava, PlayEbean)
@@ -9,8 +9,7 @@ scalaVersion := "2.11.6"
 
 libraryDependencies ++= Seq(
   javaJdbc,
-  cache,
-  javaWs
+  cache
 )
 
 libraryDependencies += "org.pegdown" % "pegdown" % "1.5.0"

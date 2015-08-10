@@ -8,6 +8,7 @@ create table posts (
   creation_date             timestamp,
   title                     varchar(255),
   content                   clob,
+  html_preview              clob,
   user_email                varchar(255),
   is_private                boolean,
   constraint pk_posts primary key (id))

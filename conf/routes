@@ -11,14 +11,16 @@ GET         /assets/*file           controllers.Assets.versioned(path="/public",
 # Admins
 
 # Add post
-GET         /admin/posts/new        controllers.Posts.create()
-POST        /admin/posts            controllers.Posts.save()
+GET         /admin/post/new        controllers.Posts.create()
+POST        /admin/post            controllers.Posts.save()
 
 
 # Edit existing post
-GET         /admin/posts/:id        controllers.Posts.edit(id: java.util.UUID)
-POST        /admin/posts/           controllers.Posts.doEdit(id: java.util.UUID)
+GET         /admin/post/:id        controllers.Posts.edit(id: java.util.UUID)
+POST        /admin/post/           controllers.Posts.doEdit(id: java.util.UUID)
 
+# Delete post
+POST         /admin/post/delete    controllers.Posts.delete(id)
 
 #Admin page
 GET         /admin                  controllers.Application.admin()
@@ -28,5 +30,9 @@ GET         /login                  controllers.Application.login()
 POST        /authenticate           controllers.Application.authenticate()
 GET         /logout                 controllers.Application.logout()
 
-#
+#View post
 GET         /post/:postTitle        controllers.Posts.detail(postTitle)
+
+
+# For calling routes from js
+GET         /javascriptRoutes                     controllers.Application.javascriptRoutes()

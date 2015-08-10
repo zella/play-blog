@@ -2,14 +2,42 @@
 
 @(posts: List[Post]) @main("Administration") {
 
+
+<script>
+
+    function onDeleteClicked(identifier) {
+    var postId = $(identifier).data('post-id');
+    var postTitle = $(identifier).data('post-title');
+
+       UIkit.modal.confirm('Delete '+ postTitle+' ?', function() {
+           var postId = $(identifier).data('post-id');
+               deletePost(postId);
+       });
+    }
+
+var deletePost = function(postId) {
+    var ajaxCallBack = {
+        success : onSuccess,
+        error : onError
+    }
+    jsRoutes.controllers.Posts.delete(postId).ajax(ajaxCallBack);
+};
+
+var onSuccess = function(data) {
+    location.reload();
+}
+
+var onError = function(error) {
+     UIkit.modal.alert(error);
+}
+
+
+
+</script>
+
 @*Top panel*@
 <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
-    <nav class="uk-navbar uk-margin-large-bottom" >
-        <div class="uk-navbar-flip uk-margin-small-top uk-margin-small-bottom uk-margin-small-right">
 
-
-        </div>
-    </nav>
 
     <div class="container">
 
@@ -19,26 +47,34 @@
         </p>
         }
 
-        <h4>My posts:</h4>
+        @if(flash.contains("error")) {
+        <p>
+            @flash.get("error")
+        </p>
+        }
 
+        <h4>My posts:</h4>
 
         <ul>
             @for(post <- posts) {
-            <li>@post.getTitle <a href="@routes.Posts.edit(post.getId)">edit</a></li>
+            <li>@post.getTitle</li>
+
+            <div class="uk-button-group">
+                <a class="uk-button uk-button-primary" href="@routes.Posts.edit(post.getId)">Edit</a>
+                <a class="uk-button uk-button-danger" id="@post.getId" data-post-title="@post.getTitle" data-post-id="@post.getId"
+                   onclick="onDeleteClicked(this)">Delete</a>
+
+
+            </div>
+
             }
-            <li><a class="btn" href="@routes.Posts.create()">Create new post</a> as @Application.getLocalUser(session).getName</li>
+            <li><a class="btn" href="@routes.Posts.create()">Create new post</a> as
+                @Application.getLocalUser(session).getName
+            </li>
         </ul>
 
 
-
-
     </div>
-</div>
 
 
-
-
-
-
-
-}
+    }

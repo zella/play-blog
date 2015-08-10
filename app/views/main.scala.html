@@ -10,15 +10,19 @@
         @*front-end framework*@
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/uikit.min.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
-        <script type="text/javascript" src="@routes.Assets.versioned("javascripts/jquery-1.11.2.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("javascripts/jquery-2.1.4.min.js")"></script>
         @*front-end framework*@
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/uikit.min.js")"></script>
+        @*need for calling routes from js*@
+        <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
     </head>
     <body>
-        @*Top panel*@
-
-
-        <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+    <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+        <nav class="uk-navbar uk-margin-large-bottom">
+            <a class="uk-navbar-brand uk-hidden-small" href="/">Zella blog</a>
+            @*centered on small screens*@
+            <div class="uk-navbar-brand uk-navbar-center uk-visible-small">Zella blog</div>
+        </nav>
             <div class="container">@content</div>
         </div>
     </body>

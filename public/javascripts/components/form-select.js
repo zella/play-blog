@@ -1,38 +1,39 @@
-/*! UIkit 2.16.2 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
 
-    if (jQuery && UIkit) {
-        component = addon(jQuery, UIkit);
+    if (window.UIkit) {
+        component = addon(UIkit);
     }
 
     if (typeof define == "function" && define.amd) {
         define("uikit-form-select", ["uikit"], function(){
-            return component || addon(jQuery, UIkit);
+            return component || addon(UIkit);
         });
     }
 
-})(function($, UI){
+})(function(UI){
 
     "use strict";
 
     UI.component('formSelect', {
 
         defaults: {
-            'target': '>span:first'
+            'target': '>span:first',
+            'activeClass': 'uk-active'
         },
 
         boot: function() {
             // init code
             UI.ready(function(context) {
 
-                UI.$("[data-@-form-select]", context).each(function(){
+                UI.$("[data-uk-form-select]", context).each(function(){
 
                     var ele = UI.$(this);
 
                     if (!ele.data("formSelect")) {
-                        var obj = UI.formSelect(ele, UI.Utils.options(ele.attr("data-@-form-select")));
+                        var obj = UI.formSelect(ele, UI.Utils.options(ele.attr("data-uk-form-select")));
                     }
                 });
             });
@@ -52,6 +53,8 @@
                     try {
                         $this.target.text(select.options[select.selectedIndex].text);
                     } catch(e) {}
+
+                    $this.element[$this.select.val() ? 'addClass':'removeClass']($this.options.activeClass);
 
                     return fn;
                 };

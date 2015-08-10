@@ -1,5 +1,5 @@
-/*! UIkit 2.16.2 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
-(function($, UI) {
+/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+(function(UI) {
 
     "use strict";
 
@@ -8,7 +8,7 @@
     UI.component('stackMargin', {
 
         defaults: {
-            'cls': '@-margin-small-top'
+            'cls': 'uk-margin-small-top'
         },
 
         boot: function() {
@@ -16,12 +16,12 @@
             // init code
             UI.ready(function(context) {
 
-                UI.$("[data-@-margin]", context).each(function() {
+                UI.$("[data-uk-margin]", context).each(function() {
 
                     var ele = UI.$(this), obj;
 
                     if (!ele.data("stackMargin")) {
-                        obj = UI.stackMargin(ele, UI.Utils.options(ele.attr("data-@-margin")));
+                        obj = UI.stackMargin(ele, UI.Utils.options(ele.attr("data-uk-margin")));
                     }
                 });
             });
@@ -41,7 +41,7 @@
                     $this.process();
                 };
 
-                $(function() {
+                UI.$(function() {
                     fn();
                     UI.$win.on("load", fn);
                 });
@@ -77,58 +77,88 @@
         }
     });
 
-    // responsive iframes
-    UI.ready((function(){
 
-        var iframes = [], check = function() {
+    // responsive element e.g. iframes
 
-            iframes.forEach(function(iframe){
+    (function(){
 
-                if (!iframe.is(':visible')) return;
+        var elements = [], check = function(ele) {
 
-                var width  = iframe.parent().width(),
-                    iwidth = iframe.data('width'),
-                    ratio  = (width / iwidth),
-                    height = Math.floor(ratio * iframe.data('height'));
+            if (!ele.is(':visible')) return;
 
-                iframe.css({'height': (width < iwidth) ? height : iframe.data('height')});
-            });
+            var width  = ele.parent().width(),
+                iwidth = ele.data('width'),
+                ratio  = (width / iwidth),
+                height = Math.floor(ratio * ele.data('height'));
+
+            ele.css({'height': (width < iwidth) ? height : ele.data('height')});
         };
 
-        UI.$win.on('resize', UI.Utils.debounce(check, 15));
+        UI.component('responsiveElement', {
 
-        return function(context){
+            defaults: {},
 
-            UI.$('iframe.@-responsive-width', context).each(function(){
+            boot: function() {
 
-                var iframe = $(this);
+                // init code
+                UI.ready(function(context) {
 
-                if (!iframe.data('responsive') && iframe.attr('width') && iframe.attr('height')) {
+                    UI.$("iframe.uk-responsive-width, [data-uk-responsive]", context).each(function() {
 
-                    iframe.data('width'     , iframe.attr('width'));
-                    iframe.data('height'    , iframe.attr('height'));
-                    iframe.data('responsive', true);
-                    iframes.push(iframe);
+                        var ele = UI.$(this), obj;
+
+                        if (!ele.data("responsiveIframe")) {
+                            obj = UI.responsiveElement(ele, {});
+                        }
+                    });
+                });
+            },
+
+            init: function() {
+
+                var ele = this.element;
+
+                if (ele.attr('width') && ele.attr('height')) {
+
+                    ele.data({
+
+                        'width' : ele.attr('width'),
+                        'height': ele.attr('height')
+
+                    }).on('display.uk.check', function(){
+                        check(ele);
+                    });
+
+                    check(ele);
+
+                    elements.push(ele);
                 }
+            }
+        });
+
+        UI.$win.on('resize load', UI.Utils.debounce(function(){
+
+            elements.forEach(function(ele){
+                check(ele);
             });
 
-            check();
-        };
+        }, 15));
 
-    })());
+    })();
+
 
 
     // helper
 
     UI.Utils.stackMargin = function(elements, options) {
 
-        options = $.extend({
-            'cls': '@-margin-small-top'
+        options = UI.$.extend({
+            'cls': 'uk-margin-small-top'
         }, options);
 
-        options.cls = UI.prefix(options.cls);
+        options.cls = options.cls;
 
-        elements = $(elements).removeClass(options.cls);
+        elements = UI.$(elements).removeClass(options.cls);
 
         var skip         = false,
             firstvisible = elements.filter(":visible:first"),
@@ -154,4 +184,60 @@
         });
     };
 
-})(jQuery, UIkit);
+    UI.Utils.matchHeights = function(elements, options) {
+
+        elements = UI.$(elements).css('min-height', '');
+        options  = UI.$.extend({ row : true }, options);
+
+        var matchHeights = function(group){
+
+            if (group.length < 2) return;
+
+            var max = 0;
+
+            group.each(function() {
+                max = Math.max(max, UI.$(this).outerHeight());
+            }).each(function() {
+
+                var element = UI.$(this),
+                    height  = max - (element.css('box-sizing') == 'border-box' ? 0 : (element.outerHeight() - element.height()));
+
+                element.css('min-height', height + 'px');
+            });
+        };
+
+        if (options.row) {
+
+            elements.first().width(); // force redraw
+
+            setTimeout(function(){
+
+                var lastoffset = false, group = [];
+
+                elements.each(function() {
+
+                    var ele = UI.$(this), offset = ele.offset().top;
+
+                    if (offset != lastoffset && group.length) {
+
+                        matchHeights(UI.$(group));
+                        group  = [];
+                        offset = ele.offset().top;
+                    }
+
+                    group.push(ele);
+                    lastoffset = offset;
+                });
+
+                if (group.length) {
+                    matchHeights(UI.$(group));
+                }
+
+            }, 0);
+
+        } else {
+            matchHeights(elements);
+        }
+    };
+
+})(UIkit);

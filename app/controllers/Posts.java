@@ -5,8 +5,10 @@ import models.Post;
 import models.user.User;
 import play.data.Form;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
+import utils.TextUtils;
 import views.html.editpost;
 import views.html.*;
 
@@ -26,8 +28,13 @@ public class Posts extends Controller {
 //   }
 
    public static Result detail(String title) {
+
       Post post_ = Post.find.query()
-            .where().eq("title", title).findUnique();
+          .where().eq("title", title).findUnique();
+
+      if (post_ == null) {
+         return notFound("Page not found");
+      }
 
       //TODO multiuser
 //
@@ -44,7 +51,7 @@ public class Posts extends Controller {
       if (post_.getIsPrivate() && Application.getLocalUser(session()) == null) {
          return notFound("Page not found");
       } else
-         return ok(post.render(post_));
+         return ok(post.render(post_, Post.allWithTitlesOnly()));
 
    }
 
@@ -71,6 +78,7 @@ public class Posts extends Controller {
       //   post.setHtmlPreview(.TextUtils.generateTruncateHtmlPreview(blogPost.getBody(), TRUNCATED_MEDIUM_CHAR_COUNT));
       //TODO local user!
       User localUser = Application.getLocalUser(session());
+      post.setHtmlPreview(TextUtils.generateTruncateHtmlPreview(post.getContent(), TextUtils.TRUNCATED_CHAR_COUNT));
       post.setUser(localUser);
       post.setCreationDate(new Date());
 
@@ -109,8 +117,7 @@ public class Posts extends Controller {
       toUpdate.setContent(postFromForm.getContent());
       toUpdate.setTitle(postFromForm.getTitle());
       toUpdate.setIsPrivate(postFromForm.getIsPrivate());
-//      toUpdate.setName(postFromForm.getName());
-//      toUpdate.setHtmlPreview(util.TextUtils.generateTruncateHtmlPreview(toUpdate.getBody(), TRUNCATED_MEDIUM_CHAR_COUNT));
+      toUpdate.setHtmlPreview(TextUtils.generateTruncateHtmlPreview(postFromForm.getContent(), TextUtils.TRUNCATED_CHAR_COUNT));
       toUpdate.save();
       flash("success", "Post has been updated");
       /**
@@ -120,5 +127,26 @@ public class Posts extends Controller {
        */
       return redirect(routes.Application.admin());
    }
+
+
+   /**
+    * Handle delete post
+    */
+   @Security.Authenticated(Secured.class)
+   public static Result delete(String id) {
+
+      Post toDelete = Post.find.byId(UUID.fromString(id));
+      if (toDelete != null) {
+         toDelete.delete();
+         flash("success", "Post has been deleted");
+         return ok(id);
+      } else {
+         flash("error", "Error, post not exist");
+         return forbidden(id);
+
+      }
+
+   }
+
 
 }
