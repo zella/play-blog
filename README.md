@@ -9,7 +9,7 @@
 * Discuss comments 
 
 
-**Usage:**  
+**Development usage:**  
  
  1. Edit conf/application.conf:  
  
@@ -34,6 +34,17 @@
  
  4. Admin urls: `/login` `/logout` `/admin`
  
+Production usage and more see [play framework documentation](https://www.playframework.com/documentation/2.4.x/Home)
+
+**FAQ**  
+
+* How backup blog?
+
+     Just copy database from `~/h2/blog`. Also you can manualy edit it with sql tools
+
+
+
+  
 
 
 *NOTE*  
