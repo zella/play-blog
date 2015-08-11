@@ -52,4 +52,4 @@
 **Attention** 
 * It's very alpha version.
 * If you change model, ebean regenerates db evolutions, so tables will be dropped; See docs how manage evolutions.
-* Users from `application.conf` updates on application restart - You can change password of exiting users or add new users; 
+* Users from `application.conf` updates on application restart - You can change password of exiting users or add new users; There is no multi user support yet. Users uses for authorization only. Also user's name displays in post author.
