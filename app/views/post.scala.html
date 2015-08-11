@@ -5,7 +5,7 @@
 @*markdown parser and code highlighter*@
 <script type="text/javascript" src="@routes.Assets.versioned("javascripts/marked.min.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/highlight.min.js")"></script>
-<link rel="stylesheet" media="screen" href="@routes.Assets.versioned(" stylesheets/highlight.min.css")">
+<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/highlight.min.css")">
 
 
 
@@ -60,7 +60,6 @@
 
 
 <script>
-    hljs.initHighlightingOnLoad ( ) ;
     var marked_ = marked.setOptions ( {
     renderer : new marked.Renderer ( ),
     gfm : true,
@@ -72,6 +71,7 @@
     smartypants : false
     } ) ;
     $ ( ".post-content" ).html ( marked_ ( $ ( ".post-content" ).text ( ) ) ) ;
+       hljs.initHighlightingOnLoad ( ) ;
 
 </script>
 

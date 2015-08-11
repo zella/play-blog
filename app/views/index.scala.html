@@ -14,9 +14,9 @@ routes.Application.index(newPage)
 
 @main("Zella blog") {
 @*markdown parser and code highlighter*@
-<script type="text/javascript" src="@routes.Assets.versioned(" javascripts/marked.js")"></script>
+<script type="text/javascript" src="@routes.Assets.versioned("javascripts/marked.min.js")"></script>
 <script type="text/javascript" src="@routes.Assets.versioned("javascripts/highlight.min.js")"></script>
-<link rel="stylesheet" media="screen" href="@routes.Assets.versioned(" stylesheets/highlight.min.css")">
+<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/highlight.min.css")">
 
 
 <div class="uk-grid" data-uk-grid-margin>
@@ -108,11 +108,11 @@ routes.Application.index(newPage)
 </div>
 
 <script>
-    hljs.initHighlightingOnLoad ( ) ;
     $ ( ".blog-content" ).each ( function ( index ) {
     var content = $ ( this ).text ( )
     $ ( this ).html ( content ) ;
     } ) ;
+    hljs.initHighlightingOnLoad ( ) ;
 </script>
 
 }
