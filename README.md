@@ -31,7 +31,7 @@
  
  Find `var disqus_shortname = 'your_discuss_id';` and specify your own from disquss admin.
 
- 3. Launch `./activator start` from project folder
+ 3. Launch `./activator run` from project folder
  
  4. Admin urls: `/login` `/logout` `/admin`
  
