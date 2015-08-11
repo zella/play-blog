@@ -3,8 +3,8 @@
 
 
 **Feautures:**
-* Write in markdown with realtime preview. Thanks to [http://getuikit.com/docs/htmleditor.html](http://getuikit.com/docs/htmleditor.html)
-* Code highlight. Thanks to [highlight.js](https://highlightjs.org/)
+* Write in markdown with realtime preview.
+* Code highlight.
 * Private and public posts
 * Jdbc-compliant database (h2 embedded by default)
 * Discuss comments 
