@@ -4,6 +4,7 @@
 
 **Feautures:**
 * Write in markdown with realtime preview. Thanks to [http://getuikit.com/docs/htmleditor.html](http://getuikit.com/docs/htmleditor.html)
+* Code highlight. Thanks to [highlight.js](https://highlightjs.org/)
 * Private and public posts
 * Jdbc-compliant database (h2 embedded by default)
 * Discuss comments 
@@ -34,18 +35,20 @@
  
  4. Admin urls: `/login` `/logout` `/admin`
  
-Production usage and more see [play framework documentation](https://www.playframework.com/documentation/2.4.x/Home)
+**Production usage:**   
+For production usage it need few steps:
+* Enable auto-deploy database evolutions; 
+* Setup application secret;
+* More see [play framework documentation](https://www.playframework.com/documentation/2.4.x/Home)
 
 **FAQ**  
 
 * How backup blog?
 
-     Just copy database from `~/h2/blog`. Also you can manualy edit it with sql tools
+     Just copy database from `~/h2/blog`. Also you can manualy edit it with sql tools. For example, `h2-console`
 
 
 
-  
-
-
-*NOTE*  
-It's very alpha version.
+*Attention*  
+* It's very alpha version.
+* If you change model, ebean regenerates db evolutions, so tables will be dropped; See docs how manage evolutions.
