@@ -36,7 +36,7 @@
  4. Admin urls: `/login` `/logout` `/admin`
  
 **Production usage:**   
-For production usage it need few steps:
+ Production usage needs few steps more:
 * Enable auto-deploy database evolutions; 
 * Setup application secret;
 * More see [play framework documentation](https://www.playframework.com/documentation/2.4.x/Home)
