@@ -1,21 +1,24 @@
- $( document ).ready(function() {
+$(document).ready(function () {
 
-      var titleOld = $('#title').serialize();
+    $("#postForm").submit(function () {
+         $(window).off('beforeunload');
+    })
 
-      var mardownEditor = $('.CodeMirror')[0].CodeMirror;
-      var contentOld = mardownEditor.getValue();
+    var titleOld = $('#title').serialize();
 
-      var isPrivateOld = $('#isPrivate').serialize();
+    var mardownEditor = $('.CodeMirror')[0].CodeMirror;
+    var contentOld = mardownEditor.getValue();
 
-       $(window).bind('beforeunload', function(e){
+    var isPrivateOld = $('#isPrivate').serialize();
 
-          var title = $('#title').serialize();
-          var content = mardownEditor.getValue();
-          var isPrivate = $('#isPrivate').serialize();
+    $(window).on('beforeunload', function (e) {
 
-          if((title !== titleOld)||(content !== contentOld)||(isPrivate !== isPrivateOld))
-          {
-             return 'All changes will be lost!';
-          }
-       });
- });
+        var title = $('#title').serialize();
+        var content = mardownEditor.getValue();
+        var isPrivate = $('#isPrivate').serialize();
+
+        if ((title !== titleOld) || (content !== contentOld) || (isPrivate !== isPrivateOld)) {
+            return 'All changes will be lost!';
+        }
+    });
+});
