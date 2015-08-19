@@ -17,16 +17,14 @@ public class Global extends GlobalSettings {
 
    @Override
    public F.Promise<Result> onHandlerNotFound(Http.RequestHeader request) {
-      //TODO not tested
       return F.Promise.<Result>pure(play.mvc.Results.notFound("Page not found"));
    }
 
    @Override
    public void onStart(Application app) {
       super.onStart(app);
-     // Ebean.getServer("default").shutdown(true, true);
-      setupUsers();
 
+      setupUsers();
    }
 
    private void setupUsers() {
