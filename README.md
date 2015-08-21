@@ -9,6 +9,7 @@
 * Jdbc-compliant database (h2 embedded by default)
 * Discuss comments 
 
+Example: http://blogzella.tk
 
 **Development usage:**  
  
