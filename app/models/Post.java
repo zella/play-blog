@@ -111,8 +111,7 @@ public class Post extends Model {
       else
          total = find.query()
              .where().eq("isPrivate", false).findRowCount();
-      System.out.println("total " + total);
-
+      
       List<Post> postsOnPage;
       if (showPrivate)
          postsOnPage = find
