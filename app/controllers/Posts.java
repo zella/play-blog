@@ -1,6 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import dao.BlogPostDao;
 import models.Post;
 import models.user.User;
 import play.data.Form;
@@ -29,8 +30,7 @@ public class Posts extends Controller {
 
    public static Result detail(String title) {
 
-      Post post_ = Post.find.query()
-          .where().eq("title", title).findUnique();
+      Post post_ = BlogPostDao.findByTitle(title);
 
       if (post_ == null) {
          return notFound("Page not found");
@@ -51,7 +51,7 @@ public class Posts extends Controller {
       if (post_.getIsPrivate() && Application.getLocalUser(session()) == null) {
          return notFound("Page not found");
       } else
-         return ok(post.render(post_, Post.allWithTitlesOnly()));
+         return ok(post.render(post_, BlogPostDao.findAllWithTitlesOnly()));
 
    }
 
@@ -94,7 +94,7 @@ public class Posts extends Controller {
     */
    @Security.Authenticated(Secured.class)
    public static Result edit(UUID postId) {
-      Form<Post> postForm = form(Post.class).fill(Post.find.byId(postId));
+      Form<Post> postForm = form(Post.class).fill(BlogPostDao.findById(postId.toString()));
       return ok(editpost.render(postId, postForm));
    }
 
@@ -113,7 +113,7 @@ public class Posts extends Controller {
       Post postFromForm = postForm.get();
       //TODO info about blog
       //TODO merge/update functionality
-      Post toUpdate = Post.find.byId(postId);
+      Post toUpdate = BlogPostDao.findById(postId.toString());
       toUpdate.setContent(postFromForm.getContent());
       toUpdate.setTitle(postFromForm.getTitle());
       toUpdate.setIsPrivate(postFromForm.getIsPrivate());
@@ -144,7 +144,7 @@ public class Posts extends Controller {
 //      }
 //      return redirect(routes.Application.admin());
 
-      Post toDelete = Post.find.byId(UUID.fromString(id));
+      Post toDelete = BlogPostDao.findById(id);
       if (toDelete != null) {
          toDelete.delete();
          flash("success", "Post has been deleted");

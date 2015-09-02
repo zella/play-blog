@@ -16,7 +16,7 @@ import java.util.*;
 @Table(name = "users")
 public class User extends Model {
 
-   public static final Finder<String, User> find = new Finder<>(User.class);
+   public static final Finder<String, User> finder = new Finder<>(User.class);
 
    private String name;
 
@@ -77,27 +77,7 @@ public class User extends Model {
       this.email = email;
    }
 
-   public static User findByEmail(final String email) {
-      return find.query()
-            .where().eq("email", email).findUnique();
 
-   }
-
-   public static User findByEmailAndPass(final String email, final String password) {
-      List<User> users = find.all();
-      User user = find.where()
-            .and(Expr.eq("email", email), Expr.eq("password", password))
-                  //TODO exist query
-            .findUnique();
-
-      return user;
-   }
-
-   public static boolean exist(final String email, final String password) {
-
-      //  if (email.equals("1")) return true; else  return false;
-      return findByEmailAndPass(email, password) != null;
-   }
 
    @Override
    public boolean equals(Object o) {

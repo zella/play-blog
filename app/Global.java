@@ -1,4 +1,5 @@
 import com.avaje.ebean.Ebean;
+import dao.UserDao;
 import models.user.User;
 import play.*;
 
@@ -40,7 +41,7 @@ public class Global extends GlobalSettings {
 
 
    private void updateUserInDb(String email, String password, String name) {
-      User u = User.findByEmail(email);
+      User u = UserDao.findByEmail(email);
       if (u == null) {
          u = new User(email, password, name);
          u.save();
