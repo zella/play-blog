@@ -105,7 +105,13 @@ public class Post extends Model {
 
    public static Page page(int page, boolean showPrivate) {
 
-      long total = find.findRowCount();
+      long total;
+      if (showPrivate)
+         total = find.findRowCount();
+      else
+         total = find.query()
+             .where().eq("isPrivate", false).findRowCount();
+      System.out.println("total " + total);
 
       List<Post> postsOnPage;
       if (showPrivate)
@@ -121,6 +127,7 @@ public class Post extends Model {
              .order().desc("creationDate")
              .findPagedList(page - 1, Page.DEFAULT_PAGE_SIZE)
              .getList();
+
       return new Page(postsOnPage, total, page);
    }
 
