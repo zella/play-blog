@@ -5,7 +5,7 @@
 
 <script>
 
-    function onDeleteClicked(identifier) {
+function onDeleteClicked(identifier) {
     var postId = $(identifier).data('post-id');
     var postTitle = $(identifier).data('post-title');
 
@@ -13,25 +13,23 @@
            var postId = $(identifier).data('post-id');
                deletePost(postId);
        });
-    }
+}
 
-var deletePost = function(postId) {
-    var ajaxCallBack = {
-        success : onSuccess,
-        error : onError
-    }
-    jsRoutes.controllers.Posts.delete(postId).ajax(ajaxCallBack);
-};
-
-var onSuccess = function(data) {
+var onDeleteSuccess = function(data) {
     location.reload();
 }
 
-var onError = function(error) {
+var onDeleteError = function(error) {
      UIkit.modal.alert(error);
 }
 
-
+var deletePost = function(postId) {
+    var ajaxCallBack = {
+        success : onDeleteSuccess,
+        error : onDeleteError
+    }
+    jsRoutes.controllers.Posts.delete(postId).ajax(ajaxCallBack);
+};
 
 </script>
 
@@ -61,7 +59,8 @@ var onError = function(error) {
 
             <div class="uk-button-group">
                 <a class="uk-button uk-button-primary" href="@routes.Posts.edit(post.getId)">Edit</a>
-                <a class="uk-button uk-button-danger" id="@post.getId" data-post-title="@post.getTitle" data-post-id="@post.getId"
+                <a class="uk-button uk-button-danger" id="@post.getId" data-post-title="@post.getTitle"
+                   data-post-id="@post.getId"
                    onclick="onDeleteClicked(this)">Delete</a>
 
 
@@ -78,3 +77,4 @@ var onError = function(error) {
 
 
     }
+</div>

@@ -106,23 +106,12 @@ public class Posts extends Controller {
        */
       return redirect(routes.Application.admin());
    }
-
-
+   
    /**
-    * Handle delete post
+    * Handle delete post as ajax action
     */
    @Security.Authenticated(Secured.class)
    public static Result delete(String id) {
-
-//      Post toDelete = Post.find.byId(UUID.fromString(id));
-//      if (toDelete != null) {
-//         toDelete.delete();
-//         flash("success", "Post has been deleted");
-//      } else {
-//         flash("error", "Error, post not exist");
-//      }
-//      return redirect(routes.Application.admin());
-
       Post toDelete = Application.postDao.findById(id);
       if (toDelete != null) {
          Application.postDao.delete(toDelete);
@@ -131,7 +120,6 @@ public class Posts extends Controller {
       } else {
          flash("error", "Error, post not exist");
          return forbidden(id);
-
       }
 
    }

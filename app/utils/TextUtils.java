@@ -125,7 +125,7 @@ public class TextUtils {
       if (truncatedHtml.length() > charCount * 2) {
          truncatedHtml = TextUtils.truncateHtmlWords(truncatedHtml, charCount);
       }
-      truncatedHtml += "<br/><br/>. . . ";
+      truncatedHtml += "<br/>. . . ";
       return truncatedHtml;
    }
 
