@@ -2,7 +2,6 @@ package models;
 
 import com.avaje.ebean.*;
 import com.avaje.ebean.Query;
-import dao.BlogPostDao;
 import models.user.User;
 import org.springframework.core.annotation.Order;
 import play.data.format.Formats;
@@ -23,7 +22,7 @@ import java.util.UUID;
 public class Post extends Model {
 
 
-   public static final Finder<UUID, Post> finder = new Finder<>(Post.class);
+   public static final Finder<UUID, Post> find = new Finder<>(Post.class);
 
    @Id
    private UUID id;
@@ -106,11 +105,39 @@ public class Post extends Model {
 
    public static Page page(int page, boolean showPrivate) {
 
-      long total = BlogPostDao.count(showPrivate);
-
-      List<Post> postsOnPage = BlogPostDao.page(page, Page.DEFAULT_PAGE_SIZE, showPrivate);
+      long total;
+      if (showPrivate)
+         total = find.findRowCount();
+      else
+         total = find.query()
+             .where().eq("isPrivate", false).findRowCount();
+      
+      List<Post> postsOnPage;
+      if (showPrivate)
+         postsOnPage = find
+             .query()
+             .order().desc("creationDate")
+             .findPagedList(page - 1, Page.DEFAULT_PAGE_SIZE)
+             .getList();
+      else
+         postsOnPage = find
+             .query()
+             .where().eq("isPrivate", false)
+             .order().desc("creationDate")
+             .findPagedList(page - 1, Page.DEFAULT_PAGE_SIZE)
+             .getList();
 
       return new Page(postsOnPage, total, page);
+   }
+
+   public static List<Post> allWithTitlesOnly() {
+      //TODO fetch titles only
+      return find.order().desc("creationDate").findList();
+   }
+
+   public static boolean isTitleUnique(String title) {
+      return find.query()
+          .where().eq("title", title).findUnique() == null;
    }
 
 
@@ -121,7 +148,7 @@ public class Post extends Model {
     */
    public List<ValidationError> validate() {
       List<ValidationError> errors = new ArrayList<>();
-      if (getId() != null && !BlogPostDao.isPostTitleUnique(getTitle())) {
+      if (getId() != null && !isTitleUnique(getTitle())) {
          errors.add(new ValidationError("title", "Post with title " + getTitle() + " already exist."));
       }
       return errors.isEmpty() ? null : errors;

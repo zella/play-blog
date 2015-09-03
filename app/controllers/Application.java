@@ -1,7 +1,5 @@
 package controllers;
 
-import dao.BlogPostDao;
-import dao.UserDao;
 import models.*;
 import models.user.User;
 import play.data.Form;
@@ -15,13 +13,13 @@ public class Application extends Controller {
    public static Result index(int page) {
       if (page < 1)
          return redirect(routes.Application.index(1));
-      return ok(index.render(Post.page(page, getLocalUser(session()) != null), BlogPostDao.findAllWithTitlesOnly()));
+      return ok(index.render(Post.page(page, getLocalUser(session()) != null), Post.allWithTitlesOnly()));
    }
 
 
    public static Result login() {
       return ok(
-          login.render(Form.form(Login.class))
+            login.render(Form.form(Login.class))
       );
    }
 
@@ -29,7 +27,7 @@ public class Application extends Controller {
       session().clear();
       flash("success", "You've been logged out");
       return redirect(
-          routes.Application.login()
+            routes.Application.login()
       );
    }
 
@@ -41,7 +39,7 @@ public class Application extends Controller {
          session().clear();
          session("email", loginForm.get().email);
          return redirect(
-             routes.Application.admin()
+               routes.Application.admin()
          );
       }
    }
@@ -53,7 +51,7 @@ public class Application extends Controller {
     */
    @Security.Authenticated(Secured.class)
    public static Result admin() {
-      return ok(admin.render(BlogPostDao.findAllWithTitlesOnly()));
+      return ok(admin.render(Post.find.order().desc("creationDate").findList()));
    }
 
    /**
@@ -71,13 +69,14 @@ public class Application extends Controller {
    }
 
 
+
    public static class Login {
 
       public String email;
       public String password;
 
       public String validate() {
-         if (!UserDao.exist(email, password)) {
+         if (!User.exist(email, password)) {
             return "Invalid user or password";
          }
          return null;
@@ -87,7 +86,7 @@ public class Application extends Controller {
 
 
    public static User getLocalUser(Http.Session session) {
-      return UserDao.findByEmail(session.get("email"));
+      return User.findByEmail(session.get("email"));
    }
 
 
