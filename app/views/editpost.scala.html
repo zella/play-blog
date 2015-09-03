@@ -1,6 +1,6 @@
 @import models._
 
-@(postId: UUID, postForm: Form[Post]) @main("Edit post") {
+@(postId: String, postForm: Form[Post]) @main("Edit post") {
 
     <!-- Codemirror and marked dependencies -->
     <link rel="stylesheet" href="@routes.Assets.versioned("codemirror/lib/codemirror.css")">

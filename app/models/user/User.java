@@ -3,6 +3,7 @@ package models.user;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Model;
+import com.orientechnologies.orient.core.record.impl.ODocument;
 import models.Post;
 
 import javax.persistence.*;
@@ -12,15 +13,13 @@ import java.util.*;
  * Created by dru on 09.01.2015.
  */
 
-@Entity
-@Table(name = "users")
-public class User extends Model {
+public class User {
 
-   public static final Finder<String, User> find = new Finder<>(User.class);
+
+   private String id;
 
    private String name;
 
-   @Id
    private String email;
 
    private String password;
@@ -30,6 +29,9 @@ public class User extends Model {
    //TODO
    @OneToMany
    public List<Post> posts = new ArrayList<>();
+
+   public User() {
+   }
 
    public User(String email, String password, String name) {
       this.password = password;
@@ -77,26 +79,12 @@ public class User extends Model {
       this.email = email;
    }
 
-   public static User findByEmail(final String email) {
-      return find.query()
-            .where().eq("email", email).findUnique();
-
+   public String getId() {
+      return id;
    }
 
-   public static User findByEmailAndPass(final String email, final String password) {
-      List<User> users = find.all();
-      User user = find.where()
-            .and(Expr.eq("email", email), Expr.eq("password", password))
-                  //TODO exist query
-            .findUnique();
-
-      return user;
-   }
-
-   public static boolean exist(final String email, final String password) {
-
-      //  if (email.equals("1")) return true; else  return false;
-      return findByEmailAndPass(email, password) != null;
+   private void setId(String id) {
+      this.id = id;
    }
 
    @Override
@@ -105,11 +93,39 @@ public class User extends Model {
       if (o == null || getClass() != o.getClass()) return false;
       User user = (User) o;
       return Objects.equals(getEmail(), user.getEmail()) &&
-            Objects.equals(getPassword(), user.getPassword());
+          Objects.equals(getPassword(), user.getPassword());
    }
 
    @Override
    public int hashCode() {
       return Objects.hash(getEmail(), getPassword());
+   }
+
+   public static User fromDocument(ODocument doc) {
+      if (doc == null) return null;
+
+      User user = new User();
+      user.setId(doc.getIdentity().toString());
+      user.setName(doc.field("name"));
+      user.setEmail(doc.field("email"));
+      user.setPassword(doc.field("password"));
+      user.setAvatarUrl(doc.field("avatarUrl"));
+      return user;
+   }
+
+   public ODocument toDocument() {
+      ODocument doc = new ODocument();
+
+      //TODO 75% - not working; need test
+      if (getId() != null) {
+         doc.field("rid", getId());
+      }
+
+
+      doc.field("name", getName());
+      doc.field("email", getEmail());
+      doc.field("password", getPassword());
+      doc.field("avatarUrl", getAvatarUrl());
+      return doc;
    }
 }

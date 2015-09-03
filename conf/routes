@@ -20,8 +20,8 @@ POST        /admin/post               controllers.Posts.save()
 
 
 # Edit existing post
-GET         /admin/post/:id           controllers.Posts.edit(id: java.util.UUID)
-POST        /admin/post/              controllers.Posts.doEdit(id: java.util.UUID)
+GET         /admin/post/:id           controllers.Posts.edit(id)
+POST        /admin/post/              controllers.Posts.doEdit(id)
 
 # Delete post
 POST        /admin/post/delete        controllers.Posts.delete(id)
