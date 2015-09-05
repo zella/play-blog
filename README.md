@@ -35,7 +35,6 @@ Example: http://blogzella.tk
  
 **Production usage:**   
  Production usage needs few steps more:
-* Enable auto-deploy database evolutions; 
 * Setup application secret;
 * More see [play framework documentation](https://www.playframework.com/documentation/2.4.x/Home)
 
