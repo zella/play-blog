@@ -29,7 +29,7 @@ public class Application extends Controller {
 
    public static Result login() {
       return ok(
-          login.render(Form.form(Login.class))
+              login.render(Form.form(Login.class))
       );
    }
 
@@ -37,7 +37,7 @@ public class Application extends Controller {
       session().clear();
       flash("success", "You've been logged out");
       return redirect(
-          routes.Application.login()
+              routes.Application.login()
       );
    }
 
@@ -49,7 +49,7 @@ public class Application extends Controller {
          session().clear();
          session("email", loginForm.get().email);
          return redirect(
-             routes.Application.admin()
+                 routes.Application.admin()
          );
       }
    }
@@ -72,9 +72,9 @@ public class Application extends Controller {
    public static Result javascriptRoutes() {
       response().setContentType("text/javascript");
       return ok(
-          Routes.javascriptRouter("jsRoutes",
-              controllers.routes.javascript.Posts.delete()
-          )
+              Routes.javascriptRouter("jsRoutes",
+                      controllers.routes.javascript.Posts.delete()
+              )
       );
    }
 
@@ -95,7 +95,10 @@ public class Application extends Controller {
 
 
    public static User getLocalUser(Http.Session session) {
-      return userDao.findByEmail(session.get("email"));
+      if (session.get("email") == null)
+         return null;
+      else
+         return userDao.findByEmail(session.get("email"));
    }
 
 

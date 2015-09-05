@@ -15,7 +15,7 @@
         <div class="uk-width-medium-3-4">
 
             <article class="uk-article">
-                <div id="postContainer" data-post-id="@post.getTitle()">
+                <div id="postContainer" data-post-id="@post.getId()">
                     <h1 class="uk-article-title">
                         @post.getTitle
                     </h1>
@@ -48,7 +48,7 @@
 
                     @for(p <- archives) {
 
-                    <li><a href="@routes.Posts.detail(p.getTitle)">@p.getTitle</a></li>
+                    <li><a href="@routes.Posts.detail(p.getId)">@p.getTitle</a></li>
 
                     }
 

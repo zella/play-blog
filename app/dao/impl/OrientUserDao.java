@@ -47,7 +47,8 @@ public class OrientUserDao implements IUserDao {
    public void save(User user) {
       try (ODatabaseDocumentTx db = DB.acquire()) {
          ODocument doc = user.toDocument();
-         db.save(doc);
+          db.save(doc);
+
       }
    }
 }

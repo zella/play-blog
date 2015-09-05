@@ -2,6 +2,7 @@ package models;
 
 import com.avaje.ebean.*;
 
+import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import controllers.Application;
 
@@ -141,12 +142,13 @@ public class Post  {
    }
 
    public ODocument toDocument() {
-      ODocument doc = new ODocument();
 
-      //TODO 75% - not working; need test
+      ODocument doc;
+
       if (getId() != null) {
-         doc.field("rid", getId());
-      }
+         doc = new ODocument("BlogPost", new ORecordId(getId()));
+      } else
+         doc = new ODocument("BlogPost");
 
       doc.field("content", getContent());
       doc.field("creationDate", getCreationDate());
@@ -158,4 +160,14 @@ public class Post  {
       return doc;
    }
 
+   @Override
+   public String toString() {
+      return "Post{" +
+              "id='" + id + '\'' +
+              ", creationDate=" + creationDate +
+              ", title='" + title + '\'' +
+              ", user=" + user +
+              ", isPrivate=" + isPrivate +
+              '}';
+   }
 }

@@ -16,32 +16,16 @@ import static play.data.Form.form;
 
 public class Posts extends Controller {
 
-//   public static Result list() {
-//      List<Post> allPosts = Post.find.query().findList();
-//      // alternativ    Ebean.find(Post.class).findList();
-//
-//      return ok(index.render(allPosts));
-//   }
 
-   public static Result detail(String title) {
+   public static Result detail(String id) {
 
-      Post post_ = Application.postDao.findByTitle(title);
+      Post post_ = Application.postDao.findById(id);
 
       if (post_ == null) {
          return notFound("Page not found");
       }
 
       //TODO multiuser
-//
-//      if (post_.getIsPrivate()) {
-//         User localUser = Application.getLocalUser(session());
-//         //don't allow see private post from other users
-//         if (localUser != null && post_.getUser().equals(localUser))
-//            return ok(post.render(post_));
-//         else
-//            return notFound("Page not found");
-//      } else
-//         return ok(post.render(post_));
 
       if (post_.getIsPrivate() && Application.getLocalUser(session()) == null) {
          return notFound("Page not found");

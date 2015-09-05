@@ -3,6 +3,7 @@ package models.user;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Model;
+import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import models.Post;
 
@@ -93,7 +94,7 @@ public class User {
       if (o == null || getClass() != o.getClass()) return false;
       User user = (User) o;
       return Objects.equals(getEmail(), user.getEmail()) &&
-          Objects.equals(getPassword(), user.getPassword());
+              Objects.equals(getPassword(), user.getPassword());
    }
 
    @Override
@@ -114,18 +115,29 @@ public class User {
    }
 
    public ODocument toDocument() {
-      ODocument doc = new ODocument();
+      ODocument doc;
 
-      //TODO 75% - not working; need test
       if (getId() != null) {
-         doc.field("rid", getId());
-      }
-
+         doc = new ODocument("User", new ORecordId(getId()));
+      } else
+         doc = new ODocument("User");
 
       doc.field("name", getName());
       doc.field("email", getEmail());
       doc.field("password", getPassword());
       doc.field("avatarUrl", getAvatarUrl());
       return doc;
+   }
+
+   @Override
+   public String toString() {
+      return "User{" +
+              "id='" + id + '\'' +
+              ", name='" + name + '\'' +
+              ", email='" + email + '\'' +
+              ", password='" + password + '\'' +
+              ", avatarUrl='" + avatarUrl + '\'' +
+              ", posts=" + posts +
+              '}';
    }
 }
