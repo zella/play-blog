@@ -21,7 +21,7 @@ Example: http://blogzella.tk
        {email: "dru", password: "123", name: "Вася"}
       ]
  
- Edit database url
+ Edit database url (Database will be created on startup)
  
       orient.db_url = "plocal:/home/dru/blog_db"
 
