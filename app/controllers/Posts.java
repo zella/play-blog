@@ -1,11 +1,9 @@
 package controllers;
 
-import com.avaje.ebean.Ebean;
 import models.Post;
 import models.user.User;
 import play.data.Form;
 import play.mvc.Controller;
-import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
 import utils.TextUtils;
@@ -13,45 +11,26 @@ import views.html.editpost;
 import views.html.*;
 
 import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 import static play.data.Form.form;
 
 public class Posts extends Controller {
 
-//   public static Result list() {
-//      List<Post> allPosts = Post.find.query().findList();
-//      // alternativ    Ebean.find(Post.class).findList();
-//
-//      return ok(index.render(allPosts));
-//   }
 
-   public static Result detail(String title) {
+   public static Result detail(String id) {
 
-      Post post_ = Post.find.query()
-          .where().eq("title", title).findUnique();
+      Post post_ = Application.postDao.findById(id);
 
       if (post_ == null) {
          return notFound("Page not found");
       }
 
       //TODO multiuser
-//
-//      if (post_.getIsPrivate()) {
-//         User localUser = Application.getLocalUser(session());
-//         //don't allow see private post from other users
-//         if (localUser != null && post_.getUser().equals(localUser))
-//            return ok(post.render(post_));
-//         else
-//            return notFound("Page not found");
-//      } else
-//         return ok(post.render(post_));
 
       if (post_.getIsPrivate() && Application.getLocalUser(session()) == null) {
          return notFound("Page not found");
       } else
-         return ok(post.render(post_, Post.allWithTitlesOnly()));
+         return ok(post.render(post_, Application.postDao.findAll()));
 
    }
 
@@ -81,8 +60,8 @@ public class Posts extends Controller {
       post.setHtmlPreview(TextUtils.generateTruncateHtmlPreview(post.getContent(), TextUtils.TRUNCATED_CHAR_COUNT));
       post.setUser(localUser);
       post.setCreationDate(new Date());
+      Application.postDao.save(post);
 
-      post.save();
       flash("success", "Post has been created");
       return redirect(controllers.routes.Application.admin());
    }
@@ -93,8 +72,8 @@ public class Posts extends Controller {
     * @param postId Id of the blog post to edit
     */
    @Security.Authenticated(Secured.class)
-   public static Result edit(UUID postId) {
-      Form<Post> postForm = form(Post.class).fill(Post.find.byId(postId));
+   public static Result edit(String postId) {
+      Form<Post> postForm = form(Post.class).fill(Application.postDao.findById(postId));
       return ok(editpost.render(postId, postForm));
    }
 
@@ -105,7 +84,7 @@ public class Posts extends Controller {
     * @param postId Id of the blog post to edit
     */
    @Security.Authenticated(Secured.class)
-   public static Result doEdit(UUID postId) {
+   public static Result doEdit(String postId) {
       Form<Post> postForm = form(Post.class).bindFromRequest();
       if (postForm.hasErrors()) {
          return badRequest(editpost.render(postId, postForm));
@@ -113,12 +92,12 @@ public class Posts extends Controller {
       Post postFromForm = postForm.get();
       //TODO info about blog
       //TODO merge/update functionality
-      Post toUpdate = Post.find.byId(postId);
+      Post toUpdate = Application.postDao.findById(postId.toString());
       toUpdate.setContent(postFromForm.getContent());
       toUpdate.setTitle(postFromForm.getTitle());
       toUpdate.setIsPrivate(postFromForm.getIsPrivate());
       toUpdate.setHtmlPreview(TextUtils.generateTruncateHtmlPreview(postFromForm.getContent(), TextUtils.TRUNCATED_CHAR_COUNT));
-      toUpdate.save();
+      Application.postDao.save(toUpdate);
       flash("success", "Post has been updated");
       /**
        * you can use redirect(routes.Application.viewPost(blogPost.save().getRid().toString()));
@@ -144,9 +123,9 @@ public class Posts extends Controller {
 //      }
 //      return redirect(routes.Application.admin());
 
-      Post toDelete = Post.find.byId(UUID.fromString(id));
+      Post toDelete = Application.postDao.findById(id);
       if (toDelete != null) {
-         toDelete.delete();
+         Application.postDao.delete(toDelete);
          flash("success", "Post has been deleted");
          return ok(id);
       } else {

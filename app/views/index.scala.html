@@ -28,7 +28,7 @@ routes.Application.index(newPage)
         <article class="uk-article">
 
             <h1 class="uk-article-title">
-                <a href="@routes.Posts.detail(post.getTitle)">@post.getTitle</a>
+                <a href="@routes.Posts.detail(post.getId)">@post.getTitle</a>
             </h1>
 
             <p class="uk-article-meta">Written by @post.getUser.getName on
@@ -37,7 +37,7 @@ routes.Application.index(newPage)
             <p class="blog-content">@post.getHtmlPreview</p>
 
             <p>
-                <a class="uk-button uk-button-primary" href="@routes.Posts.detail(post.getTitle)">Continue
+                <a class="uk-button uk-button-primary" href="@routes.Posts.detail(post.getId)">Continue
                     Reading</a>
 
             </p>
@@ -95,7 +95,7 @@ routes.Application.index(newPage)
 
                 @for(p <- archives) {
 
-                <li><a href="@routes.Posts.detail(p.getTitle)">@p.getTitle</a></li>
+                <li><a href="@routes.Posts.detail(p.getId)">@p.getTitle</a></li>
 
                 }
 
