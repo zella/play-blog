@@ -6,8 +6,8 @@
 * Write in markdown with realtime preview.
 * Code highlight.
 * Private and public posts
-* Jdbc-compliant database (h2 embedded by default)
 * Discuss comments 
+* Embedded database (orientdb)
 
 Example: http://blogzella.tk
 
@@ -21,12 +21,9 @@ Example: http://blogzella.tk
        {email: "dru", password: "123", name: "Вася"}
       ]
  
- You can also edit database, but default works
+ Edit database url
  
-      db.default.driver=org.h2.Driver
-      db.default.url="jdbc:h2:file:~/h2/blog"
-      db.default.username="sa"
-      db.default.password=""
+      orient.db_url = "plocal:/home/dru/blog_db"
 
  2. Add disqus to post.scala.html
  
@@ -46,11 +43,7 @@ Example: http://blogzella.tk
 
 * How backup blog?
 
-     Just copy database from `~/h2/blog`. Also you can manualy edit it with sql tools. For example, `h2-console`
-
-
+     Just copy database from your `orient.db_url`. Also you can manage database with OrientDB console. More see OrientDb docs
 
 **Attention** 
-* It's very alpha version.
-* If you change model, ebean regenerates db evolutions, so tables will be dropped; See docs how manage evolutions.
 * Users from `application.conf` updates on application restart - You can change password of exiting users or add new users; There is no multi user support yet. Users uses for authorization only. Also user's name displays in post author.
