@@ -79,7 +79,7 @@ public class Posts extends Controller {
 
 
    /**
-    * Handle the 'edit form' submission
+    * Handle the 'edit form' submission. Ajax action
     *
     * @param postId Id of the blog post to edit
     */
@@ -87,7 +87,7 @@ public class Posts extends Controller {
    public static Result doEdit(String postId) {
       Form<Post> postForm = form(Post.class).bindFromRequest();
       if (postForm.hasErrors()) {
-         return badRequest(editpost.render(postId, postForm));
+         return badRequest(postForm.errorsAsJson().toString());
       }
       Post postFromForm = postForm.get();
       //TODO info about blog
@@ -98,15 +98,10 @@ public class Posts extends Controller {
       toUpdate.setIsPrivate(postFromForm.getIsPrivate());
       toUpdate.setHtmlPreview(TextUtils.generateTruncateHtmlPreview(postFromForm.getContent(), TextUtils.TRUNCATED_CHAR_COUNT));
       Application.postDao.save(toUpdate);
-      flash("success", "Post has been updated");
-      /**
-       * you can use redirect(routes.Application.viewPost(blogPost.save().getRid().toString()));
-       * and if you use @With(LocalUser.class) it preferred way.
-       * Only one plus of my solution - avoiding Post.findById query TODO only on create
-       */
-      return redirect(routes.Application.admin());
+
+      return ok("Blog post saved");
    }
-   
+
    /**
     * Handle delete post as ajax action
     */

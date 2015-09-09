@@ -112,21 +112,6 @@ public class Post  {
       return new Page(postsOnPage, total, page);
    }
 
-
-   /**
-    * Form validation
-    *
-    * @return
-    */
-   public List<ValidationError> validate() {
-      List<ValidationError> errors = new ArrayList<>();
-      if (getId() != null && !Application.postDao.isPostTitleUnique(getTitle())) {
-         errors.add(new ValidationError("title", "Post with title " + getTitle() + " already exist."));
-      }
-      return errors.isEmpty() ? null : errors;
-
-   }
-
    public static Post fromDocument(ODocument doc) {
       if (doc == null) return null;
 
