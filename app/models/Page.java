@@ -65,9 +65,7 @@ public class Page {
     }
 
     public int getTotalPages() {
-        //TODO
         int res = (int) Math.ceil((float)totalRowCount / (float)pageSize);
-      //  System.out.println(res);
         return res;
     }
 

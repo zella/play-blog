@@ -1,5 +1,3 @@
-import controllers.*;
-import dao.impl.UserDao;
 import database.DB;
 import models.user.User;
 import play.*;

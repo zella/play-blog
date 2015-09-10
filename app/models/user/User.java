@@ -106,7 +106,7 @@ public class User {
       if (doc == null) return null;
 
       User user = new User();
-      user.setId(doc.getIdentity().toString());
+      user.setId(String.valueOf(doc.getIdentity()));
       user.setName(doc.field("name"));
       user.setEmail(doc.field("email"));
       user.setPassword(doc.field("password"));

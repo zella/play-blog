@@ -31,10 +31,7 @@ public class OrientUserDao implements IUserDao {
       try (ODatabaseDocumentTx db = DB.acquire()) {
          OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from User where email = ? and password = ?");
          List<ODocument> result = db.command(query).execute(email, password);
-         if (result.size() < 1)
-            return null;
-         else
-            return User.fromDocument(result.get(0));
+         return result.size() < 1 ? null : User.fromDocument(result.get(0));
       }
    }
 
@@ -47,7 +44,7 @@ public class OrientUserDao implements IUserDao {
    public void save(User user) {
       try (ODatabaseDocumentTx db = DB.acquire()) {
          ODocument doc = user.toDocument();
-          db.save(doc);
+         db.save(doc);
 
       }
    }

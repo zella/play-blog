@@ -25,8 +25,6 @@ public class DB {
    private static OPartitionedDatabasePoolFactory poolFactory = new OPartitionedDatabasePoolFactory();
 
    public static ODatabaseDocumentTx acquire() {
-    //  return ODatabaseDocumentPool.global().acquire(sDbUrl, sDbUser, sDbPassword);
-      //  return new ODatabaseDocumentTx(sDbUrl).open(sDbUser, sDbPassword);
       return poolFactory.get(sDbUrl, sDbUser, sDbPassword).acquire();
    }
 
@@ -47,7 +45,7 @@ public class DB {
 
             db.getMetadata().getSchema().createClass("User");
             db.getMetadata().getSchema().createClass("BlogPost");
-
+            db.getMetadata().getSchema().createClass("PostTag");
          } finally {
             db.close();
          }

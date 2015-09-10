@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by dru on 02.08.15.
  */
-public class Post  {
+public class Post {
 
    private String id;
 
@@ -36,16 +36,15 @@ public class Post  {
 
    @Constraints.Required
    @Constraints.MinLength(value = 10)
-   @Lob
    private String content;
 
-   @Lob
    private String htmlPreview = "";
 
-   @ManyToOne
    private User user;
 
    private Boolean isPrivate = false;
+
+   private List<Tag> tags = new ArrayList<>();
 
    public String getId() {
       return id;
@@ -103,6 +102,14 @@ public class Post  {
       this.htmlPreview = htmlPreview;
    }
 
+   public List<Tag> getTags() {
+      return tags;
+   }
+
+   public void setTags(List<Tag> tags) {
+      this.tags = tags;
+   }
+
    public static Page page(int page, boolean showPrivate) {
 
       long total = Application.postDao.count(showPrivate);
@@ -116,7 +123,7 @@ public class Post  {
       if (doc == null) return null;
 
       Post post = new Post();
-      post.setId(doc.getIdentity().toString());
+      post.setId(String.valueOf(doc.getIdentity()));;
       post.setContent(doc.field("content"));
       post.setCreationDate(doc.field("creationDate"));
       post.setTitle(doc.field("title"));
@@ -148,11 +155,11 @@ public class Post  {
    @Override
    public String toString() {
       return "Post{" +
-              "id='" + id + '\'' +
-              ", creationDate=" + creationDate +
-              ", title='" + title + '\'' +
-              ", user=" + user +
-              ", isPrivate=" + isPrivate +
-              '}';
+          "id='" + id + '\'' +
+          ", creationDate=" + creationDate +
+          ", title='" + title + '\'' +
+          ", user=" + user +
+          ", isPrivate=" + isPrivate +
+          '}';
    }
 }
