@@ -8,6 +8,7 @@
 * Private and public posts
 * Discuss comments 
 * Embedded database (orientdb)
+* Autosave while editing
 
 Example: http://blogzella.tk
 
