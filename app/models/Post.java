@@ -1,9 +1,13 @@
 package models;
 
 import com.avaje.ebean.*;
-import com.avaje.ebean.Query;
+
+import com.orientechnologies.orient.core.id.ORecordId;
+import com.orientechnologies.orient.core.record.impl.ODocument;
+import controllers.Application;
+
 import models.user.User;
-import org.springframework.core.annotation.Order;
+
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
@@ -17,17 +21,9 @@ import java.util.UUID;
 /**
  * Created by dru on 02.08.15.
  */
-@Entity
-@Table(name = "posts")
-public class Post extends Model {
+public class Post  {
 
-
-   public static final Finder<UUID, Post> find = new Finder<>(Post.class);
-
-   @Id
-   private UUID id;
-
-   //TODO set column names manually
+   private String id;
 
    //TODO created and update - separate dates
    @Formats.DateTime(pattern = "yyyy-MM-dd hh:mm")
@@ -51,12 +47,16 @@ public class Post extends Model {
 
    private Boolean isPrivate = false;
 
-   public UUID getId() {
+   public String getId() {
       return id;
    }
 
    public Date getCreationDate() {
       return creationDate;
+   }
+
+   private void setId(String id) {
+      this.id = id;
    }
 
    public String getTitle() {
@@ -105,54 +105,54 @@ public class Post extends Model {
 
    public static Page page(int page, boolean showPrivate) {
 
-      long total;
-      if (showPrivate)
-         total = find.findRowCount();
-      else
-         total = find.query()
-             .where().eq("isPrivate", false).findRowCount();
-      System.out.println("total " + total);
+      long total = Application.postDao.count(showPrivate);
 
-      List<Post> postsOnPage;
-      if (showPrivate)
-         postsOnPage = find
-             .query()
-             .order().desc("creationDate")
-             .findPagedList(page - 1, Page.DEFAULT_PAGE_SIZE)
-             .getList();
-      else
-         postsOnPage = find
-             .query()
-             .where().eq("isPrivate", false)
-             .order().desc("creationDate")
-             .findPagedList(page - 1, Page.DEFAULT_PAGE_SIZE)
-             .getList();
+      List<Post> postsOnPage = Application.postDao.page(page, Page.DEFAULT_PAGE_SIZE, showPrivate);
 
       return new Page(postsOnPage, total, page);
    }
 
-   public static List<Post> allWithTitlesOnly() {
-      //TODO fetch titles only
-      return find.order().desc("creationDate").findList();
+   public static Post fromDocument(ODocument doc) {
+      if (doc == null) return null;
+
+      Post post = new Post();
+      post.setId(doc.getIdentity().toString());
+      post.setContent(doc.field("content"));
+      post.setCreationDate(doc.field("creationDate"));
+      post.setTitle(doc.field("title"));
+      post.setHtmlPreview(doc.field("htmlPreview"));
+      post.setIsPrivate(doc.field("isPrivate"));
+      post.setUser(User.fromDocument(doc.field("user")));
+      return post;
    }
 
-   public static boolean isTitleUnique(String title) {
-      return find.query()
-          .where().eq("title", title).findUnique() == null;
+   public ODocument toDocument() {
+
+      ODocument doc;
+
+      if (getId() != null) {
+         doc = new ODocument("BlogPost", new ORecordId(getId()));
+      } else
+         doc = new ODocument("BlogPost");
+
+      doc.field("content", getContent());
+      doc.field("creationDate", getCreationDate());
+      doc.field("title", getTitle());
+      doc.field("htmlPreview", getHtmlPreview());
+      doc.field("isPrivate", getIsPrivate());
+      doc.field("user", getUser().toDocument());
+
+      return doc;
    }
 
-
-   /**
-    * Form validation
-    *
-    * @return
-    */
-   public List<ValidationError> validate() {
-      List<ValidationError> errors = new ArrayList<>();
-      if (getId() != null && !isTitleUnique(getTitle())) {
-         errors.add(new ValidationError("title", "Post with title " + getTitle() + " already exist."));
-      }
-      return errors.isEmpty() ? null : errors;
-
+   @Override
+   public String toString() {
+      return "Post{" +
+              "id='" + id + '\'' +
+              ", creationDate=" + creationDate +
+              ", title='" + title + '\'' +
+              ", user=" + user +
+              ", isPrivate=" + isPrivate +
+              '}';
    }
 }

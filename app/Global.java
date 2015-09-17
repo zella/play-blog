@@ -1,11 +1,13 @@
-import com.avaje.ebean.Ebean;
+import controllers.*;
+import dao.impl.UserDao;
+import database.DB;
 import models.user.User;
 import play.*;
 
+import play.Application;
 import play.libs.F;
 import play.mvc.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +26,8 @@ public class Global extends GlobalSettings {
    public void onStart(Application app) {
       super.onStart(app);
 
+      DB.createIfNotExist();
+
       setupUsers();
    }
 
@@ -40,14 +44,14 @@ public class Global extends GlobalSettings {
 
 
    private void updateUserInDb(String email, String password, String name) {
-      User u = User.findByEmail(email);
+      User u = controllers.Application.userDao.findByEmail(email);
       if (u == null) {
          u = new User(email, password, name);
-         u.save();
+         controllers.Application.userDao.save(u);
       } else {
          u.setPassword(password);
          u.setName(name);
-         u.save();
+         controllers.Application.userDao.save(u);
       }
    }
 }

@@ -1,7 +1,7 @@
 $(document).ready(function () {
-
+   // exit confirmation
     $("#postForm").submit(function () {
-         $(window).off('beforeunload');
+        $(window).off('beforeunload');
     })
 
     var titleOld = $('#title').serialize();

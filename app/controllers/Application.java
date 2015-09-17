@@ -1,5 +1,11 @@
 package controllers;
 
+import dao.IUserDao;
+import dao.impl.BlogPostDao;
+import dao.IBlogPostDao;
+import dao.impl.OrientBlogPostDao;
+import dao.impl.OrientUserDao;
+import dao.impl.UserDao;
 import models.*;
 import models.user.User;
 import play.data.Form;
@@ -10,16 +16,20 @@ import views.html.*;
 
 public class Application extends Controller {
 
+   //TODO DI ?
+   public static IBlogPostDao postDao = new OrientBlogPostDao();
+   public static IUserDao userDao = new OrientUserDao();
+
    public static Result index(int page) {
       if (page < 1)
          return redirect(routes.Application.index(1));
-      return ok(index.render(Post.page(page, getLocalUser(session()) != null), Post.allWithTitlesOnly()));
+      return ok(index.render(Post.page(page, getLocalUser(session()) != null), postDao.findAll()));
    }
 
 
    public static Result login() {
       return ok(
-            login.render(Form.form(Login.class))
+              login.render(Form.form(Login.class))
       );
    }
 
@@ -27,7 +37,7 @@ public class Application extends Controller {
       session().clear();
       flash("success", "You've been logged out");
       return redirect(
-            routes.Application.login()
+              routes.Application.login()
       );
    }
 
@@ -39,7 +49,7 @@ public class Application extends Controller {
          session().clear();
          session("email", loginForm.get().email);
          return redirect(
-               routes.Application.admin()
+                 routes.Application.admin()
          );
       }
    }
@@ -51,7 +61,7 @@ public class Application extends Controller {
     */
    @Security.Authenticated(Secured.class)
    public static Result admin() {
-      return ok(admin.render(Post.find.order().desc("creationDate").findList()));
+      return ok(admin.render(postDao.findAll()));
    }
 
    /**
@@ -62,12 +72,12 @@ public class Application extends Controller {
    public static Result javascriptRoutes() {
       response().setContentType("text/javascript");
       return ok(
-          Routes.javascriptRouter("jsRoutes",
-              controllers.routes.javascript.Posts.delete()
-          )
+              Routes.javascriptRouter("jsRoutes",
+                      controllers.routes.javascript.Posts.delete(),
+                      controllers.routes.javascript.Posts.doEdit()
+              )
       );
    }
-
 
 
    public static class Login {
@@ -76,7 +86,7 @@ public class Application extends Controller {
       public String password;
 
       public String validate() {
-         if (!User.exist(email, password)) {
+         if (!userDao.exist(email, password)) {
             return "Invalid user or password";
          }
          return null;
@@ -86,7 +96,10 @@ public class Application extends Controller {
 
 
    public static User getLocalUser(Http.Session session) {
-      return User.findByEmail(session.get("email"));
+      if (session.get("email") == null)
+         return null;
+      else
+         return userDao.findByEmail(session.get("email"));
    }
 
 

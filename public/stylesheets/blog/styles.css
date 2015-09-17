@@ -1,0 +1,5 @@
+#status { font-size: 13px; }
+#status.nochange { color: #aaa; }
+#status.pending { color: #00FFFF; }
+#status.saved { color: #00FF00; }
+#status.error { color: #FF0000; }
