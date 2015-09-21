@@ -29,7 +29,7 @@
         @helper.textarea(postForm("title"), 'id -> "titleArea", '_label -> "Title", 'cols -> "100", 'rows -> "2", '_showConstraints -> false)
         <div id="status" class="nochange">no change</div>
         @helper.textarea(postForm("content"), 'id -> "contentArea", '_label -> "Text", 'cols -> "100", 'rows -> "20",  '_showConstraints -> false, Symbol("data-uk-htmleditor") -> "{markdown:true}")
-        @helper.checkbox(postForm("isPrivate"), 'id -> "privateCheckBox")
+        @helper.checkbox(postForm("Make post private"), 'id -> "privateCheckBox")
         <input type="submit" value="Submit">
     }
 }

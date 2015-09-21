@@ -8,6 +8,12 @@ $(document).ready(function () {
         timeoutId;
 
     var tryAutoSave = function () {
+        //autosave disabled
+        if(!($('#checkbox-autosave-on').prop('checked'))){
+           $status.attr('class', 'pending').text('changes pending');
+           return;
+        }
+
         $status.attr('class', 'pending').text('changes pending');
         if (timeoutId)
             clearTimeout(timeoutId);
@@ -48,5 +54,6 @@ $(document).ready(function () {
     $('#titleArea').on('input propertychange', tryAutoSave);
 
     $('#privateCheckBox').on('change',tryAutoSave);
+
 
 });
