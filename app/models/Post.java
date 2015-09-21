@@ -123,7 +123,8 @@ public class Post {
       if (doc == null) return null;
 
       Post post = new Post();
-      post.setId(String.valueOf(doc.getIdentity()));;
+      post.setId(String.valueOf(doc.getIdentity()));
+      ;
       post.setContent(doc.field("content"));
       post.setCreationDate(doc.field("creationDate"));
       post.setTitle(doc.field("title"));
@@ -148,6 +149,7 @@ public class Post {
       doc.field("htmlPreview", getHtmlPreview());
       doc.field("isPrivate", getIsPrivate());
       doc.field("user", getUser().toDocument());
+      doc.field("tags", Tag.toDocumentList(getTags()));
 
       return doc;
    }

@@ -49,4 +49,6 @@ $(document).ready(function () {
 
     $('#privateCheckBox').on('change',tryAutoSave);
 
+    //on adding/removing tags tryAutoSave
+
 });

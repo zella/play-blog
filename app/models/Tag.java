@@ -4,10 +4,13 @@ import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import models.user.User;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Created by dru on 10.09.15.
  */
-public class Tag  {
+public class Tag {
 
    private String id;
 
@@ -52,6 +55,12 @@ public class Tag  {
       doc.field("name", getName());
 
       return doc;
+   }
+
+   public static List<ODocument> toDocumentList(List<Tag> tags) {
+      return tags.stream()
+          .map(tag -> tag.toDocument())
+          .collect(Collectors.toList());
    }
 
 }

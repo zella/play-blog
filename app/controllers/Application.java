@@ -72,7 +72,8 @@ public class Application extends Controller {
       return ok(
               Routes.javascriptRouter("jsRoutes",
                       controllers.routes.javascript.Posts.delete(),
-                      controllers.routes.javascript.Posts.doEdit()
+                      controllers.routes.javascript.Posts.doEdit(),
+                      controllers.routes.javascript.Posts.save()
               )
       );
    }

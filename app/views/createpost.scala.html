@@ -12,6 +12,7 @@
     <script src="@routes.Assets.versioned("codemirror/mode/gfm/gfm.js")"></script>
     <script src="@routes.Assets.versioned("javascripts/marked.min.js")"></script>
     <script src="@routes.Assets.versioned("javascripts/blog/exit_confirmation.js")"></script>
+    <script src="@routes.Assets.versioned("javascripts/blog/tags.js")"></script>
 
     <!-- HTML editor CSS and JavaScript -->
     <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/components/htmleditor.css")">
@@ -25,11 +26,32 @@
 
 
     <h3 class="uk-h3">Create new blog post as @Application.getLocalUser(session).getName</h3>
-    @helper.form(action = routes.Posts.save(), 'id -> "postForm") {
+
+    <form id= "postForm" action = "@routes.Posts.save()" method="post">
         @helper.textarea(postForm("title"), 'id -> "titleArea", '_label -> "Title", 'cols -> "100", 'rows -> "2", '_showConstraints -> false)
         <div id="status" class="nochange">no change</div>
         @helper.textarea(postForm("content"), 'id -> "contentArea", '_label -> "Text", 'cols -> "100", 'rows -> "20",  '_showConstraints -> false, Symbol("data-uk-htmleditor") -> "{markdown:true}")
         @helper.checkbox(postForm("isPrivate"), 'id -> "privateCheckBox")
-        <input type="submit" value="Submit">
-    }
+        <input type="hidden" id="tags-input" name="tags" value=""/>
+    </form>
+
+    <h4 class="uk-h4">Tags: </h4>
+
+    <div id = "tag-container" class="uk-width-1-2">
+    </div>
+
+
+    <div class="uk-button-group">
+        <input type="text" name="tag" id="tag-add-input"/>
+        <button id ="btn-tag-add" class="uk-button">Add tag</button>
+    </div>
+    <br/>
+
+    <button class="uk-button" id="btn-submit" value="Create post"> Save post </b>
+    <script>
+        $("#btn-submit").on( "click", function() {
+           $("#postForm").submit();
+        });
+    </script>
+
 }
