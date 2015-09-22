@@ -1,14 +1,14 @@
 package models.user;
 
 
-import com.avaje.ebean.Expr;
-import com.avaje.ebean.Model;
+
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import models.Post;
 
-import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by dru on 09.01.2015.
@@ -27,8 +27,6 @@ public class User {
 
    private String avatarUrl;
 
-   //TODO
-   @OneToMany
    public List<Post> posts = new ArrayList<>();
 
    public User() {
