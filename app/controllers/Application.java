@@ -1,11 +1,9 @@
 package controllers;
 
 import dao.IUserDao;
-import dao.impl.BlogPostDao;
 import dao.IBlogPostDao;
 import dao.impl.OrientBlogPostDao;
 import dao.impl.OrientUserDao;
-import dao.impl.UserDao;
 import models.*;
 import models.user.User;
 import play.data.Form;
