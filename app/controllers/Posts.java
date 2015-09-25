@@ -25,12 +25,12 @@ public class Posts extends Controller {
          return notFound("Page not found");
       }
 
-      //TODO multiuser
+      boolean isLogged = Application.getLocalUser(session()) != null;
 
-      if (post_.getIsPrivate() && Application.getLocalUser(session()) == null) {
+      if (post_.getIsPrivate() && !isLogged) {
          return notFound("Page not found");
       } else
-         return ok(post.render(post_, Application.postDao.findAll()));
+         return ok(post.render(post_, Application.postDao.findAll(isLogged)));
 
    }
 

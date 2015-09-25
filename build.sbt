@@ -11,7 +11,9 @@ libraryDependencies ++= Seq(
   cache
 )
 
-libraryDependencies += "org.pegdown" % "pegdown" % "1.5.0"
+resolvers += "amateras" at "http://amateras.sourceforge.jp/mvn/"
+
+libraryDependencies += "io.github.gitbucket" % "markedj" % "1.0.2"
 
 libraryDependencies += "com.orientechnologies" % "orientdb-core" % "2.1.1" withSources() withJavadoc()
 

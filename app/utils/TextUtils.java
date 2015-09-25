@@ -1,6 +1,9 @@
 package utils;
 
 
+import io.github.gitbucket.markedj.Marked;
+import io.github.gitbucket.markedj.Options;
+
 import java.text.BreakIterator;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,7 +22,8 @@ import java.util.regex.Pattern;
 public class TextUtils {
 
    public static final int TRUNCATED_CHAR_COUNT = 250;
-   public static final int TRUNCATED_WORD_COUNT = 50;
+   public static final int TRUNCATED_WORD_COUNT = 200;
+   public static final int TRUNCATED_LINE_COUNT = 20;
 
    /**
     * Copyright (c) Django Software Foundation and individual contributors.
@@ -114,17 +118,36 @@ public class TextUtils {
       return what;
    }
 
+   public static String truncateStringLineCount(String what, int wordCount) {
+      BreakIterator breakIterator = BreakIterator.getWordInstance();
+      breakIterator.setText(what);
+
+      int currentWord = 0;
+
+      int boundaryIndex = breakIterator.first();
+      while (boundaryIndex != BreakIterator.DONE && currentWord < wordCount) {
+         currentWord ++;
+         boundaryIndex = breakIterator.next();
+      }
+
+      return what.substring(0, boundaryIndex);
+   }
+
    //TODO if images.count>1 reduce it. use jsoup.
    //TODO not working properly
    public static String generateTruncateHtmlPreview(String markdown, int charCount) {
 
-      org.pegdown.PegDownProcessor pegDownProcessor = new org.pegdown.PegDownProcessor();
-      String html = pegDownProcessor.markdownToHtml(markdown);
-      String truncatedHtml = TextUtils.truncateHtmlWords(html, TRUNCATED_WORD_COUNT);
+      Options options = new Options();
+      options.setGfm(true);
+      options.setTables(true);
+      options.setBreaks(true);
+      options.setPedantic(false);
+      options.setSanitize(false);
 
-      if (truncatedHtml.length() > charCount * 2) {
-         truncatedHtml = TextUtils.truncateHtmlWords(truncatedHtml, charCount);
-      }
+      String html = Marked.marked(markdown, options);
+      //Temorary. Need time to develop proper html truncater with jsoup
+      String truncatedHtml = TextUtils.truncateStringLineCount(html, TRUNCATED_WORD_COUNT);
+
       truncatedHtml += "<br/>. . . ";
       return truncatedHtml;
    }
