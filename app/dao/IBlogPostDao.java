@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface IBlogPostDao {
 
-   List<Post> findAll();
+   List<Post> findAll(boolean showPrivates);
 
    boolean isPostTitleUnique(String title);
 

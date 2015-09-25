@@ -21,13 +21,14 @@ public class Application extends Controller {
    public static Result index(int page) {
       if (page < 1)
          return redirect(routes.Application.index(1));
-      return ok(index.render(Post.page(page, getLocalUser(session()) != null), postDao.findAll()));
+      boolean isLogged = getLocalUser(session()) != null;
+      return ok(index.render(Post.page(page, isLogged), postDao.findAll(isLogged)));
    }
 
 
    public static Result login() {
       return ok(
-              login.render(Form.form(Login.class))
+          login.render(Form.form(Login.class))
       );
    }
 
@@ -35,7 +36,7 @@ public class Application extends Controller {
       session().clear();
       flash("success", "You've been logged out");
       return redirect(
-              routes.Application.login()
+          routes.Application.login()
       );
    }
 
@@ -47,7 +48,7 @@ public class Application extends Controller {
          session().clear();
          session("email", loginForm.get().email);
          return redirect(
-                 routes.Application.admin()
+             routes.Application.admin()
          );
       }
    }
@@ -59,7 +60,7 @@ public class Application extends Controller {
     */
    @Security.Authenticated(Secured.class)
    public static Result admin() {
-      return ok(admin.render(postDao.findAll()));
+      return ok(admin.render(postDao.findAll(true)));
    }
 
    /**

@@ -17,10 +17,15 @@ import java.util.stream.Collectors;
 public class OrientBlogPostDao implements IBlogPostDao {
 
    @Override
-   public List<Post> findAll() {
+   public List<Post> findAll(boolean showPrivates) {
       try (ODatabaseDocumentTx db = DB.acquire()) {
+         String queryString;
+         if (showPrivates)
+            queryString = "select * from BlogPost ORDER BY creationDate DESC";
+         else
+            queryString = "select * from BlogPost WHERE isPrivate = false ORDER BY creationDate DESC";
          return db.query(
-             new OSQLSynchQuery<ODocument>("select * from BlogPost")).stream()
+             new OSQLSynchQuery<ODocument>(queryString)).stream()
              .map(doc -> Post.fromDocument((ODocument) doc))
              .collect(Collectors.toList());
       }
@@ -47,9 +52,7 @@ public class OrientBlogPostDao implements IBlogPostDao {
 
    @Override
    public boolean isPostTitleUnique(String title) {
-      try (ODatabaseDocumentTx db = DB.acquire()) {
-         return findByTitle(title) == null;
-      }
+      return findByTitle(title) == null;
    }
 
    @Override
@@ -73,9 +76,9 @@ public class OrientBlogPostDao implements IBlogPostDao {
 
          String queryString;
          if (withPrivatePosts)
-            queryString = "SELECT * FROM BlogPost skip ? limit ?";
+            queryString = "SELECT * FROM BlogPost ORDER BY creationDate DESC skip ? limit ?";
          else
-            queryString = "SELECT * FROM BlogPost WHERE isPrivate = false skip ? limit ?";
+            queryString = "SELECT * FROM BlogPost WHERE isPrivate = false ORDER BY creationDate DESC skip ? limit ? ";
 
          OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(queryString);
 
