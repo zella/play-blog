@@ -119,6 +119,9 @@ public class TextUtils {
    }
 
    public static String truncateStringLineCount(String what, int wordCount) {
+
+      if (what.length()<= wordCount) return what;
+
       BreakIterator breakIterator = BreakIterator.getWordInstance();
       breakIterator.setText(what);
 
