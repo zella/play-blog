@@ -9,6 +9,7 @@
 * Discuss comments 
 * Embedded database (orientdb)
 * Autosave while editing
+* Responsive design
 
 Example: http://blogzella.tk
 
