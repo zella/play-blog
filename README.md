@@ -47,4 +47,4 @@ Example: http://blogzella.tk
      Just copy database from your `orient.db_url`. Also you can manage database with OrientDB console. More see OrientDb docs
 
 **Attention** 
-* Users from `application.conf` updates on application restart - You can change password of exiting users or add new users; There is no multi user support yet. Users uses for authorization only. Also user's name displays in post author.
+* Users from `application.conf` updates on application restart - You can change password of exiting users or add new users; There is no multi user support. Users uses for authorization only. Also user's name displays in post author.
