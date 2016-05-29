@@ -15,7 +15,7 @@ Example: http://blogzella.tk
 
 **Development usage:**  
  
- 1. Edit conf/application.conf:  
+ 1. Edit `conf/application.conf`:  
  
  Add user:
  
@@ -48,7 +48,7 @@ Example: http://blogzella.tk
 
 * How backup blog?
 
-     Just copy database from your `orient.db_url`. Also you can manage database with OrientDB console. More see OrientDb docs
+     Just copy database files from your `orient.db_url` path. Also you can manage database with OrientDB console. More see OrientDb docs
 
 **Attention** 
 * Users from `application.conf` updates on application restart - You can change password of exiting users or add new users; There is no multi user support. Users uses for authorization only. Also user's name displays in post author.
