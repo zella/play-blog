@@ -5,12 +5,11 @@ package database;
  */
 
 
-import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 import com.orientechnologies.orient.core.db.OPartitionedDatabasePoolFactory;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.metadata.schema.OClass;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import config.Config;
+import play.Logger;
 
 /**
  * Created by dru on 10.01.2015.
@@ -18,9 +17,9 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 //TODO inject
 public class DB {
 
-   protected final static String sDbUrl = OConfig.getInstance().getDbUrl();
-   protected final static String sDbUser = OConfig.getInstance().getDbUser();
-   protected final static String sDbPassword = OConfig.getInstance().getDbPass();
+   protected final static String sDbUrl = Config.getInstance().getDbUrl();
+   protected final static String sDbUser = Config.getInstance().getDbUser();
+   protected final static String sDbPassword = Config.getInstance().getDbPass();
 
    private static OPartitionedDatabasePoolFactory poolFactory = new OPartitionedDatabasePoolFactory();
 
@@ -34,11 +33,11 @@ public class DB {
       ODatabaseDocumentTx db = new ODatabaseDocumentTx(sDbUrl);
       if (!db.exists()) {
          db.create();
-         System.out.println("created");
+         Logger.info("db created");
 
          try {
             db = new ODatabaseDocumentTx(sDbUrl).open("admin", "admin");
-            System.out.println("opened");
+            Logger.info("db opened");
             //update current admin user from from config
             ODocument admin = db.getUser().getDocument();
             admin.field("name", sDbUser);
