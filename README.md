@@ -41,7 +41,7 @@ Example: http://blogzella.tk
  
 **Production usage:**   
 
-* Launch `./activator dist` and find distribution in `/target/universal/play_blog_version.zip`
+* Launch `./activator dist` and find distribution in `target/universal/play_blog_version.zip`
 * More see [play framework documentation](https://www.playframework.com/documentation/2.4.x/Home)
 
 **FAQ**  
