@@ -27,17 +27,21 @@ Example: http://blogzella.tk
  
       orient.db_url = "plocal:/home/dru/blog_db"
 
- 2. Add disqus to post.scala.html
+ Edit your disqus id 
  
- Find `var disqus_shortname = 'your_discuss_id';` and specify your own from disquss admin.
+      disqus.id = "your_disqus_id"
+ 
 
- 3. Launch `./activator run` from project folder
+ 2. Launch `./activator run` from project folder
  
- 4. Admin urls: `/login` `/logout` `/admin`
+ 
+ 3. Go to browser `http://localhost:9000` 
+ 
+ 3. Admin urls: `/login` `/logout` `/admin`
  
 **Production usage:**   
- Production usage needs few steps more:
-* Setup application secret;
+
+* Launch `./activator dist` and find distribution in `/target/universal/play_blog_version.zip`
 * More see [play framework documentation](https://www.playframework.com/documentation/2.4.x/Home)
 
 **FAQ**  
