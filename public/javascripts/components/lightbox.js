@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.26.4 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
@@ -22,9 +22,10 @@
     UI.component('lightbox', {
 
         defaults: {
-            "group"      : false,
-            "duration"   : 400,
-            "keyboard"   : true
+            "allowfullscreen" : true,
+            "duration"        : 400,
+            "group"           : false,
+            "keyboard"        : true
         },
 
         index : 0,
@@ -67,7 +68,7 @@
 
         init: function() {
 
-            var $this = this, siblings = [];
+            var siblings = [];
 
             this.index    = 0;
             this.siblings = [];
@@ -85,7 +86,7 @@
 
                     siblings.push({
                         'source': ele.attr('href'),
-                        'title' : ele.attr('title'),
+                        'title' : ele.attr('data-title') || ele.attr('title'),
                         'type'  : ele.attr("data-lightbox-type") || 'auto',
                         'link'  : ele
                     });
@@ -331,7 +332,7 @@
                 var id, matches, resolve = function(id, width, height) {
 
                     data.meta = {
-                        'content': '<iframe src="//www.youtube.com/embed/'+id+'" width="'+width+'" height="'+height+'" style="max-width:100%;"></iframe>',
+                        'content': '<iframe src="//www.youtube.com/embed/'+id+'" width="'+width+'" height="'+height+'" style="max-width:100%;"'+(modal.lightbox.options.allowfullscreen?' allowfullscreen':'')+'></iframe>',
                         'width': width,
                         'height': height
                     };
@@ -353,7 +354,7 @@
 
                     if(!cache[id]) {
 
-                        var img = new Image();
+                        var img = new Image(), lowres = false;
 
                         img.onerror = function(){
                             cache[id] = {width:640, height:320};
@@ -361,11 +362,22 @@
                         };
 
                         img.onload = function(){
-                            cache[id] = {width:img.width, height:img.height};
-                            resolve(id, img.width, img.height);
+                            //youtube default 404 thumb, fall back to lowres
+                            if (img.width == 120 && img.height == 90) {
+                                if (!lowres) {
+                                    lowres = true;
+                                    img.src = '//img.youtube.com/vi/' + id + '/0.jpg';
+                                } else {
+                                    cache[id] = {width: 640, height: 320};
+                                    resolve(id, cache[id].width, cache[id].height);
+                                }
+                            } else {
+                                cache[id] = {width: img.width, height: img.height};
+                                resolve(id, img.width, img.height);
+                            }
                         };
 
-                        img.src = '//img.youtube.com/vi/'+id+'/0.jpg';
+                        img.src = '//img.youtube.com/vi/'+id+'/maxresdefault.jpg';
 
                     } else {
                         resolve(id, cache[id].width, cache[id].height);
@@ -390,7 +402,7 @@
                 var id, resolve = function(id, width, height) {
 
                     data.meta = {
-                        'content': '<iframe src="//player.vimeo.com/video/'+id+'" width="'+width+'" height="'+height+'" style="width:100%;box-sizing:border-box;"></iframe>',
+                        'content': '<iframe src="//player.vimeo.com/video/'+id+'" width="'+width+'" height="'+height+'" style="width:100%;box-sizing:border-box;"'+(modal.lightbox.options.allowfullscreen?' allowfullscreen':'')+'></iframe>',
                         'width': width,
                         'height': height
                     };
@@ -473,6 +485,33 @@
     });
 
 
+    UIkit.plugin("lightbox", "iframe", {
+
+        init: function (lightbox) {
+
+            lightbox.on("showitem.uk.lightbox", function (e, data) {
+
+                var resolve = function (source, width, height) {
+
+                    data.meta = {
+                        'content': '<iframe class="uk-responsive-width" src="' + source + '" width="' + width + '" height="' + height + '"'+(modal.lightbox.options.allowfullscreen?' allowfullscreen':'')+'></iframe>',
+                        'width': width,
+                        'height': height
+                    };
+
+                    data.type = 'iframe';
+
+                    data.promise.resolve();
+                };
+
+                if (data.type === 'iframe' || data.source.match(/\.(html|php)$/)) {
+                    resolve(data.source, (lightbox.options.width || 800), (lightbox.options.height || 600));
+                }
+            });
+
+        }
+    });
+
     function getModal(lightbox) {
 
         if (modal) {
@@ -510,9 +549,17 @@
             modal.content.html('');
         });
 
+        var resizeCache = {w: window.innerWidth, h:window.innerHeight};
+
         UI.$win.on('load resize orientationchange', UI.Utils.debounce(function(e){
-            if (modal.is(':visible') && !UI.Utils.isFullscreen()) modal.lightbox.fitSize();
-        }.bind(this), 100));
+
+            if (resizeCache.w !== window.innerWidth && modal.is(':visible') && !UI.Utils.isFullscreen()) {
+                modal.lightbox.fitSize();
+            }
+
+            resizeCache = {w: window.innerWidth, h:window.innerHeight};
+
+        }, 100));
 
         modal.lightbox = lightbox;
 

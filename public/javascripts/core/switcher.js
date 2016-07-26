@@ -1,4 +1,4 @@
-/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.26.4 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(UI) {
 
     "use strict";
@@ -12,7 +12,8 @@
             toggle    : ">*",
             active    : 0,
             animation : false,
-            duration  : 200
+            duration  : 200,
+            swiping   : true
         },
 
         animating: false,
@@ -36,7 +37,7 @@
 
             var $this = this;
 
-            this.on("click.uikit.switcher", this.options.toggle, function(e) {
+            this.on("click.uk.switcher", this.options.toggle, function(e) {
                 e.preventDefault();
                 $this.show(this);
             });
@@ -45,7 +46,7 @@
 
                 this.connect = UI.$(this.options.connect);
 
-                this.connect.find(".uk-active").removeClass(".uk-active");
+                this.connect.children().removeClass("uk-active");
 
                 // delegate switch commands within container content
                 if (this.connect.length) {
@@ -69,12 +70,17 @@
                             default:
                                 $this.show(parseInt(item, 10));
                         }
-                    }).on('swipeRight swipeLeft', function(e) {
-                        e.preventDefault();
-                        if(!window.getSelection().toString()) {
-                            $this.show($this.index + (e.type == 'swipeLeft' ? 1 : -1));
-                        }
                     });
+
+                    if (this.options.swiping) {
+
+                        this.connect.on('swipeRight swipeLeft', function(e) {
+                            e.preventDefault();
+                            if(!window.getSelection().toString()) {
+                                $this.show($this.index + (e.type == 'swipeLeft' ? 1 : -1));
+                            }
+                        });
+                    }
                 }
 
                 var toggles = this.find(this.options.toggle),
@@ -93,10 +99,6 @@
                 // Init ARIA for toggles
                 toggles.not(active).attr('aria-expanded', 'false');
                 active.attr('aria-expanded', 'true');
-
-                this.on('changed.uk.dom', function() {
-                    $this.connect = UI.$($this.options.connect);
-                });
             }
 
         },
@@ -180,6 +182,7 @@
                             UI.Utils.checkDisplay(next, true);
 
                             $this.animating = false;
+
                         });
                 });
             }
@@ -262,15 +265,21 @@
             clsOut = cls[1] || cls[0];
         }
 
+        UI.$body.css('overflow-x', 'hidden'); // fix scroll jumping in iOS
+
         release = function() {
 
             if (current) current.hide().removeClass('uk-active '+clsOut+' uk-animation-reverse');
 
             next.addClass(clsIn).one(UI.support.animation.end, function() {
 
-                next.removeClass(''+clsIn+'').css({opacity:'', display:''});
+                setTimeout(function () {
+                    next.removeClass(''+clsIn+'').css({opacity:'', display:''});
+                }, 0);
 
                 d.resolve();
+
+                UI.$body.css('overflow-x', '');
 
                 if (current) current.css({opacity:'', display:''});
 
