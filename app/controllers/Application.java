@@ -33,8 +33,11 @@ public class Application extends Controller {
    }
 
    public static Result logout() {
+      final boolean isLogged = getLocalUser(session()) != null;
       session().clear();
-      flash("success", "You've been logged out");
+      if (isLogged) {
+         flash("success", "You've been logged out");
+      }
       return redirect(
           routes.Application.login()
       );
