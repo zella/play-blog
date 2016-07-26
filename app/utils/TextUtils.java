@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 public class TextUtils {
 
    public static final int TRUNCATED_CHAR_COUNT = 250;
-   public static final int TRUNCATED_WORD_COUNT = 200;
+   public static final int TRUNCATED_WORD_COUNT = 150;
    public static final int TRUNCATED_LINE_COUNT = 20;
 
    /**
@@ -57,6 +57,7 @@ public class TextUtils {
     * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     */
 
+   @Deprecated
    public static String truncateHtmlWords(String html, int length) {
       if (length <= 0)
          return new String();
@@ -109,6 +110,7 @@ public class TextUtils {
       return out.toString();
    }
 
+   @Deprecated
    public static String truncateStringLineBreak(String what, int numberChars) {
       if (what.length() <= numberChars) return what;
       BreakIterator bi = BreakIterator.getLineInstance();
@@ -118,7 +120,7 @@ public class TextUtils {
       return what;
    }
 
-   public static String truncateStringLineCount(String what, int wordCount) {
+   public static String truncateStringByWordCount(String what, int wordCount) {
 
       if (what.length()<= wordCount) return what;
 
@@ -138,21 +140,29 @@ public class TextUtils {
 
    //TODO if images.count>1 reduce it. use jsoup.
    //TODO not working properly
-   public static String generateTruncateHtmlPreview(String markdown, int charCount) {
+   public static String generateTruncatedHtmlPreview(String html) {
+
+      //Temporary. Need time to develop proper html truncator with jsoup
+      String truncatedHtml = TextUtils.truncateStringByWordCount(html, TRUNCATED_WORD_COUNT);
+
+      truncatedHtml += "<br/>. . . ";
+      return truncatedHtml;
+   }
+
+   /**
+    *
+    * @param markdown
+    * @return html string
+     */
+   public static String markdownToHtml(String markdown) {
 
       Options options = new Options();
       options.setGfm(true);
       options.setTables(true);
-      options.setBreaks(true);
       options.setPedantic(false);
       options.setSanitize(false);
 
-      String html = Marked.marked(markdown, options);
-      //Temorary. Need time to develop proper html truncater with jsoup
-      String truncatedHtml = TextUtils.truncateStringLineCount(html, TRUNCATED_WORD_COUNT);
-
-      truncatedHtml += "<br/>. . . ";
-      return truncatedHtml;
+      return Marked.marked(markdown, options);
    }
 
    public static String toReadableDate(Date date) {

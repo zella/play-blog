@@ -24,9 +24,11 @@ public class Post  {
    @Constraints.MaxLength(value = 255)
    private String title;
 
+   private String content;
+
    @Constraints.Required
    @Constraints.MinLength(value = 10)
-   private String content;
+   private String mdContent;
 
 
    private String htmlPreview = "";
@@ -51,6 +53,10 @@ public class Post  {
       return title;
    }
 
+   /**
+    *
+    * @return content in Html
+    */
    public String getContent() {
       return content;
    }
@@ -91,6 +97,18 @@ public class Post  {
       this.htmlPreview = htmlPreview;
    }
 
+   /**
+    *
+    * @return content in Markdown
+     */
+   public String getMdContent() {
+      return mdContent;
+   }
+
+   public void setMdContent(String mdContent) {
+      this.mdContent = mdContent;
+   }
+
    public static Page page(int page, boolean showPrivate) {
 
       long total = Application.postDao.count(showPrivate);
@@ -106,6 +124,7 @@ public class Post  {
       Post post = new Post();
       post.setId(doc.getIdentity().toString());
       post.setContent(doc.field("content"));
+      post.setMdContent(doc.field("mdContent"));
       post.setCreationDate(doc.field("creationDate"));
       post.setTitle(doc.field("title"));
       post.setHtmlPreview(doc.field("htmlPreview"));
@@ -124,6 +143,7 @@ public class Post  {
          doc = new ODocument("BlogPost");
 
       doc.field("content", getContent());
+      doc.field("mdContent", getMdContent());
       doc.field("creationDate", getCreationDate());
       doc.field("title", getTitle());
       doc.field("htmlPreview", getHtmlPreview());

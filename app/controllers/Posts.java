@@ -7,7 +7,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import utils.TextUtils;
-import views.html.editpost;
 import views.html.*;
 
 import java.util.Date;
@@ -54,12 +53,14 @@ public class Posts extends Controller {
          return badRequest(createpost.render(newPostForm));
       }
       Post post = newPostForm.get();
-      //   post.setHtmlPreview(.TextUtils.generateTruncateHtmlPreview(blogPost.getBody(), TRUNCATED_MEDIUM_CHAR_COUNT));
-      //TODO local user!
+
       User localUser = Application.getLocalUser(session());
-      post.setHtmlPreview(TextUtils.generateTruncateHtmlPreview(post.getContent(), TextUtils.TRUNCATED_CHAR_COUNT));
+      // now we store raw html in database, yeah
+      post.setContent(TextUtils.markdownToHtml(post.getMdContent()));
+      post.setHtmlPreview(TextUtils.generateTruncatedHtmlPreview(post.getContent()));
       post.setUser(localUser);
       post.setCreationDate(new Date());
+
       Application.postDao.save(post);
 
       flash("success", "Post has been created");
@@ -90,13 +91,13 @@ public class Posts extends Controller {
          return badRequest(postForm.errorsAsJson().toString());
       }
       Post postFromForm = postForm.get();
-      //TODO info about blog
-      //TODO merge/update functionality
-      Post toUpdate = Application.postDao.findById(postId.toString());
-      toUpdate.setContent(postFromForm.getContent());
+      Post toUpdate = Application.postDao.findById(postId);
+      // now we store raw html in database, yeah
+      toUpdate.setContent(TextUtils.markdownToHtml(postFromForm.getMdContent()));
+      toUpdate.setMdContent(postFromForm.getMdContent());
       toUpdate.setTitle(postFromForm.getTitle());
       toUpdate.setIsPrivate(postFromForm.getIsPrivate());
-      toUpdate.setHtmlPreview(TextUtils.generateTruncateHtmlPreview(postFromForm.getContent(), TextUtils.TRUNCATED_CHAR_COUNT));
+      toUpdate.setHtmlPreview(TextUtils.generateTruncatedHtmlPreview(toUpdate.getContent()));
       Application.postDao.save(toUpdate);
 
       return ok("Blog post saved");
