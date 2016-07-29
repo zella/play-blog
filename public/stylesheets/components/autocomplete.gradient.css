@@ -1,4 +1,4 @@
-/*! UIkit 2.26.4 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 /* ========================================================================
    Component: Autocomplete
  ========================================================================== */
@@ -18,18 +18,13 @@
   /* 4 */
   vertical-align: middle;
 }
-/* Legacy dropdown modifier */
-.uk-dropdown-flip {
-  left: auto;
-  right: 0;
-}
 /* Nav modifier `uk-nav-autocomplete`
  ========================================================================== */
 /*
  * Items
  */
 .uk-nav-autocomplete > li > a {
-  color: #444;
+  color: #444444;
 }
 /*
  * Active
@@ -37,7 +32,7 @@
  */
 .uk-nav-autocomplete > li.uk-active > a {
   background: #009dd8;
-  color: #fff;
+  color: #ffffff;
   /* 1 */
   outline: none;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -47,11 +42,11 @@
  * Sub-object: `uk-nav-header`
  */
 .uk-nav-autocomplete .uk-nav-header {
-  color: #999;
+  color: #999999;
 }
 /*
  * Sub-object: `uk-nav-divider`
  */
 .uk-nav-autocomplete .uk-nav-divider {
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #dddddd;
 }

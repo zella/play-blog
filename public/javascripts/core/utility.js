@@ -1,4 +1,4 @@
-/*! UIkit 2.26.4 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(UI) {
 
     "use strict";
@@ -8,9 +8,7 @@
     UI.component('stackMargin', {
 
         defaults: {
-            cls: 'uk-margin-small-top',
-            rowfirst: false,
-            observe: false
+            'cls': 'uk-margin-small-top'
         },
 
         boot: function() {
@@ -20,10 +18,10 @@
 
                 UI.$("[data-uk-margin]", context).each(function() {
 
-                    var ele = UI.$(this);
+                    var ele = UI.$(this), obj;
 
                     if (!ele.data("stackMargin")) {
-                        UI.stackMargin(ele, UI.Utils.options(ele.attr("data-uk-margin")));
+                        obj = UI.stackMargin(ele, UI.Utils.options(ele.attr("data-uk-margin")));
                     }
                 });
             });
@@ -32,6 +30,10 @@
         init: function() {
 
             var $this = this;
+
+            this.columns = this.element.children();
+
+            if (!this.columns.length) return;
 
             UI.$win.on('resize orientationchange', (function() {
 
@@ -47,49 +49,32 @@
                 return UI.Utils.debounce(fn, 20);
             })());
 
+            UI.$html.on("changed.uk.dom", function(e) {
+                $this.columns  = $this.element.children();
+                $this.process();
+            });
+
             this.on("display.uk.check", function(e) {
+                $this.columns = $this.element.children();
                 if (this.element.is(":visible")) this.process();
             }.bind(this));
-
-            if (this.options.observe) {
-
-                UI.domObserve(this.element, function(e) {
-                    if ($this.element.is(":visible")) $this.process();
-                });
-            }
 
             stacks.push(this);
         },
 
         process: function() {
 
-            var $this = this, columns = this.element.children();
+            var $this = this;
 
-            UI.Utils.stackMargin(columns, this.options);
-
-            if (!this.options.rowfirst || !columns.length) {
-                return this;
-            }
-
-            // Mark first column elements
-            var group = {}, minleft = false;
-
-            columns.removeClass(this.options.rowfirst).each(function(offset, $ele){
-
-                $ele = UI.$(this);
-
-                if (this.style.display != 'none') {
-                    offset = $ele.offset().left;
-                    ((group[offset] = group[offset] || []) && group[offset]).push(this);
-                    minleft = minleft === false ? offset : Math.min(minleft, offset);
-                }
-            });
-
-            UI.$(group[minleft]).addClass(this.options.rowfirst);
+            UI.Utils.stackMargin(this.columns, this.options);
 
             return this;
-        }
+        },
 
+        revert: function() {
+            this.columns.removeClass(this.options.cls);
+            return this;
+        }
     });
 
 
@@ -122,7 +107,7 @@
 
                         var ele = UI.$(this), obj;
 
-                        if (!ele.data("responsiveElement")) {
+                        if (!ele.data("responsiveIframe")) {
                             obj = UI.responsiveElement(ele, {});
                         }
                     });
@@ -171,41 +156,30 @@
             'cls': 'uk-margin-small-top'
         }, options);
 
+        options.cls = options.cls;
+
         elements = UI.$(elements).removeClass(options.cls);
 
-        var min = false;
+        var skip         = false,
+            firstvisible = elements.filter(":visible:first"),
+            offset       = firstvisible.length ? (firstvisible.position().top + firstvisible.outerHeight()) - 1 : false; // (-1): weird firefox bug when parent container is display:flex
 
-        elements.each(function(offset, height, pos, $ele){
+        if (offset === false) return;
 
-            $ele   = UI.$(this);
+        elements.each(function() {
 
-            if ($ele.css('display') != 'none') {
+            var column = UI.$(this);
 
-                offset = $ele.offset();
-                height = $ele.outerHeight();
-                pos    = offset.top + height;
+            if (column.is(":visible")) {
 
-                $ele.data({
-                    'ukMarginPos': pos,
-                    'ukMarginTop': offset.top
-                });
+                if (skip) {
+                    column.addClass(options.cls);
+                } else {
 
-                if (min === false || (offset.top < min.top) ) {
-
-                    min = {
-                        top  : offset.top,
-                        left : offset.left,
-                        pos  : pos
-                    };
+                    if (column.position().top >= offset) {
+                        skip = column.addClass(options.cls);
+                    }
                 }
-            }
-
-        }).each(function($ele) {
-
-            $ele   = UI.$(this);
-
-            if ($ele.css('display') != 'none' && $ele.data('ukMarginTop') > min.top && $ele.data('ukMarginPos') > min.pos) {
-                $ele.addClass(options.cls);
             }
         });
     };
@@ -265,55 +239,5 @@
             matchHeights(elements);
         }
     };
-
-    (function(cacheSvgs){
-
-        UI.Utils.inlineSvg = function(selector, root) {
-
-            var images = UI.$(selector || 'img[src$=".svg"]', root || document).each(function(){
-
-                var img = UI.$(this),
-                    src = img.attr('src');
-
-                if (!cacheSvgs[src]) {
-
-                    var d = UI.$.Deferred();
-
-                    UI.$.get(src, {nc: Math.random()}, function(data){
-                        d.resolve(UI.$(data).find('svg'));
-                    });
-
-                    cacheSvgs[src] = d.promise();
-                }
-
-                cacheSvgs[src].then(function(svg) {
-
-                    var $svg = UI.$(svg).clone();
-
-                    if (img.attr('id')) $svg.attr('id', img.attr('id'));
-                    if (img.attr('class')) $svg.attr('class', img.attr('class'));
-                    if (img.attr('style')) $svg.attr('style', img.attr('style'));
-
-                    if (img.attr('width')) {
-                        $svg.attr('width', img.attr('width'));
-                        if (!img.attr('height'))  $svg.removeAttr('height');
-                    }
-
-                    if (img.attr('height')){
-                        $svg.attr('height', img.attr('height'));
-                        if (!img.attr('width')) $svg.removeAttr('width');
-                    }
-
-                    img.replaceWith($svg);
-                });
-            });
-        };
-
-        // init code
-        UI.ready(function(context) {
-            UI.Utils.inlineSvg('[data-uk-svg]', context);
-        });
-
-    })({});
 
 })(UIkit);

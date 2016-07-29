@@ -1,66 +1,19 @@
-/*! UIkit 2.26.4 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(UI) {
 
     "use strict";
 
-    var active = false, hoverIdle, flips = {
-        'x': {
-            "bottom-left"   : 'bottom-right',
-            "bottom-right"  : 'bottom-left',
-            "bottom-center" : 'bottom-center',
-            "top-left"      : 'top-right',
-            "top-right"     : 'top-left',
-            "top-center"    : 'top-center',
-            "left-top"      : 'right-top',
-            "left-bottom"   : 'right-bottom',
-            "left-center"   : 'right-center',
-            "right-top"     : 'left-top',
-            "right-bottom"  : 'left-bottom',
-            "right-center"  : 'left-center'
-        },
-        'y': {
-            "bottom-left"   : 'top-left',
-            "bottom-right"  : 'top-right',
-            "bottom-center" : 'top-center',
-            "top-left"      : 'bottom-left',
-            "top-right"     : 'bottom-right',
-            "top-center"    : 'bottom-center',
-            "left-top"      : 'left-bottom',
-            "left-bottom"   : 'left-top',
-            "left-center"   : 'left-center',
-            "right-top"     : 'right-bottom',
-            "right-bottom"  : 'right-top',
-            "right-center"  : 'right-center'
-        },
-        'xy': {
-            "bottom-left"   : 'top-right',
-            "bottom-right"  : 'top-left',
-            "bottom-center" : 'top-center',
-            "top-left"      : 'bottom-right',
-            "top-right"     : 'bottom-left',
-            "top-center"    : 'bottom-center',
-            "left-top"      : 'right-bottom',
-            "left-bottom"   : 'right-top',
-            "left-center"   : 'right-center',
-            "right-top"     : 'left-bottom',
-            "right-bottom"  : 'left-top',
-            "right-center"  : 'left-center'
-        }
-    };
+    var active = false, hoverIdle;
 
     UI.component('dropdown', {
 
         defaults: {
-           'mode'            : 'hover',
-           'pos'             : 'bottom-left',
-           'offset'          : 0,
-           'remaintime'      : 800,
-           'justify'         : false,
-           'boundary'        : UI.$win,
-           'delay'           : 0,
-           'dropdownSelector': '.uk-dropdown,.uk-dropdown-blank',
-           'hoverDelayIdle'  : 250,
-           'preventflip'     : false
+           'mode'       : 'hover',
+           'remaintime' : 800,
+           'justify'    : false,
+           'boundary'   : UI.$win,
+           'delay'      : 0,
+           'hoverDelayIdle'  : 250
         },
 
         remainIdle: false,
@@ -82,7 +35,7 @@
                         dropdown.element.trigger(triggerevent);
                     }
 
-                    if (dropdown.element.find(dropdown.options.dropdownSelector).length) {
+                    if (dropdown.element.find('.uk-dropdown').length) {
                         e.preventDefault();
                     }
                 }
@@ -93,31 +46,17 @@
 
             var $this = this;
 
-            this.dropdown     = this.find(this.options.dropdownSelector);
-            this.offsetParent = this.dropdown.parents().filter(function() {
-                return UI.$.inArray(UI.$(this).css('position'), ['relative', 'fixed', 'absolute']) !== -1;
-            }).slice(0,1);
+            this.dropdown  = this.find('.uk-dropdown');
 
             this.centered  = this.dropdown.hasClass('uk-dropdown-center');
             this.justified = this.options.justify ? UI.$(this.options.justify) : false;
 
             this.boundary  = UI.$(this.options.boundary);
+            this.flipped   = this.dropdown.hasClass('uk-dropdown-flip');
 
             if (!this.boundary.length) {
                 this.boundary = UI.$win;
             }
-
-            // legacy DEPRECATED!
-            if (this.dropdown.hasClass('uk-dropdown-up')) {
-                this.options.pos = 'top-left';
-            }
-            if (this.dropdown.hasClass('uk-dropdown-flip')) {
-                this.options.pos = this.options.pos.replace('left','right');
-            }
-            if (this.dropdown.hasClass('uk-dropdown-center')) {
-                this.options.pos = this.options.pos.replace(/(left|right)/,'center');
-            }
-            //-- end legacy
 
             // Init ARIA
             this.element.attr('aria-haspopup', 'true');
@@ -125,11 +64,11 @@
 
             if (this.options.mode == "click" || UI.support.touch) {
 
-                this.on("click.uk.dropdown", function(e) {
+                this.on("click.uikit.dropdown", function(e) {
 
                     var $target = UI.$(e.target);
 
-                    if (!$target.parents($this.options.dropdownSelector).length) {
+                    if (!$target.parents(".uk-dropdown").length) {
 
                         if ($target.is("a[href='#']") || $target.parent().is("a[href='#']") || ($this.dropdown.length && !$this.dropdown.is(":visible")) ){
                             e.preventDefault();
@@ -144,7 +83,7 @@
 
                     } else {
 
-                        if (!$this.dropdown.find(e.target).length || $target.is(".uk-dropdown-close") || $target.parents(".uk-dropdown-close").length) {
+                        if ($target.is("a:not(.js-uk-prevent)") || $target.is(".uk-dropdown-close") || !$this.dropdown.find(e.target).length) {
                             $this.hide();
                         }
                     }
@@ -153,8 +92,6 @@
             } else {
 
                 this.on("mouseenter", function(e) {
-
-                    $this.trigger('pointerenter.uk.dropdown', [$this]);
 
                     if ($this.remainIdle) {
                         clearTimeout($this.remainIdle);
@@ -190,21 +127,12 @@
                         if (active && active == $this) $this.hide();
                     }, $this.options.remaintime);
 
-                    $this.trigger('pointerleave.uk.dropdown', [$this]);
-
                 }).on("click", function(e){
 
                     var $target = UI.$(e.target);
 
                     if ($this.remainIdle) {
                         clearTimeout($this.remainIdle);
-                    }
-
-                    if (active && active == $this) {
-                        if (!$this.dropdown.find(e.target).length || $target.is(".uk-dropdown-close") || $target.parents(".uk-dropdown-close").length) {
-                            $this.hide();
-                        }
-                        return;
                     }
 
                     if ($target.is("a[href='#']") || $target.parent().is("a[href='#']")){
@@ -221,14 +149,12 @@
             UI.$html.off("click.outer.dropdown");
 
             if (active && active != this) {
-                active.hide(true);
+                active.hide();
             }
 
             if (hoverIdle) {
                 clearTimeout(hoverIdle);
             }
-
-            this.trigger('beforeshow.uk.dropdown', [this]);
 
             this.checkDimensions();
             this.element.addClass('uk-open');
@@ -244,10 +170,7 @@
             this.registerOuterClick();
         },
 
-        hide: function(force) {
-
-            this.trigger('beforehide.uk.dropdown', [this, force]);
-
+        hide: function() {
             this.element.removeClass('uk-open');
 
             if (this.remainIdle) {
@@ -259,7 +182,7 @@
             // Update ARIA
             this.element.attr('aria-expanded', 'false');
 
-            this.trigger('hide.uk.dropdown', [this, force]);
+            this.trigger('hide.uk.dropdown', [this]);
 
             if (active == this) active = false;
         },
@@ -280,8 +203,8 @@
 
                     var $target = UI.$(e.target);
 
-                    if (active == $this && !$this.element.find(e.target).length) {
-                        $this.hide(true);
+                    if (active == $this && ($target.is("a:not(.js-uk-prevent)") || $target.is(".uk-dropdown-close") || !$this.dropdown.find(e.target).length)) {
+                        $this.hide();
                         UI.$html.off("click.outer.dropdown");
                     }
                 });
@@ -292,234 +215,82 @@
 
             if (!this.dropdown.length) return;
 
-            // reset
-            this.dropdown.removeClass('uk-dropdown-top uk-dropdown-bottom uk-dropdown-left uk-dropdown-right uk-dropdown-stack').css({
-                'top-left':'',
-                'left':'',
-                'margin-left' :'',
-                'margin-right':''
-            });
-
             if (this.justified && this.justified.length) {
                 this.dropdown.css("min-width", "");
             }
 
-            var $this          = this,
-                pos            = UI.$.extend({}, this.offsetParent.offset(), {width: this.offsetParent[0].offsetWidth, height: this.offsetParent[0].offsetHeight}),
-                posoffset      = this.options.offset,
-                dropdown       = this.dropdown,
-                offset         = dropdown.show().offset() || {left: 0, top: 0},
-                width          = dropdown.outerWidth(),
-                height         = dropdown.outerHeight(),
+            var $this     = this,
+                dropdown  = this.dropdown.css("margin-" + UI.langdirection, ""),
+                offset    = dropdown.show().offset(),
+                width     = dropdown.outerWidth(),
                 boundarywidth  = this.boundary.width(),
-                boundaryoffset = this.boundary[0] !== window && this.boundary.offset() ? this.boundary.offset(): {top:0, left:0},
-                dpos           = this.options.pos;
+                boundaryoffset = this.boundary.offset() ? this.boundary.offset().left:0;
 
-            var variants =  {
-                    "bottom-left"   : {top: 0 + pos.height + posoffset, left: 0},
-                    "bottom-right"  : {top: 0 + pos.height + posoffset, left: 0 + pos.width - width},
-                    "bottom-center" : {top: 0 + pos.height + posoffset, left: 0 + pos.width / 2 - width / 2},
-                    "top-left"      : {top: 0 - height - posoffset, left: 0},
-                    "top-right"     : {top: 0 - height - posoffset, left: 0 + pos.width - width},
-                    "top-center"    : {top: 0 - height - posoffset, left: 0 + pos.width / 2 - width / 2},
-                    "left-top"      : {top: 0, left: 0 - width - posoffset},
-                    "left-bottom"   : {top: 0 + pos.height - height, left: 0 - width - posoffset},
-                    "left-center"   : {top: 0 + pos.height / 2 - height / 2, left: 0 - width - posoffset},
-                    "right-top"     : {top: 0, left: 0 + pos.width + posoffset},
-                    "right-bottom"  : {top: 0 + pos.height - height, left: 0 + pos.width + posoffset},
-                    "right-center"  : {top: 0 + pos.height / 2 - height / 2, left: 0 + pos.width + posoffset}
-                },
-                css = {},
-                pp;
+            // centered dropdown
+            if (this.centered) {
+                dropdown.css("margin-" + UI.langdirection, (parseFloat(width) / 2 - dropdown.parent().width() / 2) * -1);
+                offset = dropdown.offset();
 
-            pp = dpos.split('-');
-            css = variants[dpos] ? variants[dpos] : variants['bottom-left'];
+                // reset dropdown
+                if ((width + offset.left) > boundarywidth || offset.left < 0) {
+                    dropdown.css("margin-" + UI.langdirection, "");
+                    offset = dropdown.offset();
+                }
+            }
 
             // justify dropdown
             if (this.justified && this.justified.length) {
-                justify(dropdown.css({left:0}), this.justified, boundarywidth);
-            } else {
 
-                if (this.options.preventflip !== true) {
+                var jwidth = this.justified.outerWidth();
 
-                    var fdpos;
+                dropdown.css("min-width", jwidth);
 
-                    switch(this.checkBoundary(pos.left + css.left, pos.top + css.top, width, height, boundarywidth)) {
-                        case "x":
-                            if(this.options.preventflip !=='x') fdpos = flips['x'][dpos] || 'right-top';
-                            break;
-                        case "y":
-                            if(this.options.preventflip !=='y') fdpos = flips['y'][dpos] || 'top-left';
-                            break;
-                        case "xy":
-                            if(!this.options.preventflip) fdpos = flips['xy'][dpos] || 'right-bottom';
-                            break;
-                    }
+                if (UI.langdirection == 'right') {
 
-                    if (fdpos) {
+                    var right1   = boundarywidth - (this.justified.offset().left + jwidth),
+                        right2   = boundarywidth - (dropdown.offset().left + dropdown.outerWidth());
 
-                        pp  = fdpos.split('-');
-                        css = variants[fdpos] ? variants[fdpos] : variants['bottom-left'];
+                    dropdown.css("margin-right", right1 - right2);
 
-                        // check flipped
-                        if (this.checkBoundary(pos.left + css.left, pos.top + css.top, width, height, boundarywidth)) {
-                            pp  = dpos.split('-');
-                            css = variants[dpos] ? variants[dpos] : variants['bottom-left'];
-                        }
-                    }
+                } else {
+                    dropdown.css("margin-left", this.justified.offset().left - offset.left);
                 }
+
+                offset = dropdown.offset();
+
             }
 
-            if (width > boundarywidth) {
+            if ((width + (offset.left-boundaryoffset)) > boundarywidth) {
+                dropdown.addClass('uk-dropdown-flip');
+                offset = dropdown.offset();
+            }
+
+            if ((offset.left-boundaryoffset) < 0) {
+
                 dropdown.addClass("uk-dropdown-stack");
+
+                if (dropdown.hasClass('uk-dropdown-flip')) {
+
+                    if (!this.flipped) {
+                        dropdown.removeClass('uk-dropdown-flip');
+                        offset = dropdown.offset();
+                        dropdown.addClass('uk-dropdown-flip');
+                    }
+
+                    setTimeout(function(){
+
+                        if ((dropdown.offset().left-boundaryoffset) < 0 || !$this.flipped && (dropdown.outerWidth() + (offset.left-boundaryoffset)) < boundarywidth) {
+                            dropdown.removeClass('uk-dropdown-flip');
+                        }
+                    }, 0);
+                }
+
                 this.trigger('stack.uk.dropdown', [this]);
             }
 
-            dropdown.css(css).css("display", "").addClass('uk-dropdown-'+pp[0]);
-        },
-
-        checkBoundary: function(left, top, width, height, boundarywidth) {
-
-            var axis = "";
-
-            if (left < 0 || ((left - UI.$win.scrollLeft())+width) > boundarywidth) {
-               axis += "x";
-            }
-
-            if ((top - UI.$win.scrollTop()) < 0 || ((top - UI.$win.scrollTop())+height) > window.innerHeight) {
-               axis += "y";
-            }
-
-            return axis;
-        }
-    });
-
-
-    UI.component('dropdownOverlay', {
-
-        defaults: {
-           'justify' : false,
-           'cls'     : '',
-           'duration': 200
-        },
-
-        boot: function() {
-
-            // init code
-            UI.ready(function(context) {
-
-                UI.$("[data-uk-dropdown-overlay]", context).each(function() {
-                    var ele = UI.$(this);
-
-                    if (!ele.data("dropdownOverlay")) {
-                        UI.dropdownOverlay(ele, UI.Utils.options(ele.attr("data-uk-dropdown-overlay")));
-                    }
-                });
-            });
-        },
-
-        init: function() {
-
-            var $this = this;
-
-            this.justified = this.options.justify ? UI.$(this.options.justify) : false;
-            this.overlay   = this.element.find('uk-dropdown-overlay');
-
-            if (!this.overlay.length) {
-                this.overlay = UI.$('<div class="uk-dropdown-overlay"></div>').appendTo(this.element);
-            }
-
-            this.overlay.addClass(this.options.cls);
-
-            this.on({
-
-                'beforeshow.uk.dropdown': function(e, dropdown) {
-                    $this.dropdown = dropdown;
-
-                    if ($this.justified && $this.justified.length) {
-                        justify($this.overlay.css({'display':'block', 'margin-left':'','margin-right':''}), $this.justified, $this.justified.outerWidth());
-                    }
-                },
-
-                'show.uk.dropdown': function(e, dropdown) {
-
-                    var h = $this.dropdown.dropdown.outerHeight(true);
-
-                    $this.dropdown.element.removeClass('uk-open');
-
-                    $this.overlay.stop().css('display', 'block').animate({height: h}, $this.options.duration, function() {
-
-                       $this.dropdown.dropdown.css('visibility', '');
-                       $this.dropdown.element.addClass('uk-open');
-
-                       UI.Utils.checkDisplay($this.dropdown.dropdown, true);
-                    });
-
-                    $this.pointerleave = false;
-                },
-
-                'hide.uk.dropdown': function() {
-                    $this.overlay.stop().animate({height: 0}, $this.options.duration);
-                },
-
-                'pointerenter.uk.dropdown': function(e, dropdown) {
-                    clearTimeout($this.remainIdle);
-                },
-
-                'pointerleave.uk.dropdown': function(e, dropdown) {
-                    $this.pointerleave = true;
-                }
-            });
-
-
-            this.overlay.on({
-
-                'mouseenter': function() {
-                    if ($this.remainIdle) {
-                        clearTimeout($this.dropdown.remainIdle);
-                        clearTimeout($this.remainIdle);
-                    }
-                },
-
-                'mouseleave': function(){
-
-                    if ($this.pointerleave && active) {
-
-                        $this.remainIdle = setTimeout(function() {
-                           if(active) active.hide();
-                        }, active.options.remaintime);
-                    }
-                }
-            })
+            dropdown.css("display", "");
         }
 
     });
-
-
-    function justify(ele, justifyTo, boundarywidth, offset) {
-
-        ele           = UI.$(ele);
-        justifyTo     = UI.$(justifyTo);
-        boundarywidth = boundarywidth || window.innerWidth;
-        offset        = offset || ele.offset();
-
-        if (justifyTo.length) {
-
-            var jwidth = justifyTo.outerWidth();
-
-            ele.css("min-width", jwidth);
-
-            if (UI.langdirection == 'right') {
-
-                var right1   = boundarywidth - (justifyTo.offset().left + jwidth),
-                    right2   = boundarywidth - (ele.offset().left + ele.outerWidth());
-
-                ele.css("margin-right", right1 - right2);
-
-            } else {
-                ele.css("margin-left", justifyTo.offset().left - offset.left);
-            }
-        }
-    }
 
 })(UIkit);

@@ -1,4 +1,4 @@
-/*! UIkit 2.26.4 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
@@ -80,9 +80,7 @@
             this.container.append(ghost);
 
             ghost.children().last().on(UI.support.transition.end, function() {
-
-                setTimeout(ghost.remove.bind(ghost), 0);
-
+                ghost.remove();
                 d.resolve();
             });
 
@@ -134,6 +132,8 @@
 
             for (var i = 0; i < this.options.slices; i++) {
 
+                var width = (i == this.options.slices-1) ? (ghostWidth - (sliceWidth*i)) : sliceWidth;
+
                 bar = UI.$('<div class="uk-cover-background"></div>').css({
                     'position'           : 'absolute',
                     'top'                : 0,
@@ -157,9 +157,7 @@
             ghost.width();
 
             ghost.children().first().on(UI.support.transition.end, function() {
-
-                setTimeout(ghost.remove.bind(ghost), 0);
-
+                ghost.remove();
                 d.resolve();
             }).end().css({
                 'transform': 'scaleX(1)',
@@ -232,9 +230,7 @@
                     '-webkit-transition': 'all '+$this.options.duration+'ms ease-in-out '+(50+i*25)+'ms'
                 });
             }).last().on(UI.support.transition.end, function() {
-
-                setTimeout(ghost.remove.bind(ghost), 0);
-
+                ghost.remove();
                 d.resolve();
             });
 
@@ -338,9 +334,7 @@
             }
 
             boxes.last().on(UI.support.transition.end, function() {
-
-                setTimeout(ghost.remove.bind(ghost), 0);
-
+                ghost.remove();
                 d.resolve();
             });
 
@@ -367,7 +361,7 @@
             if (!animations[this.fxIndex]) this.fxIndex = 0;
 
             return Animations[animations[this.fxIndex]].apply(this, arguments);
-        }
+        },
     });
 
 

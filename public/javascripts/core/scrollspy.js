@@ -1,4 +1,4 @@
-/*! UIkit 2.26.4 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(UI) {
 
     "use strict";
@@ -86,7 +86,6 @@
 
                         if (element.data('scrollspy-idle')) {
                             clearTimeout(element.data('scrollspy-idle'));
-                            element.data('scrollspy-idle', false);
                         }
 
                         element.removeClass("uk-scrollspy-inview").toggleClass(toggle);
@@ -149,7 +148,7 @@
         init: function() {
 
             var ids     = [],
-                links   = this.find("a[href^='#']").each(function(){ if(this.getAttribute("href").trim()!=='#') ids.push(this.getAttribute("href")); }),
+                links   = this.find("a[href^='#']").each(function(){ ids.push(UI.$(this).attr("href")); }),
                 targets = UI.$(ids.join(",")),
 
                 clsActive  = this.options.cls,
@@ -171,7 +170,7 @@
                         scrollTop = $win.scrollTop(),
                         target = (function(){
                             for(var i=0; i< inviews.length;i++){
-                                if (inviews[i].offset().top - $this.options.topoffset >= scrollTop){
+                                if(inviews[i].offset().top >= scrollTop){
                                     return inviews[i];
                                 }
                             }
@@ -180,7 +179,7 @@
                     if (!target) return;
 
                     if ($this.options.closest) {
-                        links.blur().closest(clsClosest).removeClass(clsActive);
+                        links.closest(clsClosest).removeClass(clsActive);
                         navitems = links.filter("a[href='#"+target.attr("id")+"']").closest(clsClosest).addClass(clsActive);
                     } else {
                         navitems = links.removeClass(clsActive).filter("a[href='#"+target.attr("id")+"']").addClass(clsActive);

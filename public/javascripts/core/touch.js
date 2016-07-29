@@ -1,4 +1,4 @@
-/*! UIkit 2.26.4 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 //  Based on Zeptos touch.js
 //  https://raw.github.com/madrobby/zepto/master/src/touch.js
 //  Zepto.js may be freely distributed under the MIT license.
@@ -19,7 +19,7 @@
   function longTap() {
     longTapTimeout = null;
     if (touch.last) {
-      if ( touch.el !== undefined ) touch.el.trigger('longTap');
+      touch.el.trigger('longTap');
       touch = {};
     }
   }
@@ -55,7 +55,7 @@
 
         var swipeDirectionFromVelocity = e.originalEvent.velocityX > 1 ? 'Right' : e.originalEvent.velocityX < -1 ? 'Left' : e.originalEvent.velocityY > 1 ? 'Down' : e.originalEvent.velocityY < -1 ? 'Up' : null;
 
-        if (swipeDirectionFromVelocity && touch.el !== undefined) {
+        if (swipeDirectionFromVelocity) {
           touch.el.trigger('swipe');
           touch.el.trigger('swipe'+ swipeDirectionFromVelocity);
         }
@@ -115,10 +115,8 @@
         if ((touch.x2 && Math.abs(touch.x1 - touch.x2) > 30) || (touch.y2 && Math.abs(touch.y1 - touch.y2) > 30)){
 
           swipeTimeout = setTimeout(function() {
-            if ( touch.el !== undefined ) {
-              touch.el.trigger('swipe');
-              touch.el.trigger('swipe' + (swipeDirection(touch.x1, touch.x2, touch.y1, touch.y2)));
-            }
+            touch.el.trigger('swipe');
+            touch.el.trigger('swipe' + (swipeDirection(touch.x1, touch.x2, touch.y1, touch.y2)));
             touch = {};
           }, 0);
 
@@ -136,11 +134,11 @@
               // (cancelTouch cancels processing of single vs double taps for faster 'tap' response)
               var event = $.Event('tap');
               event.cancelTouch = cancelAll;
-              if ( touch.el !== undefined ) touch.el.trigger(event);
+              touch.el.trigger(event);
 
               // trigger double tap immediately
               if (touch.isDoubleTap) {
-                if ( touch.el !== undefined ) touch.el.trigger('doubleTap');
+                touch.el.trigger('doubleTap');
                 touch = {};
               }
 
@@ -148,7 +146,7 @@
               else {
                 touchTimeout = setTimeout(function(){
                   touchTimeout = null;
-                  if ( touch.el !== undefined ) touch.el.trigger('singleTap');
+                  touch.el.trigger('singleTap');
                   touch = {};
                 }, 250);
               }

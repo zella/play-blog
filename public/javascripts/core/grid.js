@@ -1,4 +1,4 @@
-/*! UIkit 2.26.4 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(UI) {
 
     "use strict";
@@ -10,8 +10,7 @@
         defaults: {
             "target"        : false,
             "row"           : true,
-            "ignorestacked" : false,
-            "observe"       : false
+            "ignorestacked" : false
         },
 
         boot: function() {
@@ -41,7 +40,7 @@
             UI.$win.on('load resize orientationchange', (function() {
 
                 var fn = function() {
-                    if ($this.element.is(":visible")) $this.match();
+                    $this.match();
                 };
 
                 UI.$(function() { fn(); });
@@ -49,12 +48,11 @@
                 return UI.Utils.debounce(fn, 50);
             })());
 
-            if (this.options.observe) {
-
-                UI.domObserve(this.element, function(e) {
-                    if ($this.element.is(":visible")) $this.match();
-                });
-            }
+            UI.$html.on("changed.uk.dom", function(e) {
+                $this.columns  = $this.element.children();
+                $this.elements = $this.options.target ? $this.find($this.options.target) : $this.columns;
+                $this.match();
+            });
 
             this.on("display.uk.check", function(e) {
                 if(this.element.is(":visible")) this.match();
@@ -89,8 +87,7 @@
     UI.component('gridMargin', {
 
         defaults: {
-            cls      : 'uk-grid-margin',
-            rowfirst : 'uk-row-first'
+            "cls": "uk-grid-margin"
         },
 
         boot: function() {

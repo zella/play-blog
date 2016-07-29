@@ -1,4 +1,4 @@
-/*! UIkit 2.26.4 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
@@ -34,7 +34,7 @@
 
                     e.preventDefault();
 
-                    UI.formPassword(ele, UI.Utils.options(ele.attr("data-uk-form-password")));
+                    var obj = UI.formPassword(ele, UI.Utils.options(ele.attr("data-uk-form-password")));
                     ele.trigger("click");
                 }
             });
@@ -51,13 +51,12 @@
                 if($this.input.length) {
                     var type = $this.input.attr("type");
                     $this.input.attr("type", type=="text" ? "password":"text");
-                    $this.element.html($this.options[type=="text" ? "lblShow":"lblHide"]);
+                    $this.element.text($this.options[type=="text" ? "lblShow":"lblHide"]);
                 }
             });
 
             this.input = this.element.next("input").length ? this.element.next("input") : this.element.prev("input");
-            this.element.html(this.options[this.input.is("[type='password']") ? "lblShow":"lblHide"]);
-
+            this.element.text(this.options[this.input.is("[type='password']") ? "lblShow":"lblHide"]);
 
             this.element.data("formPassword", this);
         }

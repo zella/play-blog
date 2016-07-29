@@ -1,4 +1,4 @@
-/*! UIkit 2.26.4 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
@@ -8,7 +8,7 @@
     }
 
     if (typeof define == "function" && define.amd) {
-        define("uikit-timepicker", ["uikit"], function(){
+        define("uikit-search", ["uikit"], function(){
             return component || addon(UIkit);
         });
     }
@@ -79,9 +79,9 @@
                 $this.autocomplete.value = Math.random();
                 $this.autocomplete.triggercomplete();
 
-            }).on('blur', UI.Utils.debounce(function() {
+            }).on('blur', function() {
                 $this.checkTime();
-            }, 100));
+            });
 
             this.element.data("timepicker", this);
         },

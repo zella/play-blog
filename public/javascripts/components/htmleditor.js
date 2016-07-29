@@ -1,4 +1,4 @@
-/*! UIkit 2.26.4 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.21.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
@@ -26,7 +26,6 @@
             mode         : 'split',
             markdown     : false,
             autocomplete : true,
-            enablescripts: false,
             height       : 500,
             maxsplitsize : 1000,
             codemirror   : { mode: 'htmlmixed', lineWrapping: true, dragDrop: false, autoCloseTags: true, matchTags: true, autoCloseBrackets: true, matchBrackets: true, indentUnit: 4, indentWithTabs: false, tabSize: 4, hintOptions: {completionSingle:false} },
@@ -43,10 +42,10 @@
 
                 UI.$('textarea[data-uk-htmleditor]', context).each(function() {
 
-                    var editor = UI.$(this);
+                    var editor = UI.$(this), obj;
 
                     if (!editor.data('htmleditor')) {
-                        UI.htmleditor(editor, UI.Utils.options(editor.attr('data-uk-htmleditor')));
+                        obj = UI.htmleditor(editor, UI.Utils.options(editor.attr('data-uk-htmleditor')));
                     }
                 });
             });
@@ -59,8 +58,8 @@
             this.CodeMirror = this.options.CodeMirror || CodeMirror;
             this.buttons    = {};
 
-            tpl = tpl.replace(/\{:lblPreview}/g, this.options.lblPreview);
-            tpl = tpl.replace(/\{:lblCodeview}/g, this.options.lblCodeview);
+            tpl = tpl.replace(/\{:lblPreview\}/g, this.options.lblPreview);
+            tpl = tpl.replace(/\{:lblCodeview\}/g, this.options.lblCodeview);
 
             this.htmleditor = UI.$(tpl);
             this.content    = this.htmleditor.find('.uk-htmleditor-content');
@@ -92,7 +91,7 @@
 
                 // append custom stylesheet
                 if (typeof(this.options.iframe) === 'string') {
-                    this.preview.container.parent().append('<link rel="stylesheet" href="'+this.options.iframe+'">');
+                   this.preview.container.parent().append('<link rel="stylesheet" href="'+this.options.iframe+'">');
                 }
 
             } else {
@@ -108,13 +107,13 @@
                     if ($this.htmleditor.attr('data-mode') == 'tab') return;
 
                     // calc position
-                    var codeHeight      = codeContent.height() - codeScroll.height(),
-                        previewHeight   = previewContainer[0].scrollHeight - ($this.iframe ? $this.iframe.height() : previewContainer.height()),
-                        ratio           = previewHeight / codeHeight,
-                        previewPosition = codeScroll.scrollTop() * ratio;
+                    var codeHeight       = codeContent.height() - codeScroll.height(),
+                        previewHeight    = previewContainer[0].scrollHeight - ($this.iframe ? $this.iframe.height() : previewContainer.height()),
+                        ratio            = previewHeight / codeHeight,
+                        previewPostition = codeScroll.scrollTop() * ratio;
 
                     // apply new scroll
-                    previewContainer.scrollTop(previewPosition);
+                    previewContainer.scrollTop(previewPostition);
 
                 }, 10));
 
@@ -162,7 +161,7 @@
             this.debouncedRedraw = UI.Utils.debounce(function () { $this.redraw(); }, 5);
 
             this.on('init.uk.component', function() {
-                $this.debouncedRedraw();
+                $this.redraw();
             });
 
             this.element.attr('data-uk-check-display', 1).on('display.uk.check', function(e) {
@@ -182,7 +181,7 @@
 
         replaceInPreview: function(regexp, callback) {
 
-            var editor = this.editor, results = [], value = editor.getValue(), offset = -1, index = 0;
+            var editor = this.editor, results = [], value = editor.getValue(), offset = -1;
 
             this.currentvalue = this.currentvalue.replace(regexp, function() {
 
@@ -207,13 +206,11 @@
                     }
                 };
 
-                var result = typeof(callback) === 'string' ? callback : callback(match, index);
+                var result = callback(match);
 
-                if (!result && result !== '') {
+                if (!result) {
                     return arguments[0];
                 }
-
-                index++;
 
                 results.push(match);
                 return result;
@@ -290,10 +287,6 @@
         render: function() {
 
             this.currentvalue = this.editor.getValue();
-
-            if (!this.options.enablescripts) {
-                this.currentvalue = this.currentvalue.replace(/<(script|style)\b[^<]*(?:(?!<\/(script|style)>)<[^<]*)*<\/(script|style)>/img, '');
-            }
 
             // empty code
             if (!this.currentvalue) {
@@ -448,81 +441,36 @@
             addAction('link', '<a href="http://">$1</a>');
             addAction('image', '<img src="http://" alt="$1">');
 
-            var listfn = function(tag) {
+            var listfn = function() {
                 if (editor.getCursorMode() == 'html') {
 
-                    tag = tag || 'ul';
-
-                    var cm        = editor.editor,
-                        doc       = cm.getDoc(),
-                        pos       = doc.getCursor(true),
-                        posend    = doc.getCursor(false),
-                        im        = CodeMirror.innerMode(cm.getMode(), cm.getTokenAt(cm.getCursor()).state),
-                        inList    = im && im.state && im.state.context && ['ul','ol'].indexOf(im.state.context.tagName) != -1;
+                    var cm      = editor.editor,
+                        pos     = cm.getDoc().getCursor(true),
+                        posend  = cm.getDoc().getCursor(false);
 
                     for (var i=pos.line; i<(posend.line+1);i++) {
                         cm.replaceRange('<li>'+cm.getLine(i)+'</li>', { line: i, ch: 0 }, { line: i, ch: cm.getLine(i).length });
                     }
 
-                    if (!inList) {
-                        cm.replaceRange('<'+tag+'>'+"\n"+cm.getLine(pos.line), { line: pos.line, ch: 0 }, { line: pos.line, ch: cm.getLine(pos.line).length });
-                        cm.replaceRange(cm.getLine((posend.line+1))+"\n"+'</'+tag+'>', { line: (posend.line+1), ch: 0 }, { line: (posend.line+1), ch: cm.getLine((posend.line+1)).length });
-                        cm.setCursor({ line: posend.line+1, ch: cm.getLine(posend.line+1).length });
-                    } else {
-                        cm.setCursor({ line: posend.line, ch: cm.getLine(posend.line).length });
-                    }
-
+                    cm.setCursor({ line: posend.line, ch: cm.getLine(posend.line).length });
                     cm.focus();
                 }
-            };
+            }
 
             editor.on('action.listUl', function() {
-                listfn('ul');
+                listfn();
             });
 
             editor.on('action.listOl', function() {
-                listfn('ol');
+                listfn();
             });
 
             editor.htmleditor.on('click', 'a[data-htmleditor-button="fullscreen"]', function() {
-
                 editor.htmleditor.toggleClass('uk-htmleditor-fullscreen');
 
                 var wrap = editor.editor.getWrapperElement();
 
                 if (editor.htmleditor.hasClass('uk-htmleditor-fullscreen')) {
-
-                    var fixedParent = false, parents = editor.htmleditor.parents().each(function(){
-                        if (UI.$(this).css('position')=='fixed' && !UI.$(this).is('html')) {
-                            fixedParent = UI.$(this);
-                        }
-                    });
-
-                    editor.htmleditor.data('fixedParents', false);
-
-                    if (fixedParent) {
-
-                        var transformed = [];
-
-                        fixedParent = fixedParent.parent().find(parents).each(function(){
-
-                            if (UI.$(this).css('transform') != 'none') {
-                                transformed.push(UI.$(this).data('transform-reset', {
-                                    'transform': this.style.transform,
-                                    '-webkit-transform': this.style.webkitTransform,
-                                    '-webkit-transition':this.style.webkitTransition,
-                                    'transition':this.style.transition
-                                }).css({
-                                    'transform': 'none',
-                                    '-webkit-transform': 'none',
-                                    '-webkit-transition':'none',
-                                    'transition':'none'
-                                }));
-                            }
-                        });
-
-                        editor.htmleditor.data('fixedParents', transformed);
-                    }
 
                     editor.editor.state.fullScreenRestore = {scrollTop: window.pageYOffset, scrollLeft: window.pageXOffset, width: wrap.style.width, height: wrap.style.height};
                     wrap.style.width  = '';
@@ -535,12 +483,6 @@
                     var info = editor.editor.state.fullScreenRestore;
                     wrap.style.width = info.width; wrap.style.height = info.height;
                     window.scrollTo(info.scrollLeft, info.scrollTop);
-
-                    if (editor.htmleditor.data('fixedParents')) {
-                        editor.htmleditor.data('fixedParents').forEach(function(parent){
-                            parent.css(parent.data('transform-reset'));
-                        });
-                    }
                 }
 
                 setTimeout(function() {
@@ -566,7 +508,7 @@
 
         init: function(editor) {
 
-            var parser = editor.options.mdparser || window.marked || null;
+            var parser = editor.options.mdparser || marked || null;
 
             if (!parser) return;
 
@@ -643,7 +585,7 @@
             UI.$.extend(editor, {
 
                 enableMarkdown: function() {
-                    enableMarkdown();
+                    enableMarkdown()
                     this.render();
                 },
                 disableMarkdown: function() {
