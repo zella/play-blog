@@ -145,7 +145,7 @@ public class TextUtils {
       //Temporary. Need time to develop proper html truncator with jsoup
       String truncatedHtml = TextUtils.truncateStringByWordCount(html, TRUNCATED_WORD_COUNT);
 
-      truncatedHtml += "<br/>. . . ";
+      truncatedHtml += "<br/> . . . ";
       return truncatedHtml;
    }
 
