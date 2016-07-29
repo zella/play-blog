@@ -27,6 +27,8 @@ public class Global extends GlobalSettings {
       DB.createIfNotExist();
 
       setupUsers();
+
+      DB.checkAndRepairPosts();
    }
 
    private void setupUsers() {

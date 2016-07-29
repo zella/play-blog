@@ -129,6 +129,7 @@ public class Post  {
       post.setTitle(doc.field("title"));
       post.setHtmlPreview(doc.field("htmlPreview"));
       post.setIsPrivate(doc.field("isPrivate"));
+      //FIXME error if user not exist
       post.setUser(User.fromDocument(doc.field("user")));
       return post;
    }
