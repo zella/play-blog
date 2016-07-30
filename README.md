@@ -3,7 +3,7 @@
 
 
 **Feautures:**
-* Write in markdown with realtime preview.
+* Write in markdown and **html**(version 0.2) with realtime preview.
 * Code highlight.
 * Private and public posts
 * Discuss comments 
