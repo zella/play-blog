@@ -1,7 +1,5 @@
 $(document).ready(function () {
 
-    var mardownEditor = $('.CodeMirror')[0].CodeMirror;
-
     //auto saving
     var $status = $('#status'),
         $commentBox = $('#commentBox'),
@@ -49,11 +47,16 @@ $(document).ready(function () {
         jsRoutes.controllers.Posts.doEdit(postId).ajax(ajaxCallBack);
     };
 
+
+    var mardownEditor = $('.CodeMirror')[0].CodeMirror;
+    var previewEditor = $('.CodeMirror')[1].CodeMirror;
     mardownEditor.on('change', tryAutoSave);
+    previewEditor.on('change', tryAutoSave);
 
     $('#titleArea').on('input propertychange', tryAutoSave);
 
     $('#privateCheckBox').on('change',tryAutoSave);
 
+    previewEditor.setSize("100%",250);
 
 });

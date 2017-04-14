@@ -4,21 +4,26 @@ $(document).ready(function () {
         $(window).off('beforeunload');
     })
 
-    var titleOld = $('#title').serialize();
-
     var mardownEditor = $('.CodeMirror')[0].CodeMirror;
-    var contentOld = mardownEditor.getValue();
+    var previewEditor = $('.CodeMirror')[1].CodeMirror;
 
-    var isPrivateOld = $('#isPrivate').serialize();
+    var titleOld = $('#titleArea').val();
+    var contentOld = mardownEditor.getValue();
+    var previewOld = previewEditor.getValue();
+    var isPrivateOld = $('#privateCheckBox').is(":checked");
 
     $(window).on('beforeunload', function (e) {
 
-        var title = $('#title').serialize();
+        var title = $('#titleArea').val();
         var content = mardownEditor.getValue();
-        var isPrivate = $('#isPrivate').serialize();
+        var preview = previewEditor.getValue();
+        var isPrivate = $('#privateCheckBox').is(":checked");
 
-        if ((title !== titleOld) || (content !== contentOld) || (isPrivate !== isPrivateOld)) {
+        if ((title !== titleOld) || (content !== contentOld) || (isPrivate !== isPrivateOld) || (preview !== previewOld)) {
+
             return 'All changes will be lost!';
         }
     });
+
+    previewEditor.setSize("100%",250);
 });

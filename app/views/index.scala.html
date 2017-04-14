@@ -32,8 +32,8 @@ routes.Application.index(newPage)
 
             <p class="uk-article-meta">Written by @post.getUser.getName on
                 @TextUtils.toReadableDate(post.getCreationDate)</p>
-            @*<p class="blog-content">@TextUtils.truncateStringLineBreak(post.getBody, 10)</p>*@
-            <p class="blog-content">@post.getHtmlPreview</p>
+
+            <p class="blog-content" style="display: none">@post.getHtmlPreview</p>
 
             <p>
                 <a class="uk-button uk-button-primary" href="@routes.Posts.detail(post.getId)">Continue
@@ -110,6 +110,7 @@ routes.Application.index(newPage)
     $ ( ".blog-content" ).each ( function ( index ) {
         var content = $ ( this ).text ( )
         $ ( this ).html ( content ) ;
+        $ ( this ).show();
     } ) ;
     hljs.initHighlightingOnLoad ( ) ;
 </script>

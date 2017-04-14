@@ -31,7 +31,11 @@ public class Post  {
    private String mdContent;
 
 
-   private String htmlPreview = "";
+   private String htmlPreview = "TODO";
+
+   @Constraints.Required
+   @Constraints.MinLength(value = 2)
+   private String mdPreview = "TODO";
 
    private User user;
 
@@ -97,6 +101,14 @@ public class Post  {
       this.htmlPreview = htmlPreview;
    }
 
+   public String getMdPreview() {
+      return mdPreview;
+   }
+
+   public void setMdPreview(String mdPreview) {
+      this.mdPreview = mdPreview;
+   }
+
    /**
     *
     * @return content in Markdown
@@ -128,6 +140,7 @@ public class Post  {
       post.setCreationDate(doc.field("creationDate"));
       post.setTitle(doc.field("title"));
       post.setHtmlPreview(doc.field("htmlPreview"));
+      post.setMdPreview(doc.field("mdPreview"));
       post.setIsPrivate(doc.field("isPrivate"));
       //FIXME error if user not exist
       post.setUser(User.fromDocument(doc.field("user")));
@@ -148,6 +161,7 @@ public class Post  {
       doc.field("creationDate", getCreationDate());
       doc.field("title", getTitle());
       doc.field("htmlPreview", getHtmlPreview());
+      doc.field("mdPreview", getMdPreview());
       doc.field("isPrivate", getIsPrivate());
       doc.field("user", getUser().toDocument());
 

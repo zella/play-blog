@@ -57,7 +57,7 @@ public class Posts extends Controller {
       User localUser = Application.getLocalUser(session());
       // now we store raw html in database, yeah
       post.setContent(TextUtils.markdownToHtml(post.getMdContent()));
-      post.setHtmlPreview(TextUtils.generateTruncatedHtmlPreview(post.getContent()));
+      post.setHtmlPreview(TextUtils.markdownToHtml(post.getMdPreview()));
       post.setUser(localUser);
       post.setCreationDate(new Date());
 
@@ -97,7 +97,8 @@ public class Posts extends Controller {
       toUpdate.setMdContent(postFromForm.getMdContent());
       toUpdate.setTitle(postFromForm.getTitle());
       toUpdate.setIsPrivate(postFromForm.getIsPrivate());
-      toUpdate.setHtmlPreview(TextUtils.generateTruncatedHtmlPreview(toUpdate.getContent()));
+      toUpdate.setHtmlPreview(TextUtils.markdownToHtml(postFromForm.getMdPreview()));
+      toUpdate.setMdContent(postFromForm.getMdContent());
       Application.postDao.save(toUpdate);
 
       return ok("Blog post saved");

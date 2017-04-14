@@ -30,6 +30,7 @@
         <div id="status" class="nochange">no change</div>
         @helper.textarea(postForm("mdContent"), 'id -> "contentArea", '_label -> "Text", 'cols -> "100", 'rows -> "20",  '_showConstraints -> false, Symbol("data-uk-htmleditor") -> "{markdown:true}")
         @helper.checkbox(postForm("isPrivate"), 'id -> "privateCheckBox", '_label -> "Make post private")
+        @helper.textarea(postForm("mdPreview"), 'id -> "previewArea", '_label -> "Preview Text",  'cols -> "100", 'rows -> "5",  '_showConstraints -> false, Symbol("data-uk-htmleditor") -> "{markdown:true}")
         <input type="submit" value="Submit">
     }
 }

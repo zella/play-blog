@@ -109,7 +109,8 @@ public class DB {
          doc.field("mdContent", mdContent);
          String content = TextUtils.markdownToHtml(mdContent);
          doc.field("content", content);
-         doc.field("htmlPreview", TextUtils.generateTruncatedHtmlPreview(content));
+         doc.field("htmlPreview", "TODO");
+         doc.field("mdPreview", "TODO");
          Logger.info("Post {} was repaired", doc.getIdentity().toString());
          doc.save();
          return true;
