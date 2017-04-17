@@ -44,7 +44,7 @@ $(document).ready(function () {
             error: onUpdateError,
             data: $("#postForm").serialize()
         }
-        jsRoutes.controllers.Posts.doEdit(postId).ajax(ajaxCallBack);
+        jsRoutes.controllers.Posts.doEditAjax(postId).ajax(ajaxCallBack);
     };
 
 

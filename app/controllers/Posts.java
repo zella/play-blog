@@ -85,11 +85,36 @@ public class Posts extends Controller {
     * @param postId Id of the blog post to edit
     */
    @Security.Authenticated(Secured.class)
-   public static Result doEdit(String postId) {
+   public static Result doEditAjax(String postId) {
       Form<Post> postForm = form(Post.class).bindFromRequest();
       if (postForm.hasErrors()) {
          return badRequest(postForm.errorsAsJson().toString());
       }
+      Post toUpdate = updatePost(postId, postForm);
+      Application.postDao.save(toUpdate);
+
+      return ok("Blog post saved");
+   }
+
+   /**
+    * Handle the 'edit form' submission
+    *
+    * @param postId Id of the blog post to edit
+    */
+   @Security.Authenticated(Secured.class)
+   public static Result doEdit(String postId) {
+      Form<Post> postForm = form(Post.class).bindFromRequest();
+      if (postForm.hasErrors()) {
+         return badRequest(editpost.render(postId,postForm));
+      }
+      Post toUpdate = updatePost(postId, postForm);
+      Application.postDao.save(toUpdate);
+
+      flash("success", "Blog post saved");
+      return redirect(controllers.routes.Application.admin());
+   }
+
+   private static Post updatePost(String postId, Form<Post> postForm) {
       Post postFromForm = postForm.get();
       Post toUpdate = Application.postDao.findById(postId);
       // now we store raw html in database, yeah
@@ -99,9 +124,7 @@ public class Posts extends Controller {
       toUpdate.setIsPrivate(postFromForm.getIsPrivate());
       toUpdate.setHtmlPreview(TextUtils.markdownToHtml(postFromForm.getMdPreview()));
       toUpdate.setMdContent(postFromForm.getMdContent());
-      Application.postDao.save(toUpdate);
-
-      return ok("Blog post saved");
+      return toUpdate;
    }
 
    /**
